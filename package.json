@@ -1,0 +1,33 @@
+{
+  "name": "falagringo---ipa-to-pt-br",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "backend": "ts-node backend/server.ts",
+    "build:backend": "tsc -p backend",
+    "start": "node backend/dist/server.js",
+    "build:all": "pnpm build && pnpm build:backend"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "idb": "^8.0.3",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0",
+    "vite-plugin-node-polyfills": "^0.24.0"
+  }
+}
