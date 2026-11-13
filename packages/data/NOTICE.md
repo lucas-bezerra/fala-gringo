@@ -2,7 +2,7 @@
 
 > Gerado por `pnpm --filter @falagringo/data notice` a partir de `src/sources.ts`. Não edite à mão.
 
-Os arquivos de dicionário derivados de fontes CC BY-SA (open-dict-data/ipa-dict; WikiPron (dados do Wiktionary); Wiktionary via wiktextract/kaikki.org) são distribuídos sob a **CC BY-SA 4.0** (https://creativecommons.org/licenses/by-sa/4.0/).
+Os arquivos de dicionário derivados de fontes CC BY-SA (open-dict-data/ipa-dict; WikiPron (dados do Wiktionary); Wiktionary via wiktextract/kaikki.org; FrequencyWords (OpenSubtitles 2018)) são distribuídos sob a **CC BY-SA 4.0** (https://creativecommons.org/licenses/by-sa/4.0/).
 
 ## open-dict-data/ipa-dict
 
@@ -30,7 +30,7 @@ Os arquivos de dicionário derivados de fontes CC BY-SA (open-dict-data/ipa-dict
 - Licença: CC BY-SA 4.0
 - Origem: https://github.com/CUNY-CL/wikipron
 - Crédito: Contribuidores do Wiktionary, via WikiPron (Lee et al., LREC 2020).
-- Idiomas: en-GB, de-DE, it-IT, es-ES, es-419, fr-FR
+- Idiomas: en-GB, de-DE, it-IT, es-ES, es-419, fr-FR, léxico pt-BR (texto misto)
 
 ## Wiktionary via wiktextract/kaikki.org
 
@@ -45,3 +45,10 @@ Os arquivos de dicionário derivados de fontes CC BY-SA (open-dict-data/ipa-dict
 - Origem: https://www.wikidata.org
 - Crédito: Contribuidores do Wikidata (CC0; crédito por cortesia).
 - Idiomas: en-US, en-GB, de-DE, it-IT, es-ES, es-419, fr-FR, ja-JP, ko-KR, nl-NL, sv-SE, zh-CN
+
+## FrequencyWords (OpenSubtitles 2018)
+
+- Licença: CC BY-SA 4.0 (conteúdo); MIT (código)
+- Origem: https://github.com/hermitdave/FrequencyWords
+- Crédito: Hermit Dave, FrequencyWords, a partir do corpus OpenSubtitles 2018 (OPUS). Usada no léxico do português e no relatório de cobertura.
+- Idiomas: léxico pt-BR (texto misto)

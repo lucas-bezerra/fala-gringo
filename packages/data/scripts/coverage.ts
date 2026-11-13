@@ -2,35 +2,20 @@
 // Base: as 10 mil palavras mais frequentes de legendas (FrequencyWords/OpenSubtitles 2018, CC BY-SA 4.0).
 // As listas são baixadas para build/freq/ (uso interno, não distribuído). Saída: COVERAGE.md.
 // Uso: pnpm --filter @falagringo/data coverage   (rode `shards` antes)
-import { existsSync } from 'node:fs';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { lookupKey, type Lang } from '../src/schema';
 import type { Manifest, ShardFile } from '../src/shards';
+import { frequencyList } from './lib/freq';
 import { DATA_ROOT } from './lib/write';
 
-const FREQ_BASE = 'https://raw.githubusercontent.com/hermitdave/FrequencyWords/525f9b560de4/content/2018';
 const FREQ_CODE: Partial<Record<Lang, string>> = {
   'en-US': 'en', 'en-GB': 'en', 'de-DE': 'de', 'it-IT': 'it', 'es-ES': 'es', 'es-419': 'es',
   'fr-FR': 'fr', 'ko-KR': 'ko', 'nl-NL': 'nl', 'sv-SE': 'sv', // ja: não há lista (legendas sem segmentação)
 }; // prettier-ignore
 const TOP = 10_000;
 
-async function freqList(code: string): Promise<[string, number][]> {
-  const file = path.join(DATA_ROOT, 'build/freq', `${code}_50k.txt`);
-  if (!existsSync(file)) {
-    const res = await fetch(`${FREQ_BASE}/${code}/${code}_50k.txt`);
-    if (!res.ok) throw new Error(`Lista de frequência ${code}: HTTP ${res.status}`);
-    await mkdir(path.dirname(file), { recursive: true });
-    await writeFile(file, await res.text());
-  }
-  return (await readFile(file, 'utf-8'))
-    .split('\n')
-    .slice(0, TOP)
-    .map((l) => l.trim().split(' '))
-    .filter((p) => p.length === 2)
-    .map(([w, n]) => [w, Number(n)]);
-}
+const freqList = async (code: string) => (await frequencyList(code)).slice(0, TOP);
 
 const dict = path.join(DATA_ROOT, 'build/dict');
 const manifest = JSON.parse(await readFile(path.join(dict, 'manifest.json'), 'utf-8')) as Manifest;

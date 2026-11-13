@@ -1,6 +1,6 @@
 # Cobertura do dicionário (T2.8)
 
-> Gerado por `pnpm --filter @falagringo/data coverage` em 2026-11-13 (dataVersion `d6f348d5ad8b`). Não edite à mão.
+> Gerado por `pnpm --filter @falagringo/data coverage` em 2026-11-13 (dataVersion `af318b6d158d`). Não edite à mão.
 
 Base: as 10.000 palavras mais frequentes de legendas de cada idioma ([FrequencyWords](https://github.com/hermitdave/FrequencyWords), OpenSubtitles 2018, CC BY-SA 4.0 — uso só para medir; a lista não é distribuída).
 

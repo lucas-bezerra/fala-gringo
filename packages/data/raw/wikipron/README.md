@@ -12,6 +12,7 @@
 | `ita_latn_broad_filtered.tsv` | `it-IT` | — |
 | `deu_latn_broad_filtered.tsv` | `de-DE` | — |
 | `eng_latn_uk_broad_filtered.tsv` | `en-GB` | Reino Unido |
+| `por_latn_bz_broad.tsv` | — | Brasil. **Só as palavras** são usadas, no léxico do português (modo texto misto, T3.2; ver [LEXICON.md](../../LEXICON.md)) |
 
 ## Licença e atribuição
 

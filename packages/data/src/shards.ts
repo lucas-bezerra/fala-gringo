@@ -53,6 +53,8 @@ export interface Manifest {
   dataVersion: string;
   sources: SourceId[];
   langs: Partial<Record<Lang, { words: number; prons: number; shards: ShardRef[] }>>;
+  /** Léxicos auxiliares. `pt-BR`: palavras do português para o modo texto misto (uma palavra por linha). */
+  lexicons?: { 'pt-BR'?: Omit<ShardRef, 'from'> };
 }
 
 /** Converte as pronúncias mescladas de UMA palavra em `ShardWord`. */

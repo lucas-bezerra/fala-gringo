@@ -1,50 +1,39 @@
 /**
  * API pública do motor (T3.1): `createEngine(estágios).convert(texto, idioma)`.
- * O orquestrador só conecta os estágios (stages.ts); cada tarefa da Fase 3 troca um estágio sem mudar a API.
+ * O orquestrador conecta os estágios (stages.ts) e decide, no modo texto misto (T3.2), o que é português.
  */
 import { lookupKey } from '@falagringo/data/schema';
-import type { DictEntry, Dictionary, Estimator, Phonology, RawToken, Tokenizer } from './stages';
+import { PT_CORE } from '@falagringo/data/ptLexicon';
+import { FUNCTION_WORDS } from './functionWords';
 import type {
-  ConversionResult,
-  ConvertOptions,
-  Lang,
-  Pronunciation,
-  Token,
-  TrapId,
-  WordToken,
-} from './types';
+  DictEntry,
+  Dictionary,
+  Estimator,
+  Phonology,
+  PortugueseLexicon,
+  RawToken,
+  Tokenizer,
+  WordRaw,
+} from './stages';
+import { createTokenizer } from './tokenizer';
+import type { ConversionResult, ConvertOptions, Lang, Pronunciation, Token, TrapId } from './types';
 
 export const DEFAULT_MAX_LENGTH = 2000;
 
 export interface EngineStages {
   dictionary: Dictionary;
   phonology: Phonology;
-  /** Padrão: `basicTokenizer` (provisório até a T3.2). */
+  /** Padrão: `createTokenizer()`. */
   tokenizer?: Tokenizer;
   /** Sem estimador, palavras fora do dicionário viram `unknown` (T3.9 e T5.x trazem os estimadores). */
   estimator?: Estimator;
+  /** Léxico do português — obrigatório para o modo texto misto (`convert(..., { mixed })`). */
+  portuguese?: PortugueseLexicon;
 }
 
 export interface Engine {
   convert(text: string, lang: Lang, options?: ConvertOptions): Promise<ConversionResult>;
 }
-
-/**
- * Tokenizador PROVISÓRIO (substituído na T3.2): `Intl.Segmenter` por palavra. Ainda não reconhece números
- * por extenso, hífens nem trechos em português.
- */
-export const basicTokenizer: Tokenizer = {
-  tokenize(text, lang) {
-    const segmenter = new Intl.Segmenter(lang, { granularity: 'word' });
-    return [...segmenter.segment(text)].map((s): RawToken => {
-      if (s.isWordLike)
-        return /^\p{N}+$/u.test(s.segment)
-          ? { kind: 'text', text: s.segment, reason: 'number' }
-          : { kind: 'word', text: s.segment };
-      return { kind: 'text', text: s.segment, reason: /^\s+$/u.test(s.segment) ? 'space' : 'punctuation' };
-    });
-  },
-};
 
 /**
  * Fonologia PROVISÓRIA (substituída pela T3.3–T3.6): devolve o IPA como uma sílaba só, sem conversão para PT-BR.
@@ -61,58 +50,145 @@ export const placeholderPhonology: Phonology = {
   },
 };
 
+const PT_CORE_SET = new Set(PT_CORE);
 const sylText = (p: Pronunciation, sep: string) => p.syllables.map((s) => s.text).join(sep);
 
-export function createEngine(stages: EngineStages): Engine {
-  const tokenizer = stages.tokenizer ?? basicTokenizer;
-
-  async function toToken(raw: RawToken, lang: Lang, entry: DictEntry | undefined): Promise<Token> {
-    if (raw.kind === 'text') return raw;
-    const key = lookupKey(raw.text, lang);
-    if (entry) {
-      const [first, ...rest] = entry.prons;
-      const token: WordToken = {
-        kind: 'word',
-        original: raw.text,
-        key,
-        origin: 'dictionary',
-        source: first.source,
-        proper: entry.proper,
-        agree: first.agree,
-        primary: stages.phonology.render(first.ipa, lang, first.stress),
-        variants: rest.map((p) => stages.phonology.render(p.ipa, lang, p.stress)),
-      };
-      return token;
-    }
-    const estimated = stages.estimator?.estimate(key, lang);
-    if (estimated) {
-      return {
-        kind: 'word',
-        original: raw.text,
-        key,
-        origin: 'estimated',
-        proper: false,
-        agree: 0,
-        primary: stages.phonology.render(estimated, lang, 'none'),
-        variants: [],
-      };
-    }
-    return { kind: 'unknown', original: raw.text, key };
+/** Todas as palavras (inclusive partes de reserva), para buscar no dicionário de uma vez. */
+function collectWords(raws: readonly RawToken[], acc: WordRaw[] = []): WordRaw[] {
+  for (const r of raws) {
+    if (r.kind !== 'word') continue;
+    acc.push(r);
+    if (r.parts) collectWords(r.parts, acc);
   }
+  return acc;
+}
+
+export function createEngine(stages: EngineStages): Engine {
+  const tokenizer = stages.tokenizer ?? createTokenizer();
 
   return {
     async convert(text, lang, options = {}) {
       const max = options.maxLength ?? DEFAULT_MAX_LENGTH;
       if (text.length > max) throw new RangeError(`Texto com ${text.length} caracteres; o limite é ${max}.`);
+      const mixed = options.mixed ? (options.mixed === true ? {} : options.mixed) : undefined;
+      if (mixed && !stages.portuguese) throw new Error('O modo texto misto precisa do léxico do português.');
 
       const raws = tokenizer.tokenize(text.normalize('NFC'), lang);
-      // Buscas em paralelo; o dicionário junta pedidos do mesmo shard.
-      const entries = await Promise.all(
-        raws.map((r) =>
-          r.kind === 'word' ? stages.dictionary.lookup(lang, lookupKey(r.text, lang)) : undefined,
-        ),
-      );
-      const tokens = await Promise.all(raws.map((r, i) => toToken(r, lang, entries[i])));
+      const keyOf = (w: WordRaw) => lookupKey(w.norm, lang);
+
+      // Buscas em paralelo (o dicionário junta pedidos do mesmo shard).
+      const keys = [...new Set(collectWords(raws).map(keyOf))];
+      const found = new Map<string, DictEntry | undefined>();
+      await Promise.all(keys.map(async (k) => found.set(k, await stages.dictionary.lookup(lang, k))));
+
+      // Modo texto misto: decide palavra a palavra se é português (passa direto) ou estrangeira (converte).
+      const portuguese = new Set<RawToken>();
+      if (mixed) {
+        const pt = stages.portuguese!;
+        const forcePt = new Set(mixed.forcePortuguese ?? []);
+        const forceForeign = new Set(mixed.forceForeign ?? []);
+        for (const r of raws) {
+          if (r.kind !== 'word') continue;
+          const key = keyOf(r);
+          if (forcePt.has(key)) portuguese.add(r);
+          else if (forceForeign.has(key)) continue;
+          else if (r.capitalized && !r.sentenceStart) {
+            // Nome no meio da frase: estrangeiro se o dicionário do idioma-alvo o tem; senão, português se for
+            // nome ou palavra do português. Preferimos converter um nome português por engano (Paris) a deixar
+            // um estrangeiro sem leitura.
+            if (!found.get(key) && (pt.isName(key) || pt.has(key))) portuguese.add(r);
+          } else if (pt.has(key)) {
+            portuguese.add(r); // palavra comum do português (inclusive no início da frase: "Correspondentes")
+          } else if (found.get(key)) {
+            continue; // estrangeira conhecida (inclusive nome no início da frase: "Massachusetts")
+          } else if (pt.isName(key) || !r.capitalized) {
+            portuguese.add(r); // nome português ("Londres") ou minúscula desconhecida (flexão do português)
+          }
+        }
+        // Atração: palavra funcional do idioma-alvo colada a um nome estrangeiro passa a fazer parte dele
+        // ("Bank of America", "Jerez de la Frontera"). Funcional que também é do PT (PT_CORE: de, a, e…) só vai
+        // junto se estiver ENTRE dois estrangeiros ("Tour de France") ou antes de outra funcional atraída
+        // ("de" em "de la") — assim o "de" de "o estado de Jalisco" continua português.
+        const fw = FUNCTION_WORDS[lang];
+        const initiallyForeign = (t: RawToken | undefined) => !!t && t.kind === 'word' && !portuguese.has(t);
+        // vizinho à esquerda de cada palavra, atravessando só espaços (pontuação separa)
+        const leftOf = new Map<RawToken, RawToken | undefined>();
+        let lastWord: RawToken | undefined;
+        for (const r of raws) {
+          if (r.kind === 'text') {
+            if (r.reason !== 'space') lastWord = undefined;
+            continue;
+          }
+          leftOf.set(r, lastWord);
+          lastWord = r;
+        }
+        const foreignLeft = new Map([...leftOf].map(([r, left]) => [r, initiallyForeign(left)]));
+        const attracted = new Set<RawToken>();
+        let nextWord: RawToken | undefined;
+        for (let i = raws.length - 1; i >= 0; i--) {
+          const r = raws[i];
+          if (r.kind === 'text') {
+            if (r.reason !== 'space') nextWord = undefined; // pontuação e números separam
+            continue;
+          }
+          const key = keyOf(r);
+          const candidate =
+            nextWord &&
+            portuguese.has(r) &&
+            !forcePt.has(key) &&
+            fw.has(key) &&
+            found.get(key) &&
+            !portuguese.has(nextWord);
+          if (candidate && (!PT_CORE_SET.has(key) || attracted.has(nextWord!) || foreignLeft.get(r))) {
+            portuguese.delete(r);
+            attracted.add(r);
+          }
+          nextWord = r;
+        }
+      }
+
+      const resolve = (r: RawToken, allowParts: boolean): Token[] => {
+        if (r.kind === 'text') return [r];
+        if (portuguese.has(r)) return [{ kind: 'text', text: r.text, reason: 'portuguese' }];
+        const key = keyOf(r);
+        const entry = found.get(key);
+        if (entry) {
+          const [first, ...rest] = entry.prons;
+          return [
+            {
+              kind: 'word',
+              original: r.text,
+              key,
+              origin: 'dictionary',
+              source: first.source,
+              proper: entry.proper,
+              agree: first.agree,
+              primary: stages.phonology.render(first.ipa, lang, first.stress),
+              variants: rest.map((p) => stages.phonology.render(p.ipa, lang, p.stress)),
+            },
+          ];
+        }
+        // Composto/elisão fora do dicionário: usa as partes se ao menos uma for conhecida.
+        const partsKnown = r.parts?.some((p) => p.kind === 'word' && found.get(keyOf(p)));
+        if (allowParts && r.parts && partsKnown) return r.parts.flatMap((p) => resolve(p, false));
+        const estimated = stages.estimator?.estimate(key, lang);
+        if (estimated) {
+          return [
+            {
+              kind: 'word',
+              original: r.text,
+              key,
+              origin: 'estimated',
+              proper: r.capitalized && !r.sentenceStart,
+              agree: 0,
+              primary: stages.phonology.render(estimated, lang, 'none'),
+              variants: [],
+            },
+          ];
+        }
+        return [{ kind: 'unknown', original: r.text, key }];
+      };
+      const tokens = raws.flatMap((r) => resolve(r, true));
 
       const traps: TrapId[] = [];
       let syllabic = '';

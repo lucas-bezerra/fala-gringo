@@ -7,13 +7,35 @@
  */
 import type { Lang, Pronunciation, SourceId, StressSource } from './types';
 
+/** Palavra a converter. */
+export interface WordRaw {
+  kind: 'word';
+  /** Texto exatamente como digitado. */
+  text: string;
+  /** Forma de busca: NFC, apóstrofos (’ → ') e hífens tipográficos unificados. */
+  norm: string;
+  /** Começa com maiúscula (indício de nome próprio no modo texto misto). */
+  capitalized: boolean;
+  /** Primeira palavra do texto ou da frase (maiúscula aí não indica nome). */
+  sentenceStart: boolean;
+  /** Divisão de reserva, usada só se a palavra inteira não estiver no dicionário (l'école → l' + école). */
+  parts?: RawToken[];
+}
+
 /** Trecho do texto: palavra a converter ou texto que passa direto. */
 export type RawToken =
-  | { kind: 'word'; text: string }
-  | { kind: 'text'; text: string; reason: 'space' | 'punctuation' | 'number' | 'portuguese' };
+  WordRaw | { kind: 'text'; text: string; reason: 'space' | 'punctuation' | 'number' | 'portuguese' };
 
 export interface Tokenizer {
   tokenize(text: string, lang: Lang): RawToken[];
+}
+
+/** Léxico do português (modo texto misto). Chaves: lookupKey (NFC, minúsculas). */
+export interface PortugueseLexicon {
+  /** Palavra comum do português. */
+  has(key: string): boolean;
+  /** Nome próprio do português (Londres, Alemanha, Munique). */
+  isName(key: string): boolean;
 }
 
 /** Uma pronúncia como vem do dicionário (shard), antes da fonologia. */
