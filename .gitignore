@@ -146,3 +146,6 @@ apps/web/public/dict/
 playwright-report/
 test-results/
 .playwright-mcp/
+
+# Saídas do pipeline de dados
+packages/data/build/
