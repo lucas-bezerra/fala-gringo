@@ -23,7 +23,7 @@
 
 | Fonte | Uso no FalaGringo | Licença verificada | Obrigações | Status |
 |---|---|---|---|---|
-| [CMUdict](https://github.com/cmusphinx/cmudict) | EN-US (base principal; ARPAbet → IPA) | Estilo BSD-2, © Carnegie Mellon University 1993–2015 | Manter o aviso de copyright, as condições e o disclaimer na documentação distribuída | ✅ Aprovada |
+| [CMUdict](https://github.com/cmusphinx/cmudict) | EN-US (base principal; ARPAbet → IPA) | Estilo BSD-2, © Carnegie Mellon University 1993–2015 | Manter o aviso de copyright, as condições e o disclaimer na documentação distribuída | ✅ **Em uso** (T2.3): `raw/cmudict/`, commit `74790861f652` |
 | [cmudict-ipa](https://github.com/lingz/cmudict-ipa) (usada no `en_US.txt` atual) | EN-US (alternativa já convertida para IPA) | MIT, © 2016 Lingliang Zhang (deriva do CMUdict) | Aviso MIT + aviso do CMUdict | ✅ Aprovada |
 | [Britfone](https://github.com/JoseLlarena/Britfone) | EN-UK (RP/SSB, +16 mil entradas) | MIT, © 2017 Jose Llarena | Aviso MIT | ✅ Aprovada (cobertura pequena; completar com WikiPron) |
 | [WikiPron](https://github.com/CUNY-CL/wikipron) (dados do Wiktionary) | Base multilíngue: 348 idiomas, +5 milhões de pares | Código: Apache 2.0. Dados: herdam a licença do Wiktionary (**CC BY-SA 4.0** / GFDL) | Atribuição ao Wiktionary e aos contribuidores; shards derivados em CC BY-SA | ✅ Aprovada com ShareAlike ⚖️ |
