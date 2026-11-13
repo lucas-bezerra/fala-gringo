@@ -125,9 +125,9 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T2.5 | ✅ **Concluída em 2026-11-13** (retrato versionado em `raw/wikidata/`). Importador de nomes próprios do Wikidata (P898), filtrando pessoas, lugares e clubes | medium | Dump filtrado com rótulo PT e IPA | T2.1 |
 | T2.6 | ✅ **Concluída em 2026-11-13** ([MERGE.md](../packages/data/MERGE.md): precedência por palavra, 1,98 mi pronúncias, tônica emprestada en-US → en-GB). Normalização de IPA (NFC, ɡ/g, tie bars, marcas de tônica/sílaba, variantes) e merge com prioridade entre fontes | high | Testes de normalização; relatório de conflitos | T2.2–T2.5 |
 | T2.7 | ✅ **Concluída em 2026-11-13** ([SHARDS.md](../packages/data/SHARDS.md): faixas em vez de prefixos; 98 shards ≤ 196 KB gzip). Gerador de shards por prefixo com hash e `manifest.json` | medium | Shards ≤ 200 KB comprimidos; busca de 1 palavra baixa 1 shard | T2.6 |
-| T2.8 | Relatório de cobertura por idioma | low | Tabela com nº de entradas e % de cobertura num corpus de frequência | T2.7 |
+| T2.8 | ✅ **Concluída em 2026-11-13** ([COVERAGE.md](../packages/data/COVERAGE.md): 96–98% do uso real em en/de; es 86% e ko 44,5% → ver T5.1/T5.6). Relatório de cobertura por idioma | low | Tabela com nº de entradas e % de cobertura num corpus de frequência | T2.7 |
 | T2.10 | ✅ **Concluída em 2026-11-13** ([ADR 0001](adr/0001-fonte-de-tonica.md): Wiktionary via kaikki.org + Britfone). **Fonte de tônica para it-IT e en-GB** (o WikiPron não traz): decidir entre Britfone (en-GB), raspagem própria do Wiktionary com tônica, ou extração do dump do Wiktionary (kaikki.org) 👤 | medium | ADR com a decisão + importador | T2.4 |
-| T2.9 | Atualização mensal automática dos dados (job agendado no CI) + `NOTICE` gerado a partir do SOURCES.md | low | Exigência da licença da EDRDG; atribuições sempre em dia | T2.7 |
+| T2.9 | ✅ **Concluída em 2026-11-13** (workflow `data-refresh.yml`; `NOTICE.md` gerado e conferido no CI). Atualização mensal automática dos dados (job agendado no CI) + `NOTICE` gerado a partir do SOURCES.md | low | Exigência da licença da EDRDG; atribuições sempre em dia | T2.7 |
 
 ### Fase 3 — Motor fonético (`packages/engine`) — núcleo do produto
 
@@ -165,12 +165,12 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 
 | ID | Idioma | Effort | Observações | Dep. |
 |---|---|---|---|---|
-| T5.1 | Espanhol (ES e 419) | medium | Ortografia regular; G2P por regras resolve quase tudo; variantes θ/s, ʝ/ʃ | T3.8 |
+| T5.1 | Espanhol (ES e 419) | medium | **G2P por regras é obrigatório:** o WikiPron não tem palavras básicas (`de`, `a`, `o`) nem formas verbais (`quieres`) — cobertura atual 86% do uso. Ortografia regular; G2P por regras resolve quase tudo; variantes θ/s, ʝ/ʃ | T3.8 |
 | T5.2 | Italiano | medium | Ortografia regular; consoantes duplas | T3.8 |
 | T5.3 | Alemão | medium | ç/x, ʁ, vogais arredondadas, ditongos, compostos | T3.8 |
 | T5.4 | Francês | high | Nasais, liaison, letras mudas; depende bastante do dicionário | T3.9 |
 | T5.5 | Japonês | high | **Kana → IPA por regra é obrigatório:** a fonte tem as palavras quase só em kanji (`ありがとう` não existe nela). Segmentação, kanji → kana (JMdict), kana → IPA, u/i desvozeados, acento de altura | T3.2 |
-| T5.6 | Coreano | high | Hangul é fonético, mas tem regras (ligação, nasalização, tensificação) | T3.2 |
+| T5.6 | Coreano | high | **Cobertura do dicionário é só 44,5% do uso** (faltam formas flexionadas): a conversão de Hangul por regra é o caminho principal. Hangul é fonético, mas tem regras (ligação, nasalização, tensificação) | T3.2 |
 | T5.7 | Mandarim | high | Hanzi → pinyin (polifonia), pinyin → IPA, representação dos tons na UI | T3.2 |
 | T5.8 | Nomes próprios (multi-idioma, Wikidata) | medium | Prioridade: esportes, política internacional, cidades | T2.5 |
 | T5.9 | Template "novo idioma via WikiPron" + 1 piloto (ex.: holandês ou polonês) | medium; depois **low** por idioma | Checklist de 1 página para adicionar idiomas | T5.1 |

@@ -16,7 +16,10 @@
     "import:wiktextract": "tsx scripts/import-wiktextract.ts",
     "extract:wiktextract": "tsx scripts/extract-wiktextract.ts",
     "merge": "tsx scripts/merge.ts",
-    "shards": "tsx scripts/build-shards.ts"
+    "shards": "tsx scripts/build-shards.ts",
+    "coverage": "tsx scripts/coverage.ts",
+    "notice": "tsx scripts/notice.ts",
+    "notice:check": "tsx scripts/notice.ts --check"
   },
   "main": "src/index.ts",
   "devDependencies": {

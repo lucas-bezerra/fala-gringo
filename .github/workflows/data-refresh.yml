@@ -1,0 +1,71 @@
+name: Atualização mensal dos dados
+
+# T2.9 — renova os retratos que mudam com o tempo (Wikidata e Wiktionary via kaikki.org),
+# refaz merge, shards, cobertura e NOTICE, e abre um PR para revisão humana.
+# As fontes com versão fixada (CMUdict, Britfone, WikiPron, ipa-dict) mudam só por decisão manual.
+# Obs.: PRs abertos com o GITHUB_TOKEN não disparam o workflow de CI; feche e reabra o PR para rodá-lo.
+
+on:
+  schedule:
+    - cron: '0 6 3 * *' # dia 3 de cada mês, 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180 # o kaikki.org limita a velocidade de download
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Wikidata (P898)
+        working-directory: packages/data
+        run: rm -rf build/wikidata-cache && pnpm fetch:wikidata
+
+      - name: Wiktionary via kaikki.org (it-IT, en-GB)
+        working-directory: packages/data
+        run: |
+          mkdir -p "$RUNNER_TEMP/kaikki"
+          curl -sfL -o "$RUNNER_TEMP/kaikki/it.jsonl.gz" https://kaikki.org/dictionary/Italian/kaikki.org-dictionary-Italian.jsonl.gz
+          curl -sfL -o "$RUNNER_TEMP/kaikki/en.jsonl.gz" https://kaikki.org/dictionary/English/kaikki.org-dictionary-English.jsonl.gz
+          pnpm extract:wiktextract it-IT "$RUNNER_TEMP/kaikki/it.jsonl.gz"
+          pnpm extract:wiktextract en-GB "$RUNNER_TEMP/kaikki/en.jsonl.gz"
+
+      - name: Importar, mesclar, gerar shards e relatórios
+        working-directory: packages/data
+        run: |
+          for s in ipa-dict cmudict britfone wikipron wiktextract wikidata; do pnpm import:$s; done
+          pnpm merge
+          pnpm shards
+          pnpm coverage
+          pnpm notice
+
+      - name: Abrir PR se algo mudou
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- packages/data; then echo "Nada mudou."; exit 0; fi
+          branch="data/refresh-$(date -u +%Y-%m)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add packages/data
+          git commit -m "dados: atualização mensal ($(date -u +%Y-%m))"
+          git push -f origin "$branch"
+          gh pr create --base master --head "$branch" \
+            --title "Dados: atualização mensal $(date -u +%Y-%m)" \
+            --body "Atualização automática do Wikidata e do Wiktionary (kaikki.org). Revise o diff de packages/data/COVERAGE.md e dos retratos em raw/ antes de mergear. Feche e reabra este PR para disparar o CI." \
+            || echo "PR já existe para $branch."

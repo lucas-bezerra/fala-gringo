@@ -5,6 +5,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parseMerged } from '../src/mergedTsv';
 import { DEFAULT_MAX_GZIP, buildShards, dataVersionOf } from '../src/shardBuilder';
+import { renderNotice } from '../src/notice';
 import { SHARD_FORMAT, SOURCE_ORDER, type Manifest } from '../src/shards';
 import { DATA_ROOT } from './lib/write';
 
@@ -41,6 +42,7 @@ for (const file of readdirSync(MERGED)
 manifest.dataVersion = dataVersionOf(allFiles);
 const manifestJson = JSON.stringify(manifest);
 await writeFile(path.join(OUT, 'manifest.json'), manifestJson);
+await writeFile(path.join(OUT, 'NOTICE.md'), renderNotice()); // créditos publicados junto dos dados
 console.log(
   `\nmanifest.json: ${kb(Buffer.byteLength(manifestJson))} | ${allFiles.length} shards | dataVersion ${manifest.dataVersion}`,
 );

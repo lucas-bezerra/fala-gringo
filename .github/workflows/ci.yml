@@ -27,6 +27,8 @@ jobs:
       - run: pnpm lint
       - run: pnpm format:check
       - run: pnpm typecheck
+      - name: Créditos dos dados (NOTICE) em dia
+        run: pnpm --filter @falagringo/data notice:check
       - run: pnpm test
       - run: pnpm build
       - name: Auditoria de dependências (falha só em high/critical)
