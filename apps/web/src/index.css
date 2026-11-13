@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+/* Fontes servidas pelo próprio site (sem Google Fonts em tempo de execução) */
+@import '@fontsource-variable/inter';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/700.css';
+@import '@fontsource/noto-sans-mono/400.css';
+@import '@fontsource/noto-sans-mono/500.css';
+
+/*
+ * Tokens do design v2 — extraídos do protótipo aprovado
+ * (https://claude.ai/artifact/68SFbsmQMLiwk4eQM99QFv).
+ * Uso: bg-surface, text-ink, text-muted, border-line, bg-accent, text-special, font-display, font-ipa…
+ */
+@theme {
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter Variable', sans-serif;
+  --font-ipa: 'Noto Sans Mono', ui-monospace, monospace;
+  --font-mono: 'Noto Sans Mono', ui-monospace, monospace;
+
+  --color-canvas: #f5f6f8; /* fundo da página */
+  --color-surface: #ffffff; /* cards */
+  --color-subtle: #f8fafc; /* linhas "som a som" */
+  --color-segment: #e9ecf1; /* fundo de controles segmentados */
+  --color-line: #e3e6eb; /* bordas */
+  --color-line-strong: #d5dae1;
+  --color-ink: #0f172a; /* texto principal */
+  --color-ink-2: #334155; /* texto secundário */
+  --color-muted: #5b6474; /* rótulos (contraste AA sobre branco e canvas) */
+  --color-separator: #94a3b8; /* ponto médio entre sílabas */
+
+  --color-accent: #1d4ed8; /* ação principal, seleção */
+  --color-accent-strong: #1e3a8a;
+  --color-accent-soft: #eef2ff;
+  --color-focus: #93c5fd;
+
+  --color-special: #b54708; /* som que não existe em PT-BR (laranja) */
+  --color-special-ink: #8a3a06;
+  --color-special-soft: #fff4e5;
+
+  --color-ok: #067647;
+  --color-ok-soft: #ecfdf3;
+
+  /* Modo apresentador (tema escuro) */
+  --color-stage: #0b1120;
+  --color-stage-2: #111a2e;
+  --color-stage-line: #1e293b;
+  --color-stage-reading: #fde68a;
+  --color-stage-mark: #fdba74;
+
+  --radius-card: 16px;
+  --radius-control: 10px;
+
+  /* ---- Tokens legados da v1 (remover na T4.2, quando a tela for reescrita) ---- */
+  --color-brand-400: #38bdf8;
+  --color-brand-500: #0ea5e9;
+  --color-brand-600: #0284c7;
+  --color-space-950: #020617;
+  --color-space-900: #0f172a;
+  --color-space-800: #1e293b;
+  --color-accent-cyan: #22d3ee;
+  --color-accent-lime: #a3e635;
+  --color-accent-violet: #a78bfa;
+
+  --animate-blob: blob 7s infinite;
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
+
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Estilos legados da v1 (remover na T4.2) ---- */
+@layer base {
+  body {
+    background-color: #020617;
+    color: #e2e8f0;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 3px;
+  }
+}
+
+@utility glass-panel {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@utility text-glow {
+  text-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+}

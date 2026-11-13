@@ -64,7 +64,8 @@ services/ipaMappings.ts              → IPA → PT-BR caractere a caractere (no
 - **Mudou o formato do dicionário ou do cache? Incremente `VERSION`** em `dictionaryService.ts` (hoje `v2`). O IndexedDB dos usuários guarda o texto da versão anterior.
 - **Licenças:** só existem dicionários permitidos (`en_US`, `de`, `ja`, `ko`, `nl`, `sv`), com créditos em [packages/data/raw/ipa-dict/LICENSES.md](packages/data/raw/ipa-dict/LICENSES.md). **Nenhuma fonte entra sem registro no SOURCES.md.** Dados NC (não comercial), GPL e sem licença estão proibidos. O uso declarado é individual, sem fins lucrativos e fora dos canais oficiais; se isso mudar, as licenças precisam ser revistas.
 - **EN-US é obrigatório** e é o idioma principal.
-- O Tailwind ainda vem **via CDN** no `index.html`, com o tema inline (gera um aviso no console). A instalação correta é a T1.4.
+- **Estilos:** Tailwind v4 via `@tailwindcss/vite`; tokens de design no bloco `@theme` de [apps/web/src/index.css](apps/web/src/index.css) (cores `canvas`, `surface`, `ink`, `muted`, `accent`, `special`…; fontes `font-display`, `font-ipa`). Use os tokens em vez de hex soltos. Os tokens e estilos marcados como legados da v1 saem na T4.2.
+- **Nada de CDN:** fontes vêm de `@fontsource` e são servidas pelo próprio site. Não adicione scripts, estilos ou fontes externos (requisito da CSP da T1.5).
 - Conteúdo visível ao usuário fica em PT-BR. A v1 ainda mistura rótulos em inglês.
 - Alias `@/*` → `apps/web/src/*`.
 
