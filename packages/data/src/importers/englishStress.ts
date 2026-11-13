@@ -21,7 +21,8 @@ const LEGAL_CLUSTERS = new Set([
   's p ɹ', 's p l', 's p j', 's t ɹ', 's t j', 's k ɹ', 's k w', 's k l', 's k j',
 ]); // prettier-ignore
 
-function isLegalOnset(cluster: string[]): boolean {
+/** Encontro permitido em início de sílaba no inglês (bases IPA sem ligadura: "tʃ", "ɹ"). Usado também pelo motor (T3.4). */
+export function isLegalOnset(cluster: string[]): boolean {
   if (cluster.length === 0) return true;
   if (cluster.length === 1) return cluster[0] !== 'ŋ';
   return LEGAL_CLUSTERS.has(cluster.join(' '));

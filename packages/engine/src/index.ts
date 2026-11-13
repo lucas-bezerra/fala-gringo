@@ -19,3 +19,5 @@ export { ShardDictionary } from './shardDictionary';
 export type { ShardDictionaryOptions } from './shardDictionary';
 export { parseIpa, phonesOf, serializeIpa } from './ipa/parse';
 export type { IpaToken, Phone } from './ipa/parse';
+export { NO_STRESS, legalOnset, spanishStressFromEnd, syllabify } from './ipa/syllabify';
+export type { IpaSyllable, SyllabifiedWord, SyllabifyOptions, SyllabifyResult } from './ipa/syllabify';

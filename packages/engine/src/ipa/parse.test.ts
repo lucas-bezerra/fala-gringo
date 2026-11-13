@@ -57,7 +57,7 @@ describe('parseIpa — estrutura', () => {
     expect(show('vaɪ̯n', 'de-DE')).toEqual(['v', 'aɪ', 'n']); // ̯ some no ditongo agrupado
     expect(show('ˈbaʊt', 'en-US')).toEqual(['ˈ', 'b', 'aʊ', 't']);
     expect(show('ˈbaʊt', 'ja-JP')).toEqual(['ˈ', 'b', 'a', 'ʊ', 't']); // japonês não agrupa
-    expect(show('aisatsɯ', 'ja-JP')).toEqual(['a', 'i', 's', 'a', 't͡s', 'ɯ']);
+    expect(show('aisatsɯ', 'ja-JP')).toEqual(['ai', 's', 'a', 't͡s', 'ɯ']); // vogal + i = uma sílaba (gô·ZAI·ma)
     expect(show('ˈdi.a', 'en-US')).toEqual(['ˈ', 'd', 'i', '<syllable:.>', 'a']); // hiato marcado
   });
 
