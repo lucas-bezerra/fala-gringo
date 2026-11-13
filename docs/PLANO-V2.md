@@ -135,7 +135,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 |---|---|---|---|---|
 | T3.1 | ✅ **Concluída em 2026-11-13** (`createEngine().convert()`, `ShardDictionary`; estágios substituíveis). Tipos de saída e API pública (`convert(text, lang, opts)`) | medium | Tipos com `syllables`, `stress`, `sounds[]`, `origin`, `variants` | T0.3 |
 | T3.2 | ✅ **Concluída em 2026-11-13** ([LEXICON.md](../packages/data/LEXICON.md): léxico do português + regras do texto misto; números passam direto; JA: segmentação por dicionário fica na T5.5). Tokenização com `Intl.Segmenter`, números, hífens, apóstrofos e texto misto (não converter palavras em PT) | high | Testes com frases mistas e com JA/ZH sem espaço | T3.1 |
-| T3.3 | Parser de IPA em fonemas (diacríticos, africadas, ditongos, tons) | high | Testes de round-trip; inventário por idioma | T3.1 |
+| T3.3 | ✅ **Concluída em 2026-11-13** (ida e volta 100% em 1.976.763 pronúncias; [INVENTORY.md](../packages/engine/INVENTORY.md)). Parser de IPA em fonemas (diacríticos, africadas, ditongos, tons) | high | Testes de round-trip; inventário por idioma | T3.1 |
 | T3.4 | Silabação e tônica (usar as marcas da fonte; fallback pelo princípio do ataque máximo) | high | 100 casos por idioma da onda 1 | T3.3 |
 | T3.5 | **Motor de regras contextuais**: DSL de regras ordenadas por perfil (contexto anterior/posterior, posição na sílaba/palavra) | xhigh | ADR documentando a DSL; regras declarativas por idioma; testes | T3.4 |
 | T3.6 | Renderização PT-BR (anti-palatalização, acentos, `l`/`r` em cada posição, nasais, consoantes finais, destaque de sons especiais) | high | Segue `docs/notacao.md` à risca | T3.5 |

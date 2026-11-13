@@ -3,16 +3,18 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Motor fon\u00e9tico IPA \u2192 PT-BR em TypeScript puro (sem DOM). Implementado na Fase 3 seguindo docs/notacao.md.",
+  "description": "Motor fonético IPA → PT-BR em TypeScript puro (sem DOM). Implementado na Fase 3 seguindo docs/notacao.md.",
   "main": "src/index.ts",
   "scripts": {
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "inventory": "tsx scripts/inventory.ts"
   },
   "dependencies": {
     "@falagringo/data": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "~5.8.3",
-    "@types/node": "^22.14.0"
+    "@types/node": "^22.14.0",
+    "tsx": "^4.23.15",
+    "typescript": "~5.8.3"
   }
 }
