@@ -43,6 +43,8 @@ export const TARGETS: Record<'it-IT' | 'en-GB', Target> = {
   },
 };
 
+const OPTIONAL_VOWEL = /[aeiouyæøœɐɑɒɔəɛɜɪʊʌʏɚɝᵻᵿ]/;
+
 /** Remove `/ /`, segmentos opcionais `( )` e normaliza. Devolve `null` se não for fonêmica (`[ ]`) ou for fragmento. */
 export function cleanKaikkiIpa(raw: string): string | null {
   const s = raw.trim();
@@ -52,7 +54,9 @@ export function cleanKaikkiIpa(raw: string): string | null {
   if (/^[-‿…]|[-‿…]$/.test(inner) || inner.includes('~')) return null;
   const ipa = s
     .slice(1, -1)
-    .replace(/\([^)]*\)/g, '') // segmento opcional, ex.: /ˈwɔː.tə(ɹ)/ → forma sem ele
+    // Segmento opcional: vogal fica (/ɡ(ə)ˈɹɑʒ/ → ɡəˈɹɑʒ — descartá-la deixaria ˈ no meio do ataque);
+    // consoante sai (/ˈwɔː.tə(ɹ)/ → ˈwɔː.tə — "r" de ligação).
+    .replace(/\(([^)]*)\)/g, (_m, inner: string) => (OPTIONAL_VOWEL.test(inner) ? inner : ''))
     .replace(/[₍₎]/g, '') // tônica secundária opcional: /₍ˌ₎daɪˈæn/ → /ˌdaɪˈæn/
     .replace(/\s+/g, ' ')
     .trim()

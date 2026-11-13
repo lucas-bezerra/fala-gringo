@@ -10,7 +10,7 @@ Fonte de tônica para **it-IT** e **en-GB**, que o WikiPron entrega sem tônica.
 ## Critérios de extração
 
 - Só transcrições **fonêmicas** (`/…/`). As estreitas (`[…]`) são descartadas.
-- São descartados fragmentos (`/-di/`), alternativas compactadas com `~` e afixos (`-ità`). Segmentos opcionais `( )` e `₍ ₎` são removidos.
+- São descartados fragmentos (`/-di/`), alternativas compactadas com `~` e afixos (`-ità`). Segmento opcional `( )`: vogal é mantida (`/ɡ(ə)ˈɹɑʒ/` → `ɡəˈɹɑʒ`, para a tônica não cair no meio do ataque); consoante é removida (`/ˈwɔː.tə(ɹ)/` → `ˈwɔː.tə`). `₍ ₎` são removidos.
 - **en-GB:** só etiquetas exclusivamente `Received-Pronunciation` e/ou `UK`. Ficam fora as regionais, as qualificadas (dated, rare, dialectal…) e a "British Southern Standard".
 
 ## Resultado
@@ -18,6 +18,6 @@ Fonte de tônica para **it-IT** e **en-GB**, que o WikiPron entrega sem tônica.
 | Arquivo | Pronúncias | Entradas válidas | Palavras | Polissílabas com tônica |
 |---|---|---|---|---|
 | `it-IT.tsv` | 113.708 | 95.960 | 86.842 | 99,9% |
-| `en-GB.tsv` | 59.188 | 42.678 | 36.441 | ~95% |
+| `en-GB.tsv` | 59.188 | 42.680 | 36.441 | ~95% |
 
 Para atualizar: baixe os `.jsonl.gz` e rode `pnpm --filter @falagringo/data extract:wiktextract <it-IT|en-GB> <arquivo>`. Se o kaikki remover os arquivos por idioma, use o `raw-wiktextract-data.jsonl.gz`; o script filtra por `lang_code`.

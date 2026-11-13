@@ -19,7 +19,8 @@ const FREE = {
 describe('cleanKaikkiIpa', () => {
   it('aceita só fonêmica, remove barras e segmentos opcionais', () => {
     expect(cleanKaikkiIpa('/ˈɡra.tis/')).toBe('ˈɡra.tis');
-    expect(cleanKaikkiIpa('/ˈwɔː.tə(ɹ)/')).toBe('ˈwɔː.tə');
+    expect(cleanKaikkiIpa('/ˈwɔː.tə(ɹ)/')).toBe('ˈwɔː.tə'); // consoante opcional sai
+    expect(cleanKaikkiIpa('/ɡ(ə)ˈɹɑʒ/')).toBe('ɡəˈɹɑʒ'); // vogal opcional fica: a tônica não cai no meio do ataque
     expect(cleanKaikkiIpa('/₍ˌ₎daɪˈæn/')).toBe('ˌdaɪˈæn');
     expect(cleanKaikkiIpa('[fɹɪi̯]')).toBeNull();
   });
