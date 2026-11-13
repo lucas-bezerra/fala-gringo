@@ -25,7 +25,7 @@ O projeto está **em reconstrução (v2)**. Antes de qualquer tarefa, leia:
 ```
 apps/web/            Frontend v1 (React 19 + Vite 6), ainda com a lógica antiga em src/services
 packages/data/       Dicionários brutos (raw/ipa-dict), SOURCES.md, formato intermediário (src/, SCHEMA.md) e scripts
-packages/engine/     Motor fonético v2 — vazio, implementado na Fase 3
+packages/engine/     Motor fonético v2: createEngine().convert(); estágios em src/stages.ts
 packages/content/    Dicas e guia de sons — vazio, preenchido na T4.5
 docs/                Plano, notação, deploy e ADRs (docs/adr/)
 ```
@@ -47,6 +47,12 @@ pnpm test:e2e      # Playwright (e2e/), sobe build + preview na porta 4173
 ```
 
 O CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) roda tudo acima, mais `pnpm audit --audit-level high`, em cada push na `master` e em cada PR. Antes de concluir uma tarefa, rode `pnpm lint && pnpm typecheck && pnpm test`.
+
+## Motor (`packages/engine`)
+
+- API: `createEngine({ dictionary, phonology, tokenizer?, estimator? }).convert(texto, idioma)` → `ConversionResult` (tipos em `src/types.ts`, contrato na seção 10 da notação).
+- Estágios substituíveis (`src/stages.ts`): `Tokenizer` (T3.2), `Dictionary` (`ShardDictionary`, lê os shards; carregamento injetado, LRU e pedidos simultâneos juntados), `Phonology` (T3.3–T3.6), `Estimator` (T3.9/T5.x). `basicTokenizer` e `placeholderPhonology` são **provisórios**.
+- **TypeScript puro**: `tsconfig.json` sem DOM nem Node (o compilador garante); os testes usam `tsconfig.test.json`. Não importe `fetch`, `fs` etc. no código do motor — injete.
 
 ## Fluxo atual (v1, dentro de `apps/web/src`)
 

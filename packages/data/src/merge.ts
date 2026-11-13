@@ -228,7 +228,15 @@ export function mergeLanguage(
   for (const key of [...index.keys()].sort()) {
     const perSource = index.get(key)!;
     const source = priority.find((s) => perSource.has(s))!;
-    const chosen = [...perSource.get(source)!].sort((a, b) => a.rank - b.rank);
+    // Grafias diferentes da mesma chave na mesma fonte (ex.: ipa-dict "Die" /daɪ/ e "die" /diː/) têm cada uma
+    // seu rank 0. A grafia idêntica à chave vem primeiro; as outras viram variantes (desempate estável).
+    const casingOrder = (w: string) => (w === key ? 0 : 1);
+    const chosen = [...perSource.get(source)!].sort(
+      (a, b) =>
+        casingOrder(a.word) - casingOrder(b.word) ||
+        a.rank - b.rank ||
+        (a.word < b.word ? -1 : a.word > b.word ? 1 : 0),
+    );
     const kind: EntryKind = [...perSource.values()].flat().some((e) => e.kind === 'proper')
       ? 'proper'
       : 'common';

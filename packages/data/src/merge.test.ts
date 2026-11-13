@@ -194,6 +194,17 @@ describe('mergeLanguage', () => {
     expect(report.stress).toEqual({ marked: 1, borrowed: 1, mono: 0, none: 0 });
   });
 
+  it('com grafias diferentes na mesma fonte, a idêntica à chave vem primeiro (ipa-dict "Die" × "die")', () => {
+    const { entries } = mergeLanguage(
+      'de-DE',
+      bySource(e('ipa-dict', 'Die', 'daɪ', 0, 'de-DE'), e('ipa-dict', 'die', 'diː', 0, 'de-DE')),
+    );
+    expect(entries.map((x) => [x.word, x.ipa, x.rank])).toEqual([
+      ['die', 'diː', 0],
+      ['die', 'daɪ', 1],
+    ]);
+  });
+
   it('não lê fontes fora da lista de prioridade do idioma', () => {
     const { entries } = mergeLanguage('en-US', bySource(e('ipa-dict', 'til', 'ˈtɪɫ', 0, 'en-US')));
     expect(entries).toEqual([]);

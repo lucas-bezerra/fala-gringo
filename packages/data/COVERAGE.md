@@ -1,17 +1,17 @@
 # Cobertura do dicionário (T2.8)
 
-> Gerado por `pnpm --filter @falagringo/data coverage` em 2026-11-13 (dataVersion `08879347ecf9`). Não edite à mão.
+> Gerado por `pnpm --filter @falagringo/data coverage` em 2026-11-13 (dataVersion `d6f348d5ad8b`). Não edite à mão.
 
 Base: as 10.000 palavras mais frequentes de legendas de cada idioma ([FrequencyWords](https://github.com/hermitdave/FrequencyWords), OpenSubtitles 2018, CC BY-SA 4.0 — uso só para medir; a lista não é distribuída).
 
 | Idioma | Palavras no dicionário | Top 1.000 presentes | Top 10.000 presentes | **Uso coberto*** | Uso coberto com tônica resolvida** |
 |---|---|---|---|---|---|
-| de-DE | 789.141 | 98.1% | 88.9% | **98.1%** | 99.8% |
+| de-DE | 789.141 | 98.1% | 88.9% | **98.1%** | 99.9% |
 | en-GB | 85.582 | 98.1% | 92.7% | **97.5%** | 99.8% |
 | en-US | 126.313 | 98.1% | 97.5% | **96.5%** | 100.0% |
 | es-419 | 131.057 | 90.2% | 65.8% | **86.0%** | 47.0% |
 | es-ES | 131.071 | 90.2% | 65.8% | **86.0%** | 47.0% |
-| fr-FR | 84.444 | 90.4% | 66.3% | **93.3%** | 77.7% |
+| fr-FR | 84.444 | 90.4% | 66.3% | **93.3%** | 78.2% |
 | it-IT | 85.991 | 88.0% | 65.4% | **89.5%** | 99.9% |
 | ko-KR | 62.449 | 38.6% | 20.0% | **44.5%** | 42.4% |
 | nl-NL | 117.878 | 76.6% | 59.1% | **84.8%** | 100.0% |

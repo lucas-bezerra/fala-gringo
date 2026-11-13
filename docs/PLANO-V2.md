@@ -133,7 +133,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 
 | ID | Tarefa | Effort | Entregável / critério de aceite | Dep. |
 |---|---|---|---|---|
-| T3.1 | Tipos de saída e API pública (`convert(text, lang, opts)`) | medium | Tipos com `syllables`, `stress`, `sounds[]`, `origin`, `variants` | T0.3 |
+| T3.1 | ✅ **Concluída em 2026-11-13** (`createEngine().convert()`, `ShardDictionary`; estágios substituíveis). Tipos de saída e API pública (`convert(text, lang, opts)`) | medium | Tipos com `syllables`, `stress`, `sounds[]`, `origin`, `variants` | T0.3 |
 | T3.2 | Tokenização com `Intl.Segmenter`, números, hífens, apóstrofos e texto misto (não converter palavras em PT) | high | Testes com frases mistas e com JA/ZH sem espaço | T3.1 |
 | T3.3 | Parser de IPA em fonemas (diacríticos, africadas, ditongos, tons) | high | Testes de round-trip; inventário por idioma | T3.1 |
 | T3.4 | Silabação e tônica (usar as marcas da fonte; fallback pelo princípio do ataque máximo) | high | 100 casos por idioma da onda 1 | T3.3 |
@@ -165,10 +165,10 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 
 | ID | Idioma | Effort | Observações | Dep. |
 |---|---|---|---|---|
-| T5.1 | Espanhol (ES e 419) | medium | **G2P por regras é obrigatório:** o WikiPron não tem palavras básicas (`de`, `a`, `o`) nem formas verbais (`quieres`) — cobertura atual 86% do uso. Ortografia regular; G2P por regras resolve quase tudo; variantes θ/s, ʝ/ʃ | T3.8 |
+| T5.1 | Espanhol (ES e 419) | medium | **Usar o G2P também para escolher a variante principal do WikiPron** (a ordem dele é a da página: `la` vem como `a` antes de `la`). **G2P por regras é obrigatório:** o WikiPron não tem palavras básicas (`de`, `a`, `o`) nem formas verbais (`quieres`) — cobertura atual 86% do uso. Ortografia regular; G2P por regras resolve quase tudo; variantes θ/s, ʝ/ʃ | T3.8 |
 | T5.2 | Italiano | medium | Ortografia regular; consoantes duplas | T3.8 |
 | T5.3 | Alemão | medium | ç/x, ʁ, vogais arredondadas, ditongos, compostos | T3.8 |
-| T5.4 | Francês | high | Nasais, liaison, letras mudas; depende bastante do dicionário | T3.9 |
+| T5.4 | Francês | high | **Escolher a variante principal do WikiPron por regra/concordância** (ex.: `petit` vem como `piti` antes de `pəti`). Nasais, liaison, letras mudas; depende bastante do dicionário | T3.9 |
 | T5.5 | Japonês | high | **Kana → IPA por regra é obrigatório:** a fonte tem as palavras quase só em kanji (`ありがとう` não existe nela). Segmentação, kanji → kana (JMdict), kana → IPA, u/i desvozeados, acento de altura | T3.2 |
 | T5.6 | Coreano | high | **Cobertura do dicionário é só 44,5% do uso** (faltam formas flexionadas): a conversão de Hangul por regra é o caminho principal. Hangul é fonético, mas tem regras (ligação, nasalização, tensificação) | T3.2 |
 | T5.7 | Mandarim | high | Hanzi → pinyin (polifonia), pinyin → IPA, representação dos tons na UI | T3.2 |
