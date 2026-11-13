@@ -120,7 +120,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 |---|---|---|---|---|
 | T2.1 | ✅ **Concluída em 2026-11-13** ([SCHEMA.md](../packages/data/SCHEMA.md)). Esquema intermediário único (`palavra, ipa, variante, fonte, frequência`) | medium | Tipos e validador; documento curto | T0.2 |
 | T2.2 | ✅ **Concluída em 2026-11-13** (`pnpm --filter @falagringo/data import:ipa-dict`; 6 idiomas, 1,42 mi entradas, 0 erros, 0 avisos). Importador ipa-dict (migrar os `.txt` atuais) | low | TSV normalizado por idioma | T2.1 |
-| T2.3 | Importador CMUdict com conversão ARPAbet → IPA | medium | Testes com 30 palavras conhecidas | T2.1 |
+| T2.3 | ✅ **Concluída em 2026-11-13** (135.163 entradas, 0 falhas; 30 palavras de referência passam). Importador CMUdict com conversão ARPAbet → IPA | medium | Testes com 30 palavras conhecidas | T2.1 |
 | T2.4 | Importador WikiPron (genérico por idioma) | medium | Um comando por idioma; atribuição registrada | T2.1 |
 | T2.5 | Importador de nomes próprios do Wikidata (P898), filtrando pessoas, lugares e clubes | medium | Dump filtrado com rótulo PT e IPA | T2.1 |
 | T2.6 | Normalização de IPA (NFC, ɡ/g, tie bars, marcas de tônica/sílaba, variantes) e merge com prioridade entre fontes | high | Testes de normalização; relatório de conflitos | T2.2–T2.5 |
