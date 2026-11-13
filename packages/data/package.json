@@ -14,7 +14,8 @@
     "import:britfone": "tsx scripts/import-britfone.ts",
     "import:wikidata": "tsx scripts/import-wikidata.ts",
     "import:wiktextract": "tsx scripts/import-wiktextract.ts",
-    "extract:wiktextract": "tsx scripts/extract-wiktextract.ts"
+    "extract:wiktextract": "tsx scripts/extract-wiktextract.ts",
+    "merge": "tsx scripts/merge.ts"
   },
   "main": "src/index.ts",
   "devDependencies": {

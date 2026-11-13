@@ -40,7 +40,7 @@ A notação ([docs/notacao.md](../notacao.md)) marca a sílaba tônica em MAIÚS
 | Idioma | Fonte | Entradas | Palavras | Tônica |
 |---|---|---|---|---|
 | it-IT | Wiktionary (kaikki) | 95.960 | 86.842 | 99,9% das polissílabas |
-| en-GB | Wiktionary (kaikki) | 42.678 | 36.441 | ~95% das polissílabas |
+| en-GB | Wiktionary (kaikki) | 42.680 | 36.441 | ~95% das polissílabas |
 | en-GB | Britfone | 16.204 | 15.212 | 16.117 de 16.204 linhas |
 
 Casos que a regra não resolveria vieram certos e com as duas leituras: `subito` → `ˈsu.bi.to` / `suˈbi.to`; `ancora` → `ˈan.ko.ra` / `anˈko.ra`.
