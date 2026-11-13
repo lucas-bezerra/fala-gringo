@@ -6,6 +6,19 @@
 
 Cada palavra recebe **todas as pronúncias da fonte de maior prioridade que a tenha**, e só dela. As outras fontes não somam variantes. Fontes com convenções diferentes, somadas, criariam "variantes" falsas, como `ɚ` × `ɝ` no en-US. As fontes que concordam com a pronúncia principal (mesmos segmentos) ficam na coluna `agree`, um indicador de confiança.
 
+### Grafias diferentes da mesma chave
+
+Uma fonte pode ter grafias que viram a mesma chave de busca, como `Die` /daɪ/ (empréstimo do inglês) e `die` /diː/ (artigo), no ipa-dict alemão. Cada uma tem seu rank 0. **A grafia idêntica à chave (minúscula) vem primeiro**, e as outras viram variantes. Antes dessa regra, valia a ordem do arquivo, e siglas e nomes capitalizados passavam na frente da palavra comum. Isso mudou a pronúncia principal de 781 palavras em de-DE e de menos de 200 por idioma nos demais.
+
+### ⚠️ A ordem das variantes do WikiPron não é preferência
+
+No WikiPron, a ordem das variantes é a **ordem da página do Wiktionary**. Exemplos:
+- `petit` vem como `piti`, `pti`, `pəti`, …;
+- `gimp` vem como `d͡ʒɪmp` antes de `ɡɪmp`;
+- espanhol `la` vem como `a` antes de `la`.
+
+Nos idiomas em que o WikiPron é a fonte principal (es, fr), a pronúncia principal pode ser uma variante regional ou ruído. A correção prevista é a regra de conversão do idioma (T5.1, T5.4) escolher a variante que concorda com ela.
+
 ## Prioridade por idioma
 
 Regra geral: **fontes com tônica primeiro**. O WikiPron, sem tônica, só preenche lacunas.
