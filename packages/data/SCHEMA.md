@@ -22,7 +22,7 @@ Todo importador (T2.2–T2.5) grava neste formato. A normalização e o merge (T
 - **Erro** (a linha é descartada): campos vazios, tab ou quebra de linha, espaços nas pontas, texto fora de NFC, barras/colchetes ou vírgula no IPA, idioma não suportado, fonte não registrada, `rank`/`freq`/`kind` inválidos.
 - **Aviso** (a linha é mantida): caractere fora do conjunto IPA esperado, como o hífen que aparece no `ko.txt`. O teste é feito sobre a forma NFD.
 
-O conjunto de caracteres foi conferido contra os 6 dicionários de `raw/ipa-dict` (cerca de 1,4 milhão de pronúncias). Só o hífen do coreano fica de fora, e isso é proposital.
+O conjunto de caracteres foi conferido contra os 6 dicionários de `raw/ipa-dict` (cerca de 1,4 milhão de pronúncias). O hífen do `ko.txt` gera aviso no dado bruto; o importador (T2.2) o converte em espaço.
 
 ## Arquivo TSV
 
