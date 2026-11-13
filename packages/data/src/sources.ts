@@ -24,12 +24,19 @@ export const SOURCES = {
     shareAlike: false,
     stress: 'yes',
   },
-  britfone: { name: 'Britfone', license: 'MIT', shareAlike: false, stress: 'varies' }, // a confirmar na importação
+  britfone: { name: 'Britfone', license: 'MIT', shareAlike: false, stress: 'yes' }, // 16.117 de 16.204 linhas
   wikipron: {
     name: 'WikiPron (dados do Wiktionary)',
     license: 'CC BY-SA 4.0',
     shareAlike: true,
     stress: 'no', // os TSV publicados removem ˈ ˌ e as fronteiras de sílaba
+  },
+  wiktextract: {
+    name: 'Wiktionary via wiktextract/kaikki.org',
+    // O kaikki.org não declara licença; os dados são extraídos do Wiktionary e herdam a CC BY-SA 4.0.
+    license: 'CC BY-SA 4.0 (herdada do Wiktionary)',
+    shareAlike: true,
+    stress: 'yes', // IPA original do Wiktionary, com ˈ ˌ e fronteiras de sílaba
   },
   wikidata: { name: 'Wikidata (P898)', license: 'CC0', shareAlike: false, stress: 'varies' },
   jmdict: { name: 'JMdict (EDRDG)', license: 'CC BY-SA 4.0', shareAlike: true, stress: 'no' },

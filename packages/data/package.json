@@ -9,7 +9,12 @@
     "typecheck": "tsc --noEmit",
     "import:ipa-dict": "tsx scripts/import-ipa-dict.ts",
     "import:cmudict": "tsx scripts/import-cmudict.ts",
-    "import:wikipron": "tsx scripts/import-wikipron.ts"
+    "import:wikipron": "tsx scripts/import-wikipron.ts",
+    "fetch:wikidata": "tsx scripts/fetch-wikidata.ts",
+    "import:britfone": "tsx scripts/import-britfone.ts",
+    "import:wikidata": "tsx scripts/import-wikidata.ts",
+    "import:wiktextract": "tsx scripts/import-wiktextract.ts",
+    "extract:wiktextract": "tsx scripts/extract-wiktextract.ts"
   },
   "main": "src/index.ts",
   "devDependencies": {

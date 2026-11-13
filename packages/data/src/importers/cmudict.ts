@@ -6,6 +6,7 @@
  * Esses processos são do perfil EN-US do motor (T3.7), não dos dados.
  */
 import type { Entry } from '../schema';
+import { joinWithStress } from './englishStress';
 
 const VOWELS: Record<string, { stressed: string; unstressed: string }> = {
   AA: { stressed: 'ɑ', unstressed: 'ɑ' },
@@ -52,24 +53,6 @@ const CONSONANTS: Record<string, string> = {
   ZH: 'ʒ',
 };
 
-/**
- * Ataques silábicos permitidos no inglês americano, usados para posicionar ˈ/ˌ no início da sílaba
- * (princípio do ataque máximo). Qualquer consoante isolada exceto NG também é ataque válido.
- */
-const LEGAL_CLUSTERS = new Set([
-  'P R', 'P L', 'P Y', 'B R', 'B L', 'B Y', 'T R', 'T W', 'D R', 'D W',
-  'K R', 'K L', 'K W', 'K Y', 'G R', 'G L', 'G W', 'F R', 'F L', 'F Y',
-  'TH R', 'TH W', 'SH R', 'V Y', 'M Y', 'HH Y',
-  'S L', 'S W', 'S P', 'S T', 'S K', 'S M', 'S N', 'S F',
-  'S P R', 'S P L', 'S P Y', 'S T R', 'S K R', 'S K W', 'S K L', 'S K Y',
-]); // prettier-ignore
-
-function isLegalOnset(cluster: string[]): boolean {
-  if (cluster.length === 0) return true;
-  if (cluster.length === 1) return cluster[0] !== 'NG';
-  return LEGAL_CLUSTERS.has(cluster.join(' '));
-}
-
 interface Phone {
   base: string;
   stress: 0 | 1 | 2 | null; // null = consoante
@@ -91,40 +74,17 @@ function parsePhone(token: string): Phone {
 export function arpabetToIpa(arpabet: string): string {
   const phones = arpabet.trim().split(/\s+/).map(parsePhone);
 
-  // Índice do fonema antes do qual vai cada marca de tônica.
-  const marks = new Map<number, string>();
-  let prevVowel = -1;
-  phones.forEach((p, i) => {
-    if (p.stress === null) return;
-    if (p.stress > 0) {
-      const consonants = phones.slice(prevVowel + 1, i).map((c) => c.base);
-      let onsetStart = i;
-      if (prevVowel < 0) {
-        onsetStart = 0; // primeira sílaba: todas as consoantes iniciais são ataque
-      } else {
-        for (let k = 0; k <= consonants.length; k++) {
-          if (isLegalOnset(consonants.slice(k))) {
-            onsetStart = prevVowel + 1 + k;
-            break;
-          }
-        }
-      }
-      marks.set(onsetStart, p.stress === 1 ? 'ˈ' : 'ˌ');
-    }
-    prevVowel = i;
-  });
-
-  return phones
-    .map((p, i) => {
-      const sound =
+  return joinWithStress(
+    phones.map((p) => ({
+      ipa:
         p.stress === null
           ? CONSONANTS[p.base]
           : p.stress > 0
             ? VOWELS[p.base].stressed
-            : VOWELS[p.base].unstressed;
-      return (marks.get(i) ?? '') + sound;
-    })
-    .join('');
+            : VOWELS[p.base].unstressed,
+      stress: p.stress,
+    })),
+  );
 }
 
 export interface CmudictStats {
