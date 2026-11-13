@@ -109,12 +109,13 @@ export const UNTIED_AFFRICATES: Partial<Record<Lang, ReadonlySet<string>>> = {
 
 /**
  * Ditongos escritos SEM a marca de não silábico (`̯`). Com a marca, qualquer idioma agrupa (é explícito).
- * Japonês, coreano, espanhol, italiano e francês ficam de fora: as sequências de vogais são sílabas/moras
- * separadas ou as semivogais já vêm como j/w/ɥ.
+ * Japonês: vogal + i fecha uma sílaba (duas moras): "gô·ZAI·ma·s(u)" (notação, seção 7). Coreano, espanhol,
+ * italiano e francês ficam de fora: as semivogais já vêm como j/w/ɥ/ɰ.
  */
 export const DIPHTHONGS: Partial<Record<Lang, ReadonlySet<string>>> = {
   'en-US': new Set(['aɪ', 'aʊ', 'eɪ', 'oʊ', 'ɔɪ']),
   'en-GB': new Set(['aɪ', 'aʊ', 'eɪ', 'əʊ', 'ɔɪ', 'ɪə', 'eə', 'ɛə', 'ʊə', 'oʊ']),
   'de-DE': new Set(['aɪ', 'aʊ', 'ɔʏ', 'ɔɪ']),
   'nl-NL': new Set(['ɛi', 'œy', 'ʌu', 'ɑu']),
+  'ja-JP': new Set(['ai', 'oi', 'ɯi', 'ei']),
 };
