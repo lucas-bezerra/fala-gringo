@@ -17,3 +17,5 @@ export { FUNCTION_WORDS } from './functionWords';
 export type { Engine, EngineStages } from './engine';
 export { ShardDictionary } from './shardDictionary';
 export type { ShardDictionaryOptions } from './shardDictionary';
+export { parseIpa, phonesOf, serializeIpa } from './ipa/parse';
+export type { IpaToken, Phone } from './ipa/parse';
