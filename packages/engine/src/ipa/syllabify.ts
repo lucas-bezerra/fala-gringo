@@ -11,7 +11,7 @@
 import { isLegalOnset as englishOnset } from '@falagringo/data/englishStress';
 import type { Lang, StressSource } from '../types';
 import type { IpaToken, Phone } from './parse';
-import { TIE } from './symbols';
+import { FRICATIVES, GLIDES, LIQUIDS, NASALS, STOPS, TIE } from './symbols';
 
 export interface IpaSyllable {
   onset: Phone[];
@@ -55,12 +55,6 @@ const GLIDE_ONSET: ReadonlySet<Lang> = new Set([
 ]);
 /** Sons que nunca abrem sílaba. */
 const NEVER_ONSET = new Set(['ŋ', 'ɴ']);
-
-const STOPS = new Set([...'pbtdkɡqcɟʔʈɖɓ']);
-const FRICATIVES = new Set([...'fvθðszʃʒçxɣχhɦɸβɕʑʂʐħʕʝ']);
-const NASALS = new Set([...'mnŋɲɴɱɳ']);
-const LIQUIDS = new Set([...'lrɾɹʎɭɫʀɺɻʁʙ']); // ʁ se comporta como líquida nos encontros (tʁ, bʁ, ʃtʁ)
-const GLIDES = new Set([...'jwɥɰʋ']);
 
 const isNucleus = (p: Phone) =>
   (p.vowel && !p.features.includes('nonSyllabic')) || p.features.includes('syllabic');

@@ -19,6 +19,8 @@ export interface RenderedSegment {
   ipa: string;
   /** Som que não existe no PT-BR de mídia → destaque laranja (notação, seção 5.1). */
   special: boolean;
+  /** Regra que produziu este pedaço (rastreamento; "?" = sem regra). */
+  rule?: string;
 }
 
 export interface Syllable {
@@ -26,6 +28,8 @@ export interface Syllable {
   text: string;
   stressed: boolean;
   segments: RenderedSegment[];
+  /** Primeira sílaba de uma palavra que não é a primeira (nomes compostos: "Manuel Valls"). */
+  wordStart?: boolean;
 }
 
 /**

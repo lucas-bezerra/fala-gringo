@@ -68,5 +68,6 @@ export interface Estimator {
 
 /** IPA → sílabas PT-BR com tônica, destaques e armadilhas (notação inteira). */
 export interface Phonology {
-  render(ipa: string, lang: Lang, stress: Exclude<StressSource, 'rule'>): Pronunciation;
+  /** `word` = grafia original (a regra de tônica do espanhol usa o acento gráfico). */
+  render(ipa: string, lang: Lang, stress: Exclude<StressSource, 'rule'>, word?: string): Pronunciation;
 }

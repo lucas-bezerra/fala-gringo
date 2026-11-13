@@ -15,6 +15,7 @@ import type {
   Tokenizer,
   WordRaw,
 } from './stages';
+import { createPhonology } from './phonology';
 import { createTokenizer } from './tokenizer';
 import type { ConversionResult, ConvertOptions, Lang, Pronunciation, Token, TrapId } from './types';
 
@@ -22,7 +23,8 @@ export const DEFAULT_MAX_LENGTH = 2000;
 
 export interface EngineStages {
   dictionary: Dictionary;
-  phonology: Phonology;
+  /** Padrão: `createPhonology()` (parser → sílabas → regras). */
+  phonology?: Phonology;
   /** Padrão: `createTokenizer()`. */
   tokenizer?: Tokenizer;
   /** Sem estimador, palavras fora do dicionário viram `unknown` (T3.9 e T5.x trazem os estimadores). */
@@ -36,8 +38,8 @@ export interface Engine {
 }
 
 /**
- * Fonologia PROVISÓRIA (substituída pela T3.3–T3.6): devolve o IPA como uma sílaba só, sem conversão para PT-BR.
- * Existe para o pipeline funcionar de ponta a ponta enquanto a fonologia real não fica pronta.
+ * Fonologia de TESTE: devolve o IPA como uma sílaba só, sem conversão. Útil para testar o orquestrador isolado;
+ * o padrão do motor é `createPhonology()`.
  */
 export const placeholderPhonology: Phonology = {
   render(ipa, _lang, stress) {
@@ -51,7 +53,9 @@ export const placeholderPhonology: Phonology = {
 };
 
 const PT_CORE_SET = new Set(PT_CORE);
-const sylText = (p: Pronunciation, sep: string) => p.syllables.map((s) => s.text).join(sep);
+/** Forma silabada (sep "·") ou corrida (sep ""); palavras de um nome composto separadas por espaço. */
+const sylText = (p: Pronunciation, sep: string) =>
+  p.syllables.map((s, i) => (i === 0 ? '' : s.wordStart ? ' ' : sep) + s.text).join('');
 
 /** Todas as palavras (inclusive partes de reserva), para buscar no dicionário de uma vez. */
 function collectWords(raws: readonly RawToken[], acc: WordRaw[] = []): WordRaw[] {
@@ -65,6 +69,7 @@ function collectWords(raws: readonly RawToken[], acc: WordRaw[] = []): WordRaw[]
 
 export function createEngine(stages: EngineStages): Engine {
   const tokenizer = stages.tokenizer ?? createTokenizer();
+  const phonology = stages.phonology ?? createPhonology();
 
   return {
     async convert(text, lang, options = {}) {
@@ -163,8 +168,8 @@ export function createEngine(stages: EngineStages): Engine {
               source: first.source,
               proper: entry.proper,
               agree: first.agree,
-              primary: stages.phonology.render(first.ipa, lang, first.stress),
-              variants: rest.map((p) => stages.phonology.render(p.ipa, lang, p.stress)),
+              primary: phonology.render(first.ipa, lang, first.stress, r.text),
+              variants: rest.map((p) => phonology.render(p.ipa, lang, p.stress, r.text)),
             },
           ];
         }
@@ -181,7 +186,7 @@ export function createEngine(stages: EngineStages): Engine {
               origin: 'estimated',
               proper: r.capitalized && !r.sentenceStart,
               agree: 0,
-              primary: stages.phonology.render(estimated, lang, 'none'),
+              primary: phonology.render(estimated, lang, 'none', r.text),
               variants: [],
             },
           ];

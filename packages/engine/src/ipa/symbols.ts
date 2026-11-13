@@ -109,8 +109,9 @@ export const UNTIED_AFFRICATES: Partial<Record<Lang, ReadonlySet<string>>> = {
 
 /**
  * Ditongos escritos SEM a marca de não silábico (`̯`). Com a marca, qualquer idioma agrupa (é explícito).
- * Japonês: vogal + i fecha uma sílaba (duas moras): "gô·ZAI·ma·s(u)" (notação, seção 7). Coreano, espanhol,
- * italiano e francês ficam de fora: as semivogais já vêm como j/w/ɥ/ɰ.
+ * Japonês: vogal + i fecha uma sílaba (duas moras): "gô·ZAI·ma·s(u)" (notação, seção 7).
+ * Espanhol: ditongos decrescentes que o WikiPron escreve com vogal ("aiɾes" = Aires; os crescentes vêm com j/w).
+ * Coreano, italiano e francês ficam de fora: as semivogais já vêm como j/w/ɥ/ɰ.
  */
 export const DIPHTHONGS: Partial<Record<Lang, ReadonlySet<string>>> = {
   'en-US': new Set(['aɪ', 'aʊ', 'eɪ', 'oʊ', 'ɔɪ']),
@@ -118,4 +119,13 @@ export const DIPHTHONGS: Partial<Record<Lang, ReadonlySet<string>>> = {
   'de-DE': new Set(['aɪ', 'aʊ', 'ɔʏ', 'ɔɪ']),
   'nl-NL': new Set(['ɛi', 'œy', 'ʌu', 'ɑu']),
   'ja-JP': new Set(['ai', 'oi', 'ɯi', 'ei']),
+  'es-ES': new Set(['ai', 'ei', 'oi', 'au', 'eu', 'ou']),
+  'es-419': new Set(['ai', 'ei', 'oi', 'au', 'eu', 'ou']),
 };
+
+/** Classes de consoantes pela base (1º caractere). Usadas na silabação (sonoridade) e nas regras (`@stop`…). */
+export const STOPS = new Set([...'pbtdkɡqcɟʔʈɖɓ']);
+export const FRICATIVES = new Set([...'fvθðszʃʒçxɣχhɦɸβɕʑʂʐħʕʝ']);
+export const NASALS = new Set([...'mnŋɲɴɱɳ']);
+export const LIQUIDS = new Set([...'lrɾɹʎɭɫʀɺɻʁʙ']); // ʁ se comporta como líquida nos encontros (tʁ, bʁ, ʃtʁ)
+export const GLIDES = new Set([...'jwɥɰʋ']);
