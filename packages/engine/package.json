@@ -1,0 +1,8 @@
+{
+  "name": "@falagringo/engine",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Motor fonético IPA → PT-BR em TypeScript puro (sem DOM). Implementado na Fase 3 seguindo docs/notacao.md.",
+  "main": "src/index.ts"
+}

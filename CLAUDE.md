@@ -1,0 +1,73 @@
+# CLAUDE.md
+
+Guia para o Claude Code (e para pessoas) trabalharem neste repositório.
+
+## O que é o projeto
+
+**FalaGringo** mostra a um falante de português brasileiro **como pronunciar palavras em outro idioma**, usando a grafia do PT-BR. O usuário digita um texto (hoje, só em inglês americano) e recebe, para cada palavra:
+
+1. a transcrição **IPA**, tirada de um dicionário;
+2. uma **aproximação em PT-BR** gerada a partir do IPA (ex.: `think` → `θɪŋk` → `THINK` com o `th` destacado).
+
+O projeto está **em reconstrução (v2)**. Antes de qualquer tarefa, leia:
+
+| Documento | Para quê |
+|---|---|
+| [docs/PLANO-V2.md](docs/PLANO-V2.md) | Fases, tarefas, dependências e **o effort de cada tarefa** |
+| [docs/notacao.md](docs/notacao.md) | Especificação da grafia PT-BR (regras, exemplos, questões abertas). É a referência do motor |
+| [packages/data/SOURCES.md](packages/data/SOURCES.md) | Fontes de dados permitidas e suas licenças |
+| Protótipo aprovado | https://claude.ai/artifact/68SFbsmQMLiwk4eQM99QFv (referência visual da Fase 4; ajustes na seção 8 da notação) |
+
+**Effort:** cada tarefa do plano tem um effort definido. Se o effort da sessão for diferente do da tarefa, **avise o usuário e espere a troca antes de começar**.
+
+## Estrutura (monorepo pnpm)
+
+```
+apps/web/            Frontend v1 (React 19 + Vite 6), ainda com a lógica antiga em src/services
+packages/data/       Dicionários brutos (raw/ipa-dict), SOURCES.md e scripts do pipeline
+packages/engine/     Motor fonético v2 — vazio, implementado na Fase 3
+packages/content/    Dicas e guia de sons — vazio, preenchido na T4.5
+docs/                Plano, notação e (futuramente) ADRs
+```
+
+Não há backend. O site é 100% estático: o dicionário é copiado para `apps/web/public/dict/` (ignorado pelo git) e servido pelo Vite.
+
+## Comandos
+
+```bash
+pnpm install       # Node >= 20, pnpm 11 (o pnpm-workspace.yaml libera só o build do esbuild)
+pnpm dev           # copia os dicionários ativos e sobe o Vite em http://localhost:5173
+pnpm build         # build estático em apps/web/dist
+pnpm preview       # serve o build
+pnpm typecheck     # tsc (strict) em todos os pacotes que têm o script
+pnpm lint          # ESLint (flat config, typescript-eslint + react-hooks)
+pnpm format        # Prettier (format:check no CI)
+pnpm test          # Vitest — arquivos *.test.ts(x) em apps/*/src e packages/*/src
+pnpm test:e2e      # Playwright (e2e/), sobe build + preview na porta 4173
+```
+
+O CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) roda tudo acima, mais `pnpm audit --audit-level high`, em cada push na `master` e em cada PR. Antes de concluir uma tarefa, rode `pnpm lint && pnpm typecheck && pnpm test`.
+
+## Fluxo atual (v1, dentro de `apps/web/src`)
+
+```
+packages/data/scripts/sync-web.mjs  → copia os dicionários de ACTIVE para apps/web/public/dict/
+services/dictionaryService.ts        → fetch de /dict/{lang}.txt (TSV "palavra\t/ipa/") → cache IndexedDB → Map
+App.tsx                              → input com debounce de 500 ms → translateText()
+services/translator.ts               → tokeniza, busca no Map, converte
+services/ipaMappings.ts              → IPA → PT-BR caractere a caractere (no máximo 2) — será substituído pelo motor v2
+```
+
+## Convenções e armadilhas
+
+- **Ativar um idioma na v1** exige duas mudanças sincronizadas: `ACTIVE` em [packages/data/scripts/sync-web.mjs](packages/data/scripts/sync-web.mjs) e `AVAILABLE_LANGUAGES` em [apps/web/src/services/dictionaryService.ts](apps/web/src/services/dictionaryService.ts).
+- **Mudou o formato do dicionário ou do cache? Incremente `VERSION`** em `dictionaryService.ts` (hoje `v2`). O IndexedDB dos usuários guarda o texto da versão anterior.
+- **Licenças:** só existem dicionários permitidos (`en_US`, `de`, `ja`, `ko`, `nl`, `sv`), com créditos em [packages/data/raw/ipa-dict/LICENSES.md](packages/data/raw/ipa-dict/LICENSES.md). **Nenhuma fonte entra sem registro no SOURCES.md.** Dados NC (não comercial), GPL e sem licença estão proibidos. O uso declarado é individual, sem fins lucrativos e fora dos canais oficiais; se isso mudar, as licenças precisam ser revistas.
+- **EN-US é obrigatório** e é o idioma principal.
+- O Tailwind ainda vem **via CDN** no `index.html`, com o tema inline (gera um aviso no console). A instalação correta é a T1.4.
+- Conteúdo visível ao usuário fica em PT-BR. A v1 ainda mistura rótulos em inglês.
+- Alias `@/*` → `apps/web/src/*`.
+
+## Governança
+
+Projeto interno da Rede Gazeta, sujeito à Política de Uso Ético e Seguro de IA. As pronúncias são **heurísticas**: qualquer uso em conteúdo publicado ou no ar exige revisão humana. Se o projeto passar a usar modelos de IA ou coletar dados de usuários, precisa de Idea Case, classificação de risco e, com dados pessoais, validação com o DPO. Incidentes devem ser reportados a governanca@redegazeta.com.br.
