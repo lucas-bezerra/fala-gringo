@@ -112,7 +112,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T1.2 | ✅ **Concluída em 2026-11-13.** Ferramentas: TS strict, ESLint (flat config), Prettier, Vitest, Playwright | low | `pnpm lint`, `pnpm typecheck` e `pnpm test` passam | T1.1 |
 | T1.3 | 🟡 **Workflow escrito em 2026-11-13; falta rodar no GitHub (push).** CI (GitHub Actions): lint, typecheck, test, build, `pnpm audit` | low | Pipeline verde a cada PR | T1.2 |
 | T1.4 | ✅ **Concluída em 2026-11-13.** Tailwind v4 instalado de verdade; tokens do protótipo (cores, tipografia, espaçamento); fontes self-hosted | low | Nenhum CSS ou JS de CDN no `index.html` | T0.1, T1.1 |
-| T1.5 | Hospedagem estática com cabeçalhos de segurança (CSP, HSTS, Referrer-Policy, Permissions-Policy, X-Content-Type-Options) | medium | CSP sem `unsafe-inline` em scripts; nota A no securityheaders.com | T1.1 |
+| T1.5 | ✅ **Concluída em 2026-11-13** (hospedagem ainda não escolhida; ver docs/deploy.md). Hospedagem estática com cabeçalhos de segurança (CSP, HSTS, Referrer-Policy, Permissions-Policy, X-Content-Type-Options) | medium | CSP sem `unsafe-inline` em scripts; nota A no securityheaders.com | T1.1 |
 
 ### Fase 2 — Dados (`packages/data`)
 
