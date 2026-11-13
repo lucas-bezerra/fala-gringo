@@ -65,7 +65,8 @@ services/ipaMappings.ts              → IPA → PT-BR caractere a caractere (no
 - **Licenças:** só existem dicionários permitidos (`en_US`, `de`, `ja`, `ko`, `nl`, `sv`), com créditos em [packages/data/raw/ipa-dict/LICENSES.md](packages/data/raw/ipa-dict/LICENSES.md). **Nenhuma fonte entra sem registro no SOURCES.md.** Dados NC (não comercial), GPL e sem licença estão proibidos. O uso declarado é individual, sem fins lucrativos e fora dos canais oficiais; se isso mudar, as licenças precisam ser revistas.
 - **EN-US é obrigatório** e é o idioma principal.
 - **Estilos:** Tailwind v4 via `@tailwindcss/vite`; tokens de design no bloco `@theme` de [apps/web/src/index.css](apps/web/src/index.css) (cores `canvas`, `surface`, `ink`, `muted`, `accent`, `special`…; fontes `font-display`, `font-ipa`). Use os tokens em vez de hex soltos. Os tokens e estilos marcados como legados da v1 saem na T4.2.
-- **Nada de CDN:** fontes vêm de `@fontsource` e são servidas pelo próprio site. Não adicione scripts, estilos ou fontes externos (requisito da CSP da T1.5).
+- **Nada de CDN:** fontes vêm de `@fontsource` e são servidas pelo próprio site. Não adicione scripts, estilos ou fontes externos.
+- **CSP rígida** (sem `unsafe-inline`, sem `data:`): fonte única em [apps/web/security-headers.ts](apps/web/security-headers.ts), aplicada no `dist/_headers`, no `<meta>` do build e no `vite preview`. Não vale no `pnpm dev`. Recurso novo bloqueado? Ajuste lá e rode `pnpm test:e2e`, que falha em qualquer violação ou requisição externa. O `assetsInlineLimit: 0` no Vite é proposital. Deploy: [docs/deploy.md](docs/deploy.md).
 - Conteúdo visível ao usuário fica em PT-BR. A v1 ainda mistura rótulos em inglês.
 - Alias `@/*` → `apps/web/src/*`.
 
