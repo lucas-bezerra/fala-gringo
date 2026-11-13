@@ -60,12 +60,12 @@ export interface Issue {
  * viram base + combinante): letras latinas básicas, æ ç ð ø ħ ŋ œ, extensões IPA (U+0250–02AF),
  * modificadores (U+02B0–02FF), diacríticos combinantes (U+0300–036F), letras gregas β θ χ,
  * extensões fonéticas (U+1D00–1DBF, ex.: ᵝ do japonês), sobrescritos ¹ ² ³ (acento tonal do sueco),
- * prosódia | ‖ ↗ ↘, separador de sílaba, ligadura ‿ e espaço.
+ * prosódia | ‖ ↗ ↘, cliques ǀ ǁ ǂ ǃ, separador de sílaba, ligaduras ‿ ⁀ e espaço.
  * Validado contra os dicionários de raw/ipa-dict: só o hífen do coreano fica de fora (aviso proposital).
  */
 /* eslint-disable no-misleading-character-class -- a faixa de diacríticos combinantes é intencional */
 const IPA_CHARS =
-  /^[a-z\u00e6\u00e7\u00f0\u00f8\u0127\u014b\u0153\u0250-\u02af\u02b0-\u02ff\u0300-\u036f\u03b2\u03b8\u03c7\u1d00-\u1dbf\u00b9\u00b2\u00b3|\u2016\u2197\u2198.\u203f ]+$/u;
+  /^[a-z\u00e6\u00e7\u00f0\u00f8\u0127\u014b\u0153\u0250-\u02af\u02b0-\u02ff\u0300-\u036f\u03b2\u03b8\u03c7\u1d00-\u1dbf\u00b9\u00b2\u00b3|\u2016\u2197\u2198.\u203f\u2040\u01c0-\u01c3 ]+$/u;
 /* eslint-enable no-misleading-character-class */
 
 export function validateEntry(entry: Entry): Issue[] {
