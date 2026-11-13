@@ -96,4 +96,10 @@ export interface ConversionResult {
 export interface ConvertOptions {
   /** Limite de caracteres da entrada (padrão 2.000). Acima disso, `convert` rejeita. */
   maxLength?: number;
+  /**
+   * Texto misto (português com palavras/nomes estrangeiros, ex.: modo apresentador): palavras em português passam
+   * direto (`TextToken` com `reason: 'portuguese'`). Exige o léxico do português no motor. As listas de chaves
+   * (lookupKey) corrigem a heurística palavra a palavra — a interface oferece esse ajuste ao usuário.
+   */
+  mixed?: boolean | { forcePortuguese?: string[]; forceForeign?: string[] };
 }

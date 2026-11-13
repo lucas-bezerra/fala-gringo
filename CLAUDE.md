@@ -51,7 +51,9 @@ O CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) roda tudo acima, mai
 ## Motor (`packages/engine`)
 
 - API: `createEngine({ dictionary, phonology, tokenizer?, estimator? }).convert(texto, idioma)` → `ConversionResult` (tipos em `src/types.ts`, contrato na seção 10 da notação).
-- Estágios substituíveis (`src/stages.ts`): `Tokenizer` (T3.2), `Dictionary` (`ShardDictionary`, lê os shards; carregamento injetado, LRU e pedidos simultâneos juntados), `Phonology` (T3.3–T3.6), `Estimator` (T3.9/T5.x). `basicTokenizer` e `placeholderPhonology` são **provisórios**.
+- Estágios substituíveis (`src/stages.ts`): `Tokenizer` (T3.2), `Dictionary` (`ShardDictionary`, lê os shards; carregamento injetado, LRU e pedidos simultâneos juntados), `Phonology` (T3.3–T3.6), `Estimator` (T3.9/T5.x). `placeholderPhonology` é **provisória** (até a T3.6).
+- **Tokenizador** (`src/tokenizer.ts`): `Intl.Segmenter` + correções (apóstrofo tipográfico, compostos com hífen, elisão `l'école`, `'bout`); palavras levam `norm` (forma de busca) e `parts` (reserva, usada só se a palavra inteira não estiver no dicionário). Números passam direto.
+- **Texto misto** (`convert(texto, idioma, { mixed })`): decide o que é português com o léxico `pt-BR` (gerado em `shards`; leia com `parsePtLexicon`) + dicionário + atração de palavras funcionais. Regras e casos reais em [packages/data/LEXICON.md](packages/data/LEXICON.md) — atualize a tabela de verificação se mudar as regras.
 - **TypeScript puro**: `tsconfig.json` sem DOM nem Node (o compilador garante); os testes usam `tsconfig.test.json`. Não importe `fetch`, `fs` etc. no código do motor — injete.
 
 ## Fluxo atual (v1, dentro de `apps/web/src`)

@@ -6,18 +6,23 @@
 import { PRIORITY } from './merge';
 import { SOURCES, type SourceId } from './sources';
 
+/** Fontes do léxico do português (modo texto misto), publicado junto dos shards. */
+export const LEXICON_SOURCES: readonly SourceId[] = ['wikipron', 'frequencywords'];
+
 export function sourcesInUse(): SourceId[] {
-  const used = new Set(Object.values(PRIORITY).flat());
+  const used = new Set([...Object.values(PRIORITY).flat(), ...LEXICON_SOURCES]);
   return (Object.keys(SOURCES) as SourceId[]).filter((s) => used.has(s));
 }
 
 export function renderNotice(): string {
   const blocks = sourcesInUse().map((id) => {
     const s = SOURCES[id];
-    const langs = Object.entries(PRIORITY)
-      .filter(([, list]) => list.includes(id))
-      .map(([lang]) => lang)
-      .join(', ');
+    const langs = [
+      ...Object.entries(PRIORITY)
+        .filter(([, list]) => list.includes(id))
+        .map(([lang]) => lang),
+      ...(LEXICON_SOURCES.includes(id) ? ['léxico pt-BR (texto misto)'] : []),
+    ].join(', ');
     return [
       `## ${s.name}`,
       '',

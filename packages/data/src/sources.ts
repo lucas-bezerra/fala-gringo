@@ -72,6 +72,16 @@ export const SOURCES = {
     shareAlike: true,
     stress: 'no',
   },
+  // Sempre ACRESCENTAR no fim: os shards guardam o índice da fonte nesta ordem (SOURCE_ORDER).
+  frequencywords: {
+    name: 'FrequencyWords (OpenSubtitles 2018)',
+    license: 'CC BY-SA 4.0 (conteúdo); MIT (código)',
+    url: 'https://github.com/hermitdave/FrequencyWords',
+    credit:
+      'Hermit Dave, FrequencyWords, a partir do corpus OpenSubtitles 2018 (OPUS). Usada no léxico do português e no relatório de cobertura.',
+    shareAlike: true,
+    stress: 'no',
+  },
 } as const satisfies Record<
   string,
   { name: string; license: string; url: string; credit: string; shareAlike: boolean; stress: Stress }

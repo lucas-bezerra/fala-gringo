@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Pipeline de dicionários (fontes brutas, normalização e shards). Ver SOURCES.md antes de adicionar qualquer fonte.",
+  "description": "Pipeline de dicion\u00e1rios (fontes brutas, normaliza\u00e7\u00e3o e shards). Ver SOURCES.md antes de adicionar qualquer fonte.",
   "scripts": {
     "sync:web": "node scripts/sync-web.mjs",
     "typecheck": "tsc --noEmit",
@@ -31,6 +31,7 @@
     ".": "./src/index.ts",
     "./schema": "./src/schema.ts",
     "./sources": "./src/sources.ts",
-    "./shards": "./src/shards.ts"
+    "./shards": "./src/shards.ts",
+    "./ptLexicon": "./src/ptLexicon.ts"
   }
 }

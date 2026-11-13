@@ -4,7 +4,7 @@ import { buildShards, dataVersionOf } from '../../data/src/shardBuilder';
 import { SHARD_FORMAT, SOURCE_ORDER, type Manifest, type ShardFile } from '../../data/src/shards';
 import { createEngine, placeholderPhonology } from './engine';
 import { ShardDictionary } from './shardDictionary';
-import type { Estimator, Phonology } from './stages';
+import type { Dictionary, Estimator, Phonology, PortugueseLexicon } from './stages';
 
 // Shards reais (gerador da T2.7) com limite pequeno, para ter várias faixas.
 const merged: MergedEntry[] = [
@@ -171,5 +171,113 @@ describe('createEngine().convert', () => {
     const engine = createEngine({ dictionary: dict, phonology: placeholderPhonology });
     await expect(engine.convert('a'.repeat(2001), 'en-US')).rejects.toThrow(RangeError);
     await expect(engine.convert('abc', 'en-US', { maxLength: 2 })).rejects.toThrow(/limite é 2/);
+  });
+});
+
+describe('modo texto misto e partes de reserva (T3.2)', () => {
+  const dict = (words: Record<string, string>): Dictionary => ({
+    lookup: async (_lang, key) =>
+      words[key]
+        ? {
+            display: key,
+            proper: false,
+            prons: [{ ipa: words[key], stress: 'dictionary', source: 'cmudict', agree: 0 }],
+          }
+        : undefined,
+  });
+  const lexicon = (words: string[], names: string[] = []): PortugueseLexicon => ({
+    has: (k) => words.includes(k),
+    isName: (k) => names.includes(k),
+  });
+  /** Palavras convertidas, na ordem (o resto do texto passa direto). */
+  const foreign = (r: { tokens: { kind: string; original?: string }[] }) =>
+    r.tokens.filter((t) => t.kind === 'word').map((t) => t.original);
+
+  const EN = dict({
+    worcester: 'ˈwʊstɚ', massachusetts: 'ˌmæsəˈtʃusəts', greenwich: 'ˈɡɹɛnɪtʃ', paris: 'ˈpɛɹɪs',
+    e: 'ˈi', em: 'əm', o: 'ˈoʊ', a: 'ə', caso: 'ˈkeɪsoʊ',
+    "l'": 'l', 'école': 'eˈkɔl', well: 'ˈwɛl', known: 'ˈnoʊn', 'well-known': 'ˈwɛlˈnoʊn', bout: 'ˈbaʊt',
+  }); // prettier-ignore
+  const PT = lexicon(
+    ['correspondentes', 'em', 'e', 'acompanham', 'o', 'caso', 'aprovou', 'a', 'lei', 'disse', 'paris'],
+    ['londres', 'massachusetts'],
+  );
+
+  it('converte só os nomes estrangeiros numa frase de apresentador', async () => {
+    const engine = createEngine({ dictionary: EN, phonology: placeholderPhonology, portuguese: PT });
+    const r = await engine.convert(
+      'Correspondentes em Worcester, Massachusetts, e em Greenwich, em Londres, acompanham o caso.',
+      'en-US',
+      { mixed: true },
+    );
+    expect(foreign(r)).toEqual(['Worcester', 'Massachusetts', 'Greenwich']);
+    expect(r.tokens.find((t) => t.kind === 'text' && t.text === 'Londres')).toMatchObject({
+      reason: 'portuguese',
+    });
+  });
+
+  it('nome estrangeiro no início da frase continua estrangeiro; palavra comum não', async () => {
+    const engine = createEngine({ dictionary: EN, phonology: placeholderPhonology, portuguese: PT });
+    expect(foreign(await engine.convert('Massachusetts aprovou a lei.', 'en-US', { mixed: true }))).toEqual([
+      'Massachusetts',
+    ]);
+    expect(foreign(await engine.convert('Caso encerrado em Worcester.', 'en-US', { mixed: true }))).toEqual([
+      'Worcester',
+    ]);
+  });
+
+  it('atrai palavras funcionais do idioma-alvo para o nome ("Jerez de la Frontera"), mas não em "estado de Jalisco"', async () => {
+    const ES = dict({
+      real: 'reˈal',
+      jerez: 'xeˈɾeθ',
+      de: 'de',
+      la: 'la',
+      frontera: 'fɾonˈteɾa',
+      jalisco: 'xaˈlisko',
+      a: 'a',
+      en: 'en',
+    });
+    const ptEs = lexicon(
+      ['a', 'próxima', 'etapa', 'será', 'em', 'de', 'la', 'na', 'o', 'estado'],
+      ['espanha'],
+    );
+    const engine = createEngine({ dictionary: ES, phonology: placeholderPhonology, portuguese: ptEs });
+    const r1 = await engine.convert('A próxima etapa será em Jerez de la Frontera, na Espanha.', 'es-ES', {
+      mixed: true,
+    });
+    expect(foreign(r1)).toEqual(['Jerez', 'de', 'la', 'Frontera']);
+    const r2 = await engine.convert('o estado de Jalisco', 'es-ES', { mixed: true });
+    expect(foreign(r2)).toEqual(['Jalisco']);
+    // "de" entre dois estrangeiros vai junto mesmo sendo PT_CORE
+    const r3 = await engine.convert('o Real de Jalisco', 'es-ES', { mixed: true });
+    expect(foreign(r3)).toEqual(['Real', 'de', 'Jalisco']);
+  });
+
+  it('a correção manual vence a heurística', async () => {
+    const engine = createEngine({ dictionary: EN, phonology: placeholderPhonology, portuguese: PT });
+    const text = 'Correspondentes em Paris disse o caso';
+    expect(foreign(await engine.convert(text, 'en-US', { mixed: true }))).toEqual(['Paris']);
+    expect(
+      foreign(
+        await engine.convert(text, 'en-US', {
+          mixed: { forcePortuguese: ['paris'], forceForeign: ['caso'] },
+        }),
+      ),
+    ).toEqual(['caso']);
+  });
+
+  it('exige o léxico para o modo misto', async () => {
+    const engine = createEngine({ dictionary: EN, phonology: placeholderPhonology });
+    await expect(engine.convert('em Worcester', 'en-US', { mixed: true })).rejects.toThrow(/léxico/);
+  });
+
+  it('usa a palavra inteira quando existe e as partes de reserva quando não', async () => {
+    const engine = createEngine({ dictionary: EN, phonology: placeholderPhonology });
+    expect(foreign(await engine.convert('a well-known one', 'en-US'))).toEqual(['a', 'well-known']);
+    const fr = await engine.convert('L’école', 'fr-FR');
+    expect(foreign(fr)).toEqual(['L’', 'école']);
+    expect(fr.reading.flat).toBe('leˈkɔl');
+    const unknownBoth = await engine.convert('xx-yy', 'en-US');
+    expect(unknownBoth.tokens).toEqual([{ kind: 'unknown', original: 'xx-yy', key: 'xx-yy' }]);
   });
 });
