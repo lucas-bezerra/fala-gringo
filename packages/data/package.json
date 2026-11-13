@@ -15,7 +15,8 @@
     "import:wikidata": "tsx scripts/import-wikidata.ts",
     "import:wiktextract": "tsx scripts/import-wiktextract.ts",
     "extract:wiktextract": "tsx scripts/extract-wiktextract.ts",
-    "merge": "tsx scripts/merge.ts"
+    "merge": "tsx scripts/merge.ts",
+    "shards": "tsx scripts/build-shards.ts"
   },
   "main": "src/index.ts",
   "devDependencies": {

@@ -124,7 +124,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T2.4 | ✅ **Concluída em 2026-11-13** (6 idiomas, cerca de 615 mil entradas, 0 erros). ⚠️ Os dados não têm tônica: it-IT e en-GB precisam de outra fonte (ver T2.10). Importador WikiPron (genérico por idioma) | medium | Um comando por idioma; atribuição registrada | T2.1 |
 | T2.5 | ✅ **Concluída em 2026-11-13** (retrato versionado em `raw/wikidata/`). Importador de nomes próprios do Wikidata (P898), filtrando pessoas, lugares e clubes | medium | Dump filtrado com rótulo PT e IPA | T2.1 |
 | T2.6 | ✅ **Concluída em 2026-11-13** ([MERGE.md](../packages/data/MERGE.md): precedência por palavra, 1,98 mi pronúncias, tônica emprestada en-US → en-GB). Normalização de IPA (NFC, ɡ/g, tie bars, marcas de tônica/sílaba, variantes) e merge com prioridade entre fontes | high | Testes de normalização; relatório de conflitos | T2.2–T2.5 |
-| T2.7 | Gerador de shards por prefixo com hash e `manifest.json` | medium | Shards ≤ 200 KB comprimidos; busca de 1 palavra baixa 1 shard | T2.6 |
+| T2.7 | ✅ **Concluída em 2026-11-13** ([SHARDS.md](../packages/data/SHARDS.md): faixas em vez de prefixos; 98 shards ≤ 196 KB gzip). Gerador de shards por prefixo com hash e `manifest.json` | medium | Shards ≤ 200 KB comprimidos; busca de 1 palavra baixa 1 shard | T2.6 |
 | T2.8 | Relatório de cobertura por idioma | low | Tabela com nº de entradas e % de cobertura num corpus de frequência | T2.7 |
 | T2.10 | ✅ **Concluída em 2026-11-13** ([ADR 0001](adr/0001-fonte-de-tonica.md): Wiktionary via kaikki.org + Britfone). **Fonte de tônica para it-IT e en-GB** (o WikiPron não traz): decidir entre Britfone (en-GB), raspagem própria do Wiktionary com tônica, ou extração do dump do Wiktionary (kaikki.org) 👤 | medium | ADR com a decisão + importador | T2.4 |
 | T2.9 | Atualização mensal automática dos dados (job agendado no CI) + `NOTICE` gerado a partir do SOURCES.md | low | Exigência da licença da EDRDG; atribuições sempre em dia | T2.7 |
@@ -169,7 +169,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T5.2 | Italiano | medium | Ortografia regular; consoantes duplas | T3.8 |
 | T5.3 | Alemão | medium | ç/x, ʁ, vogais arredondadas, ditongos, compostos | T3.8 |
 | T5.4 | Francês | high | Nasais, liaison, letras mudas; depende bastante do dicionário | T3.9 |
-| T5.5 | Japonês | high | Segmentação, kanji → kana (JMdict), kana → IPA, u/i desvozeados, acento de altura | T3.2 |
+| T5.5 | Japonês | high | **Kana → IPA por regra é obrigatório:** a fonte tem as palavras quase só em kanji (`ありがとう` não existe nela). Segmentação, kanji → kana (JMdict), kana → IPA, u/i desvozeados, acento de altura | T3.2 |
 | T5.6 | Coreano | high | Hangul é fonético, mas tem regras (ligação, nasalização, tensificação) | T3.2 |
 | T5.7 | Mandarim | high | Hanzi → pinyin (polifonia), pinyin → IPA, representação dos tons na UI | T3.2 |
 | T5.8 | Nomes próprios (multi-idioma, Wikidata) | medium | Prioridade: esportes, política internacional, cidades | T2.5 |
