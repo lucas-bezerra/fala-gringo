@@ -8,7 +8,8 @@
     "sync:web": "node scripts/sync-web.mjs",
     "typecheck": "tsc --noEmit",
     "import:ipa-dict": "tsx scripts/import-ipa-dict.ts",
-    "import:cmudict": "tsx scripts/import-cmudict.ts"
+    "import:cmudict": "tsx scripts/import-cmudict.ts",
+    "import:wikipron": "tsx scripts/import-wikipron.ts"
   },
   "main": "src/index.ts",
   "devDependencies": {
