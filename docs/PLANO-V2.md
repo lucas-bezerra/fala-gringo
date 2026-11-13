@@ -121,11 +121,12 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T2.1 | ✅ **Concluída em 2026-11-13** ([SCHEMA.md](../packages/data/SCHEMA.md)). Esquema intermediário único (`palavra, ipa, variante, fonte, frequência`) | medium | Tipos e validador; documento curto | T0.2 |
 | T2.2 | ✅ **Concluída em 2026-11-13** (`pnpm --filter @falagringo/data import:ipa-dict`; 6 idiomas, 1,42 mi entradas, 0 erros, 0 avisos). Importador ipa-dict (migrar os `.txt` atuais) | low | TSV normalizado por idioma | T2.1 |
 | T2.3 | ✅ **Concluída em 2026-11-13** (135.163 entradas, 0 falhas; 30 palavras de referência passam). Importador CMUdict com conversão ARPAbet → IPA | medium | Testes com 30 palavras conhecidas | T2.1 |
-| T2.4 | Importador WikiPron (genérico por idioma) | medium | Um comando por idioma; atribuição registrada | T2.1 |
+| T2.4 | ✅ **Concluída em 2026-11-13** (6 idiomas, cerca de 615 mil entradas, 0 erros). ⚠️ Os dados não têm tônica: it-IT e en-GB precisam de outra fonte (ver T2.10). Importador WikiPron (genérico por idioma) | medium | Um comando por idioma; atribuição registrada | T2.1 |
 | T2.5 | Importador de nomes próprios do Wikidata (P898), filtrando pessoas, lugares e clubes | medium | Dump filtrado com rótulo PT e IPA | T2.1 |
 | T2.6 | Normalização de IPA (NFC, ɡ/g, tie bars, marcas de tônica/sílaba, variantes) e merge com prioridade entre fontes | high | Testes de normalização; relatório de conflitos | T2.2–T2.5 |
 | T2.7 | Gerador de shards por prefixo com hash e `manifest.json` | medium | Shards ≤ 200 KB comprimidos; busca de 1 palavra baixa 1 shard | T2.6 |
 | T2.8 | Relatório de cobertura por idioma | low | Tabela com nº de entradas e % de cobertura num corpus de frequência | T2.7 |
+| T2.10 | **Fonte de tônica para it-IT e en-GB** (o WikiPron não traz): decidir entre Britfone (en-GB), raspagem própria do Wiktionary com tônica, ou extração do dump do Wiktionary (kaikki.org) 👤 | medium | ADR com a decisão + importador | T2.4 |
 | T2.9 | Atualização mensal automática dos dados (job agendado no CI) + `NOTICE` gerado a partir do SOURCES.md | low | Exigência da licença da EDRDG; atribuições sempre em dia | T2.7 |
 
 ### Fase 3 — Motor fonético (`packages/engine`) — núcleo do produto
