@@ -24,7 +24,7 @@ O projeto está **em reconstrução (v2)**. Antes de qualquer tarefa, leia:
 
 ```
 apps/web/            Frontend v1 (React 19 + Vite 6), ainda com a lógica antiga em src/services
-packages/data/       Dicionários brutos (raw/ipa-dict), SOURCES.md e scripts do pipeline
+packages/data/       Dicionários brutos (raw/ipa-dict), SOURCES.md, formato intermediário (src/, SCHEMA.md) e scripts
 packages/engine/     Motor fonético v2 — vazio, implementado na Fase 3
 packages/content/    Dicas e guia de sons — vazio, preenchido na T4.5
 docs/                Plano, notação e (futuramente) ADRs
@@ -64,6 +64,7 @@ services/ipaMappings.ts              → IPA → PT-BR caractere a caractere (no
 - **Mudou o formato do dicionário ou do cache? Incremente `VERSION`** em `dictionaryService.ts` (hoje `v2`). O IndexedDB dos usuários guarda o texto da versão anterior.
 - **Licenças:** só existem dicionários permitidos (`en_US`, `de`, `ja`, `ko`, `nl`, `sv`), com créditos em [packages/data/raw/ipa-dict/LICENSES.md](packages/data/raw/ipa-dict/LICENSES.md). **Nenhuma fonte entra sem registro no SOURCES.md.** Dados NC (não comercial), GPL e sem licença estão proibidos. O uso declarado é individual, sem fins lucrativos e fora dos canais oficiais; se isso mudar, as licenças precisam ser revistas.
 - **EN-US é obrigatório** e é o idioma principal.
+- **Dados:** todo importador grava no formato intermediário de [packages/data/SCHEMA.md](packages/data/SCHEMA.md), validado por `validateEntry`. Fonte nova exige registro em `SOURCES.md` **e** em `packages/data/src/sources.ts`, senão o validador rejeita. Idiomas usam tags BCP 47 (`en-US`, `es-419`…).
 - **Estilos:** Tailwind v4 via `@tailwindcss/vite`; tokens de design no bloco `@theme` de [apps/web/src/index.css](apps/web/src/index.css) (cores `canvas`, `surface`, `ink`, `muted`, `accent`, `special`…; fontes `font-display`, `font-ipa`). Use os tokens em vez de hex soltos. Os tokens e estilos marcados como legados da v1 saem na T4.2.
 - **Nada de CDN:** fontes vêm de `@fontsource` e são servidas pelo próprio site. Não adicione scripts, estilos ou fontes externos.
 - **CSP rígida** (sem `unsafe-inline`, sem `data:`): fonte única em [apps/web/security-headers.ts](apps/web/security-headers.ts), aplicada no `dist/_headers`, no `<meta>` do build e no `vite preview`. Não vale no `pnpm dev`. Recurso novo bloqueado? Ajuste lá e rode `pnpm test:e2e`, que falha em qualquer violação ou requisição externa. O `assetsInlineLimit: 0` no Vite é proposital. Deploy: [docs/deploy.md](docs/deploy.md).
