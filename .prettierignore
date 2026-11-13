@@ -1,0 +1,6 @@
+dist
+apps/web/public
+packages/data/raw
+pnpm-lock.yaml
+docs
+*.md

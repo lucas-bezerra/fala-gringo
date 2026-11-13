@@ -1,33 +1,32 @@
 {
-  "name": "falagringo---ipa-to-pt-br",
+  "name": "falagringo",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "backend": "ts-node backend/server.ts",
-    "build:backend": "tsc -p backend",
-    "start": "node backend/dist/server.js",
-    "build:all": "pnpm build && pnpm build:backend"
+  "packageManager": "pnpm@11.3.0",
+  "engines": {
+    "node": ">=20"
   },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.2.1",
-    "idb": "^8.0.3",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+  "scripts": {
+    "dev": "pnpm --filter @falagringo/data sync:web && pnpm --filter @falagringo/web dev",
+    "build": "pnpm --filter @falagringo/data sync:web && pnpm --filter @falagringo/web build",
+    "preview": "pnpm --filter @falagringo/web preview",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "concurrently": "^9.2.1",
-    "ts-node": "^10.9.2",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0",
-    "vite-plugin-node-polyfills": "^0.24.0"
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.72.2",
+    "vitest": "^5.1.0"
   }
 }

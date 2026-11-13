@@ -1,0 +1,8 @@
+{
+  "name": "@falagringo/content",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Dicas, guia de sons e textos de ajuda (T4.5).",
+  "main": "src/index.ts"
+}
