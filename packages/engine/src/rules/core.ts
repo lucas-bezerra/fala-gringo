@@ -129,11 +129,12 @@ export const CORE_TRAPS: readonly TrapRule[] = [
   { trap: 'TI_DI', match: ['t', 'd'], when: { next: ['@i', 'j'] } },
   { trap: 'CODA_L', match: ['l', 'ɫ', 'ɭ'], when: { slot: 'coda' } },
   { trap: 'CODA_NASAL', match: ['m', 'n', 'ɴ', 'ɱ', 'ɳ'], when: { slot: 'coda' } },
-  // consoante final: obstruintes, menos z (armadilha própria), r forte (escrito rr) e as mudas
+  // consoante final: obstruintes, menos s (o português já termina palavras em -s: "mês" — decisão de
+  // 2026-11-13), z (armadilha própria), r forte (escrito rr) e as mudas
   {
     trap: 'FINAL_CONS',
     match: '@obstruent',
-    except: ['z', 'ʔ', 'ʕ', ...STRONG_R, ...STRONG_R_SPECIAL],
+    except: ['s', 'z', 'ʔ', 'ʕ', ...STRONG_R, ...STRONG_R_SPECIAL],
     when: { wordFinal: true },
   },
   { trap: 'S_CLUSTER', match: ['s', 'ʃ'], when: { wordInitial: true, next: '@consonant' } },
