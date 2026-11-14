@@ -184,7 +184,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T6.3 | ✅ **Concluída em 2026-11-14** ([desempenho.md](desempenho.md): LCP 1,2 s, 1ª conversão 3,1 s, 2.000 caracteres 0,5 s no perfil celular médio; `pnpm budget` para tamanhos; shards de 48 KB; medido com Playwright + CDP em vez do Lighthouse). Orçamento de performance (JS inicial, LCP, tempo de conversão) | medium | Metas definidas e medidas no CI (Lighthouse) | Fase 4 |
 | T6.4 | Revisão linguística final dos golden sets 👤 | — (humano) | Assinatura do revisor por idioma | Fase 5 |
 | T6.5 | ✅ **Concluída em 2026-11-14** (README reescrito para a v2; CLAUDE.md atualizado a cada tarefa). Atualizar CLAUDE.md e README | low | — | todas |
-| T6.6 | 🟡 **Configuração pronta em 2026-11-14** (Render: `render.yaml` gerado de `security-headers.ts`; `pnpm check:deploy <url>`; workflow diário `monitor.yml`; sem telemetria no navegador). **Falta a 1ª publicação** 👤 (passo a passo em [deploy.md](deploy.md)). Deploy + monitoramento de erros **sem dados pessoais** (sem o texto digitado) | medium | Se houver analytics: validar com o DPO (LGPD) | T6.2 |
+| T6.6 | ✅ **Concluída em 2026-11-14**: no ar em https://falagringo.onrender.com (Render, Blueprint `render.yaml`); `check:deploy` 20/20 com brotli; teste em navegador real sem erros (1ª conversão 0,69 s); monitoramento diário ativo (`SITE_URL`); sem telemetria. Deploy + monitoramento de erros **sem dados pessoais** (sem o texto digitado) | medium | Se houver analytics: validar com o DPO (LGPD) | T6.2 |
 
 ## 7. Marcos
 

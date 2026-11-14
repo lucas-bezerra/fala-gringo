@@ -23,6 +23,8 @@ O teste E2E `roda sob a CSP de produção…` falha se a página violar a CSP ou
 
 ### Render (escolhida em 2026-11-14)
 
+**No ar:** https://falagringo.onrender.com (serviço `falagringo`, 1ª publicação em 2026-11-14; `check:deploy` 20/20, compressão brotli).
+
 Site estático gratuito. A configuração inteira está no [render.yaml](../render.yaml): build, pasta publicada, Node 22 e os cabeçalhos de segurança e de cache.
 
 **Primeira publicação (uma vez):**
