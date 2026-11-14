@@ -30,25 +30,41 @@ function SyllableText({ s }: { s: Syllable }) {
 }
 
 /**
+ * Versão falada para o leitor de tela (T4.11): minúsculas (MAIÚSCULAS podem ser soletradas) e a tônica dita
+ * por extenso. Ex.: "uátching, tônica em uá".
+ */
+export function spokenReading(p: P): string {
+  const lower = (t: string) => t.toLocaleLowerCase('pt-BR');
+  const words = p.syllables.map((s, i) => (i > 0 && s.wordStart ? ' ' : '') + lower(s.text)).join('');
+  const stressed = p.syllables.filter((s) => s.stressed);
+  return p.syllables.length > 1 && stressed.length
+    ? `${words}, tônica em ${stressed.map((s) => lower(s.text)).join(' e ')}`
+    : words;
+}
+
+/**
  * Grafia PT-BR de uma pronúncia. Tônica em negrito (e MAIÚSCULAS, que já vêm do motor); átonas mais leves.
- * Sílabas: separadas por "·" (o separador é decorativo para o leitor de tela, que lê a palavra corrida).
+ * O visual é escondido do leitor de tela, que lê a versão falada (spokenReading).
  */
 export function PronunciationText({ p, mode, className }: { p: P; mode: ReadingMode; className?: string }) {
   return (
     <span className={className}>
-      {p.syllables.map((s, i) => (
-        <Fragment key={i}>
-          {i > 0 && s.wordStart && ' '}
-          {i > 0 && !s.wordStart && mode === 'syllabic' && (
-            <span aria-hidden="true" className="px-0.5 font-normal text-separator">
-              ·
+      <span className="sr-only">{spokenReading(p)}</span>
+      <span aria-hidden="true">
+        {p.syllables.map((s, i) => (
+          <Fragment key={i}>
+            {i > 0 && s.wordStart && ' '}
+            {i > 0 && !s.wordStart && mode === 'syllabic' && (
+              <span aria-hidden="true" className="px-0.5 font-normal text-separator">
+                ·
+              </span>
+            )}
+            <span className={cx(s.stressed ? 'font-bold' : 'font-medium text-ink-2')}>
+              <SyllableText s={s} />
             </span>
-          )}
-          <span className={cx(s.stressed ? 'font-bold' : 'font-medium text-ink-2')}>
-            <SyllableText s={s} />
-          </span>
-        </Fragment>
-      ))}
+          </Fragment>
+        ))}
+      </span>
     </span>
   );
 }

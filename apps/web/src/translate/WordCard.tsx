@@ -1,4 +1,4 @@
-import type { UnknownToken, WordToken } from '@falagringo/engine';
+import type { Lang, UnknownToken, WordToken } from '@falagringo/engine';
 import { cx } from '@/ui';
 import { PronunciationText, type ReadingMode } from './Pronunciation';
 
@@ -8,11 +8,14 @@ const BADGE =
 /** Cartão de uma palavra: original, grafia PT-BR e IPA. Clicar abre o detalhe (painel lateral ou inferior). */
 export function WordCard({
   token,
+  lang,
   mode,
   selected,
   onSelect,
 }: {
   token: WordToken | UnknownToken;
+  /** Idioma da palavra original: o leitor de tela a pronuncia com a voz certa (WCAG 3.1.2). */
+  lang: Lang;
   mode: ReadingMode;
   selected: boolean;
   onSelect: () => void;
@@ -30,13 +33,15 @@ export function WordCard({
         )}
       >
         <span className="flex items-center gap-2 text-sm text-muted">
-          {token.original}
+          <span lang={lang}>{token.original}</span>
           {token.kind === 'word' && token.origin === 'estimated' && <span className={BADGE}>estimado</span>}
         </span>
         {token.kind === 'word' ? (
           <>
             <PronunciationText p={token.primary} mode={mode} className="text-[26px] leading-tight" />
-            <span className="font-ipa text-xs text-muted">/{token.primary.ipa}/</span>
+            <span aria-hidden="true" className="font-ipa text-xs text-muted">
+              /{token.primary.ipa}/
+            </span>
           </>
         ) : (
           <>

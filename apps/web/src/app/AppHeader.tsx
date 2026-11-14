@@ -14,6 +14,17 @@ export function AppHeader({ route }: { route: Route }) {
   const [theme, setTheme] = useState<ThemePref>(readTheme);
   return (
     <header className="border-b border-line bg-surface">
+      <a
+        href="#conteudo"
+        onClick={(e) => {
+          // as rotas usam o hash: em vez de navegar, leva o foco ao conteúdo
+          e.preventDefault();
+          document.getElementById('conteudo')?.focus();
+        }}
+        className="focus-ring sr-only rounded-control bg-accent px-4 py-2 font-semibold text-white focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50"
+      >
+        Pular para o conteúdo
+      </a>
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2 sm:px-6">
         <a href={ROUTE_HREF.traduzir} className="focus-ring flex min-h-11 items-center gap-2 rounded-control">
           <span

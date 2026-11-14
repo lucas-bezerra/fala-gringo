@@ -4,7 +4,11 @@ import type { Ref } from 'react';
 /** Fontes e créditos (T4.12): gerada do registro de fontes (packages/data/src/sources.ts, espelho do SOURCES.md). */
 export function CreditsScreen({ headingRef }: { headingRef: Ref<HTMLHeadingElement> }) {
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-5 px-4 py-6 sm:px-6">
+    <main
+      id="conteudo"
+      tabIndex={-1}
+      className="outline-none mx-auto flex max-w-3xl flex-col gap-5 px-4 py-6 sm:px-6"
+    >
       <h1 ref={headingRef} tabIndex={-1} className="font-display text-3xl font-bold">
         Fontes e créditos
       </h1>

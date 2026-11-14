@@ -159,7 +159,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T4.9 | ✅ **Concluída em 2026-11-14** (recentes e favoritos em localStorage; "Compartilhar link" com `?t=&l=`). Histórico e favoritos locais + compartilhar por URL (`?t=&l=`) | low | Nada sai do navegador | T4.2 |
 | T4.10 | ✅ **Concluída em 2026-11-14** (tokens escuros; Auto segue o sistema, Claro/Escuro forçam via `data-theme`; axe nos dois temas; movimento reduzido já respeitado). Tema claro/escuro e `prefers-reduced-motion` | low | — | T4.1 |
 | T4.12 | ✅ **Concluída em 2026-11-14** (rota `#/creditos` gerada de `sources.ts`; crédito no rodapé de todas as telas). Página **Fontes e créditos** + crédito no rodapé de cada tela (exigência da EDRDG e do CC BY-SA) | low | Lista gerada do SOURCES.md | T2.9 |
-| T4.11 | Auditoria de acessibilidade (axe, teclado, leitor de tela, contraste) | medium | Zero violações graves no axe; leitor de tela lê a pronúncia | T4.2–T4.7 |
+| T4.11 | ✅ **Concluída em 2026-11-14** (relatório em [acessibilidade.md](acessibilidade.md): axe em 4 telas × 2 temas × 2 tamanhos, reflow 320 px, contraste dos tokens, teclado e nomes acessíveis no CI; 8 problemas corrigidos). **Falta o roteiro manual em leitor de tela real** 👤. Auditoria de acessibilidade (axe, teclado, leitor de tela, contraste) | medium | Zero violações graves no axe; leitor de tela lê a pronúncia | T4.2–T4.7 |
 
 ### Fase 5 — Idiomas (cada um = perfil de regras + G2P se aplicável + golden set + dicas)
 

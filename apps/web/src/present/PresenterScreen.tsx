@@ -3,6 +3,7 @@ import { useEffect, useId, useState, type Ref } from 'react';
 import { ROUTE_HREF } from '@/app/route';
 import { groupOf } from '@/engine/langs';
 import { useConversion } from '@/engine/useConversion';
+import { spokenReading } from '@/translate/Pronunciation';
 import { cx } from '@/ui';
 
 /** Tamanhos do texto (px). O padrão (64) é legível a ~3 m num monitor de 24" ou maior. */
@@ -86,7 +87,7 @@ export function PresenterScreen({ headingRef, script, setScript, lang }: Present
 
   return (
     <div className="min-h-screen bg-stage text-white">
-      <div className="border-b border-stage-line">
+      <header className="border-b border-stage-line">
         <div className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <a
             href={ROUTE_HREF.traduzir}
@@ -173,9 +174,13 @@ export function PresenterScreen({ headingRef, script, setScript, lang }: Present
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      <main className="mx-auto flex max-w-[1320px] flex-col gap-12 px-4 pt-10 pb-8 sm:px-6">
+      <main
+        id="conteudo"
+        tabIndex={-1}
+        className="outline-none mx-auto flex max-w-[1320px] flex-col gap-12 px-4 pt-10 pb-8 sm:px-6"
+      >
         <h1 ref={headingRef} tabIndex={-1} className="sr-only">
           Modo apresentador
         </h1>
@@ -191,7 +196,7 @@ export function PresenterScreen({ headingRef, script, setScript, lang }: Present
             maxLength={2000}
             rows={5}
             spellCheck={false}
-            className="focus-ring block w-full resize-y rounded-control border border-slate-600 bg-stage-2 px-3 py-2 text-lg text-white"
+            className="focus-ring block w-full resize-y rounded-control border border-slate-500 bg-stage-2 px-3 py-2 text-lg text-white"
           />
           <p className="mt-1 text-xs text-slate-400">
             {script.length.toLocaleString('pt-BR')} caracteres · máx. 2.000. Linha em branco separa
@@ -212,12 +217,13 @@ export function PresenterScreen({ headingRef, script, setScript, lang }: Present
         <div
           aria-busy={state.status === 'loading'}
           className="flex flex-col gap-14"
-          style={{ fontSize: SIZES[size] }}
+          // no celular, o tamanho cede à largura (sem rolagem horizontal, WCAG 1.4.10)
+          style={{ fontSize: `min(${SIZES[size]}px, 10vw)` }}
         >
           {paras.map((tokens, i) => (
-            <p key={i} className="leading-[1.15] font-medium text-slate-300">
+            <p key={i} className="leading-[1.15] font-medium [overflow-wrap:anywhere] text-slate-300">
               {tokens.map((t, j) => (
-                <PresenterToken key={j} token={t} showIpa={ipa} />
+                <PresenterToken key={j} token={t} showIpa={ipa} lang={lang} />
               ))}
             </p>
           ))}
@@ -263,12 +269,13 @@ export function PresenterScreen({ headingRef, script, setScript, lang }: Present
 }
 
 /** Palavra estrangeira: leitura em amarelo acima, IPA opcional, original sublinhado. O resto passa como texto. */
-function PresenterToken({ token, showIpa }: { token: Token; showIpa: boolean }) {
+function PresenterToken({ token, showIpa, lang }: { token: Token; showIpa: boolean; lang: Lang }) {
   if (token.kind === 'text') return <>{token.text}</>;
   const reading = token.kind === 'word' ? readingOf(token.primary) : '?';
   return (
     <span className="inline-flex flex-col items-start align-bottom">
       <span
+        aria-hidden="true"
         className={cx(
           'text-[0.62em] font-bold',
           token.kind === 'word' ? 'text-stage-reading' : 'text-slate-400',
@@ -277,7 +284,9 @@ function PresenterToken({ token, showIpa }: { token: Token; showIpa: boolean }) 
         {reading}
       </span>
       {showIpa && token.kind === 'word' && (
-        <span className="font-ipa text-[0.34em] text-slate-400">/{token.primary.ipa}/</span>
+        <span aria-hidden="true" className="font-ipa text-[0.34em] text-slate-400">
+          /{token.primary.ipa}/
+        </span>
       )}
       <span
         className={cx(
@@ -285,7 +294,11 @@ function PresenterToken({ token, showIpa }: { token: Token; showIpa: boolean }) 
           token.kind === 'word' ? 'border-stage-mark' : 'border-dashed border-slate-400',
         )}
       >
-        {token.original}
+        <span lang={lang}>{token.original}</span>
+      </span>
+      {/* o leitor de tela ouve a palavra (na língua dela) e depois como falar */}
+      <span className="sr-only">
+        {token.kind === 'word' ? ` (leia: ${spokenReading(token.primary)})` : ' (fora do dicionário)'}
       </span>
     </span>
   );

@@ -128,7 +128,11 @@ export function TranslateScreen({
 
   return (
     <div className="bg-canvas text-ink">
-      <main className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6 sm:py-6">
+      <main
+        id="conteudo"
+        tabIndex={-1}
+        className="outline-none mx-auto flex max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6 sm:py-6"
+      >
         <h1 ref={headingRef} tabIndex={-1} className="sr-only">
           Como pronunciar em {group.inLabel}
         </h1>
@@ -170,7 +174,7 @@ export function TranslateScreen({
                 maxLength={MAX}
                 rows={3}
                 spellCheck={false}
-                className="focus-ring block w-full resize-y rounded-control border border-line bg-surface px-3 py-2 text-xl leading-snug text-ink focus:border-accent"
+                className="focus-ring block w-full resize-y rounded-control border border-field bg-surface px-3 py-2 text-xl leading-snug text-ink focus:border-accent"
               />
               <div className="mt-2 flex items-center justify-between gap-3">
                 <span className="text-xs text-muted">
@@ -224,7 +228,7 @@ export function TranslateScreen({
               className="sticky top-4 rounded-card border border-line bg-surface p-5"
             >
               {current ? (
-                <WordDetail token={current} speech={speech} />
+                <WordDetail token={current} lang={lang} speech={speech} />
               ) : (
                 <p className="text-sm text-ink-2">Escolha uma palavra para ver os detalhes som a som.</p>
               )}
@@ -234,8 +238,12 @@ export function TranslateScreen({
       </main>
 
       {!desktop && current && (
-        <BottomSheet open={sheetOpen} onClose={() => setSheetOpen(false)} title={current.original}>
-          <WordDetail token={current} speech={speech} showTitle={false} />
+        <BottomSheet
+          open={sheetOpen}
+          onClose={() => setSheetOpen(false)}
+          title={<span lang={lang}>{current.original}</span>}
+        >
+          <WordDetail token={current} lang={lang} speech={speech} showTitle={false} />
         </BottomSheet>
       )}
     </div>
@@ -286,6 +294,7 @@ function Results({
         <WordCard
           key={`${i}-${w.original}`}
           token={w}
+          lang={result!.lang}
           mode={m}
           selected={i === selectedIndex}
           onSelect={() => onSelect(i)}
