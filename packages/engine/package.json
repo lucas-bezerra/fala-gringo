@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "inventory": "tsx scripts/inventory.ts",
     "syllables-eval": "tsx scripts/syllables-eval.ts",
-    "rules-coverage": "tsx scripts/rules-coverage.ts"
+    "rules-coverage": "tsx scripts/rules-coverage.ts",
+    "golden": "tsx scripts/golden.ts",
+    "golden:draft": "tsx scripts/golden-draft.ts"
   },
   "dependencies": {
     "@falagringo/data": "workspace:*"
