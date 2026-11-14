@@ -76,6 +76,50 @@ function renderHeadersFile(): string {
   ].join('\n\n');
 }
 
+const IMMUTABLE = 'public, max-age=31536000, immutable';
+
+/**
+ * Regras do Render (T6.6) no formato do Blueprint (`render.yaml`, campo `headers`).
+ * A documentação do Render não diz qual regra vence quando duas casam com o mesmo cabeçalho, então as regras de
+ * cache NÃO se sobrepõem: `/dict/**\/*.json` só pega arquivos em subpastas (shards), nunca o `/dict/manifest.json`.
+ * Confira no ar com `pnpm check:deploy <url>`.
+ */
+export const RENDER_HEADER_RULES: { path: string; name: string; value: string }[] = [
+  ...Object.entries(SECURITY_HEADERS).map(([name, value]) => ({ path: '/*', name, value })),
+  { path: '/assets/*', name: 'Cache-Control', value: IMMUTABLE },
+  { path: '/dict/**/*.json', name: 'Cache-Control', value: IMMUTABLE },
+  { path: '/dict/*.txt', name: 'Cache-Control', value: IMMUTABLE },
+  { path: '/dict/manifest.json', name: 'Cache-Control', value: 'no-cache' },
+  { path: '/sw.js', name: 'Cache-Control', value: 'no-cache' },
+  { path: '/manifest.webmanifest', name: 'Cache-Control', value: 'no-cache' },
+];
+
+/** Conteúdo do render.yaml (Blueprint). Gerado: `pnpm render:yaml`; o teste deploy-sync falha se divergir. */
+export function renderBlueprint(): string {
+  const q = (v: string) => `'${v.replace(/'/g, "''")}'`;
+  const headers = RENDER_HEADER_RULES.map(
+    (h) => `      - path: ${q(h.path)}\n        name: ${q(h.name)}\n        value: ${q(h.value)}`,
+  ).join('\n');
+  return `# GERADO por apps/web/security-headers.ts (renderBlueprint). Não edite à mão: rode \`pnpm render:yaml\`.
+# Site estático no Render (T6.6). Passo a passo em docs/deploy.md.
+services:
+  - type: web
+    name: falagringo
+    runtime: static
+    branch: master
+    # só publica depois que o CI do commit passar
+    autoDeployTrigger: checksPass
+    # o pipeline de dados (~40 s) roda dentro do build: os dicionários são gerados a partir de raw/
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    staticPublishPath: ./apps/web/dist
+    envVars:
+      - key: NODE_VERSION
+        value: '22'
+    headers:
+${headers}
+`;
+}
+
 export function securityHeaders(): Plugin {
   return {
     name: 'falagringo:security-headers',

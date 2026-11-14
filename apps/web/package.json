@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "budget": "node scripts/budget.mjs"
+    "budget": "node scripts/budget.mjs",
+    "render:yaml": "tsx scripts/render-yaml.ts",
+    "check:deploy": "node scripts/check-deploy.mjs"
   },
   "dependencies": {
     "@falagringo/data": "workspace:*",
@@ -27,6 +29,7 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.0",
     "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-pwa": "^2.0.0"

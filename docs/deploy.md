@@ -13,6 +13,7 @@ A fonte única é [apps/web/security-headers.ts](../apps/web/security-headers.ts
 
 | Mecanismo | Onde vale | Cobertura |
 |---|---|---|
+| `render.yaml` (Blueprint, na raiz) | **Render (hospedagem escolhida)** | Completa. Gerado por `pnpm render:yaml`; o teste `deploy-sync` falha se divergir |
 | `dist/_headers` | Cloudflare Pages, Netlify | Completa: CSP, HSTS, X-Frame-Options, cache etc. |
 | `<meta http-equiv="Content-Security-Policy">` | Qualquer hospedagem | Só a CSP, e sem `frame-ancestors` (o navegador ignora essa diretiva em `<meta>`) |
 
@@ -20,7 +21,29 @@ O teste E2E `roda sob a CSP de produção…` falha se a página violar a CSP ou
 
 ## Opções de hospedagem
 
-### Cloudflare Pages / Netlify (recomendado)
+### Render (escolhida em 2026-11-14)
+
+Site estático gratuito. A configuração inteira está no [render.yaml](../render.yaml): build, pasta publicada, Node 22 e os cabeçalhos de segurança e de cache.
+
+**Primeira publicação (uma vez):**
+
+1. Em render.com, entre com a conta do GitHub que tem acesso ao repositório.
+2. **New → Blueprint**, escolha o repositório `fala-gringo` e a branch `master`. O Render lê o `render.yaml` e mostra o serviço `falagringo` (site estático). Confirme.
+3. Espere o primeiro build. Ele leva de 2 a 3 minutos, porque gera os dicionários a partir de `raw/`.
+4. Anote o endereço (`https://falagringo….onrender.com`) e rode, no seu computador:
+   ```bash
+   pnpm check:deploy https://<endereço>
+   ```
+   Todas as verificações precisam passar: CSP, HSTS, cache de cada tipo de arquivo, compressão e service worker.
+5. Monitoramento diário (abaixo): em GitHub → Settings → Secrets and variables → Actions → **Variables**, crie `SITE_URL` com o endereço.
+
+**Dia a dia:**
+
+- Cada merge na `master` publica sozinho, **depois que o CI do commit passar** (`autoDeployTrigger: checksPass`). Confira no painel do serviço (Settings → Build & Deploy) se a opção ficou como "After CI checks pass".
+- Mudou `security-headers.ts`? Rode `pnpm render:yaml` e faça commit do `render.yaml`. Ao sincronizar o Blueprint, o Render aplica as regras novas. Regras criadas à mão no painel e ausentes do arquivo **são mantidas**: apague-as no painel se sobrarem.
+- A documentação do Render não diz qual regra de cabeçalho vence quando duas casam com o mesmo arquivo. Por isso as regras de cache do `render.yaml` não se sobrepõem. O `check:deploy` confere o resultado real.
+
+### Cloudflare Pages / Netlify (alternativa)
 
 - Comando de build: `pnpm build`
 - Diretório de saída: `apps/web/dist`
@@ -30,7 +53,7 @@ O `_headers` é aplicado automaticamente.
 
 ### Vercel
 
-O Vercel não lê o `_headers`. Seria preciso um `vercel.json` com os mesmos cabeçalhos, que ainda não existe.
+O Vercel não lê o `_headers`; seria preciso um `vercel.json`, que não existe. Além disso, o plano gratuito (Hobby) é só para uso pessoal e não comercial. Uma ferramenta interna de empresa provavelmente exige o plano pago.
 
 ### GitHub Pages
 
@@ -94,7 +117,24 @@ server {
 
 ## Checklist depois de publicar
 
+0. `pnpm check:deploy https://<endereço>`: tudo ✅.
 1. Abrir o site e conferir os cabeçalhos em https://securityheaders.com (meta da T1.5: nota A).
 2. Console do navegador sem erros de CSP.
 3. Converter uma frase (prova de que o dicionário carregou).
 4. Abrir **Uso offline**, baixar um idioma, ativar o modo avião e converter de novo (prova do service worker). O PWA exige HTTPS (ou `localhost`).
+5. Instalar como app (no celular: "Adicionar à tela inicial") e abrir sem internet.
+
+## Monitoramento (sem dados pessoais)
+
+**Não há telemetria no navegador:** nenhum analytics, rastreio de erros ou registro de uso. Isso evitaria um serviço externo, uma mudança na CSP e o risco de capturar o texto digitado (LGPD). Para incluir algo assim no futuro, são obrigatórios a validação com o DPO e um serviço que nunca receba o texto.
+
+O que existe:
+
+| O quê | Como | Cobertura |
+|---|---|---|
+| Qualidade antes de publicar | CI (lint, tipos, testes, golden sets, e2e de telas, acessibilidade, segurança e desempenho, orçamento de tamanho) | Cada PR; o Render só publica com o CI verde |
+| Site no ar e bem configurado | Workflow `monitor.yml`: roda `check:deploy` contra `SITE_URL` todo dia | Disponibilidade, cabeçalhos, cache, compressão, dados e service worker. Falha → e-mail do GitHub para quem acompanha o repositório |
+| Erros de quem usa | Relato direto (canal interno da equipe) | — |
+
+Incidentes de segurança ou de privacidade: governanca@redegazeta.com.br.
+

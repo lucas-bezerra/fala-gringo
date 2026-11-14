@@ -4,3 +4,6 @@ packages/data/raw
 pnpm-lock.yaml
 docs
 *.md
+
+# gerado por apps/web/security-headers.ts (pnpm render:yaml)
+render.yaml
