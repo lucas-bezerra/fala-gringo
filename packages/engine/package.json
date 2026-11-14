@@ -18,8 +18,8 @@
     "@falagringo/data": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.6.6",
     "tsx": "^4.23.15",
-    "typescript": "~5.8.3"
+    "typescript": "~7.0.2"
   }
 }
