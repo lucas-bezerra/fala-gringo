@@ -67,9 +67,20 @@ server {
         add_header Cache-Control "public, max-age=31536000, immutable" always;
     }
 
+    # shards e léxico têm hash no nome; o manifest dos dados não tem e precisa revalidar
     location /dict/ {
         include /etc/nginx/snippets/falagringo-security.conf;
-        add_header Cache-Control "public, max-age=86400" always;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+    }
+    location = /dict/manifest.json {
+        include /etc/nginx/snippets/falagringo-security.conf;
+        add_header Cache-Control "no-cache" always;
+    }
+
+    # service worker e manifest do PWA (T4.8): sem cache, para a versão nova chegar logo
+    location ~ ^/(sw\.js|manifest\.webmanifest)$ {
+        include /etc/nginx/snippets/falagringo-security.conf;
+        add_header Cache-Control "no-cache" always;
     }
 
     location / {
@@ -85,3 +96,4 @@ server {
 1. Abrir o site e conferir os cabeçalhos em https://securityheaders.com (meta da T1.5: nota A).
 2. Console do navegador sem erros de CSP.
 3. Converter uma frase (prova de que o dicionário carregou).
+4. Abrir **Uso offline**, baixar um idioma, ativar o modo avião e converter de novo (prova do service worker). O PWA exige HTTPS (ou `localhost`).

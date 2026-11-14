@@ -1,26 +1,26 @@
 import { useSyncExternalStore } from 'react';
 
 /** Rotas por hash: funcionam em qualquer hospedagem estática, sem configurar o servidor. */
-export type Route = 'traduzir' | 'apresentar' | 'creditos';
+export type Route = 'traduzir' | 'apresentar' | 'offline' | 'creditos';
 
 export const ROUTE_HREF: Record<Route, string> = {
   traduzir: '#/',
   apresentar: '#/apresentar',
+  offline: '#/offline',
   creditos: '#/creditos',
 };
 export const ROUTE_TITLE: Record<Route, string> = {
   traduzir: 'FalaGringo — Como pronunciar',
   apresentar: 'Modo apresentador — FalaGringo',
+  offline: 'Uso offline — FalaGringo',
   creditos: 'Fontes e créditos — FalaGringo',
 };
 
 function current(): Route {
   const hash = window.location.hash;
-  return hash === ROUTE_HREF.apresentar
-    ? 'apresentar'
-    : hash === ROUTE_HREF.creditos
-      ? 'creditos'
-      : 'traduzir';
+  return (
+    (Object.keys(ROUTE_HREF) as Route[]).find((r) => r !== 'traduzir' && ROUTE_HREF[r] === hash) ?? 'traduzir'
+  );
 }
 
 export function useRoute(): Route {

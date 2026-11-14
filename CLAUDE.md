@@ -79,6 +79,8 @@ translate/WordDetail.tsx             → detalhe: som a som, fonte, variantes, �
 translate/useSpeech.ts               → voz sintética do navegador (Web Speech); sem voz no idioma, desativa e explica
 app/                                 → cabeçalho (navegação + tema), rodapé com créditos, #/creditos (de sources.ts),
                                       storage.ts (recentes/favoritos em localStorage), share.ts (?t=&l=), theme.ts
+offline/                             → PWA (T4.8): offlineStore.ts (Cache Storage "fg-dict", o MESMO cache CacheFirst do service
+                                      worker em vite.config.ts — mude os dois juntos), OfflineScreen (#/offline), selo offline
 present/PresenterScreen.tsx          → modo apresentador: roteiro com texto misto, leitura em amarelo acima do nome, IPA,
                                       tamanhos 40–96 px, atalhos (Espaço, + −, I, E) listados na própria tela
 ```
@@ -94,6 +96,7 @@ present/PresenterScreen.tsx          → modo apresentador: roteiro com texto mi
 - **Relatórios e créditos:** `coverage` gera `packages/data/COVERAGE.md` (uso real coberto por idioma); `notice` gera `packages/data/NOTICE.md` a partir de `sources.ts` — o CI falha se estiver desatualizado (`notice:check`). Ao mexer em `SOURCES`/`PRIORITY`, rode `notice`. O workflow `data-refresh.yml` renova Wikidata e Wiktionary todo mês e abre um PR. Cada `raw/<fonte>/README.md` diz versão, licença e como atualizar. `fetch:wikidata` e `extract:wiktextract` acessam a rede e só são usados para **atualizar** os retratos versionados.
 - **Tônica:** cada fonte declara em `sources.ts` se traz tônica (`stress`). **O WikiPron não traz**; a tônica de it-IT e en-GB vem do Wiktionary via kaikki ([ADR 0001](docs/adr/0001-fonte-de-tonica.md)). Não trate "sem `ˈ`" como "sem tônica".
 - **Estilos:** Tailwind v4 via `@tailwindcss/vite`; tokens de design no bloco `@theme` de [apps/web/src/index.css](apps/web/src/index.css) (cores `canvas`, `surface`, `ink`, `muted`, `accent`, `special`…; fontes `font-display`, `font-ipa`). Use os tokens em vez de hex soltos; o tema escuro (T4.10) redefine os mesmos tokens em `index.css`, então cor nova precisa de valor nos dois temas (o e2e roda axe em ambos). Os tokens e estilos marcados como legados da v1 saem na T4.2.
+- **Service worker (T4.8):** só existe no build (`pnpm build && pnpm preview`; no `pnpm dev`, não). Registro em `src/app/pwa.ts` (`injectRegister: false`: o script inline padrão do plugin quebraria a CSP). Os dicionários ficam fora do precache (`globIgnores`); subconjuntos de fonte também, exceto latin, latin-ext e greek (o IPA usa θ, β, χ). Nome de arquivo sem hash em `/dict/` (só o `manifest.json`) precisa de `no-cache` no `_headers`.
 - **Nada de CDN:** fontes vêm de `@fontsource` e são servidas pelo próprio site. Não adicione scripts, estilos ou fontes externos.
 - **CSP rígida** (sem `unsafe-inline`, sem `data:`): fonte única em [apps/web/security-headers.ts](apps/web/security-headers.ts), aplicada no `dist/_headers`, no `<meta>` do build e no `vite preview`. Não vale no `pnpm dev`. Recurso novo bloqueado? Ajuste lá e rode `pnpm test:e2e`, que falha em qualquer violação ou requisição externa. O `assetsInlineLimit: 0` no Vite é proposital. Deploy: [docs/deploy.md](docs/deploy.md).
 - Conteúdo visível ao usuário fica em PT-BR. A v1 ainda mistura rótulos em inglês.

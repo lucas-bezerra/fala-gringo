@@ -6,6 +6,7 @@ import { ROUTE_HREF, type Route } from './route';
 const NAV: { route: Route; label: string }[] = [
   { route: 'traduzir', label: 'Traduzir' },
   { route: 'apresentar', label: 'Modo apresentador' },
+  { route: 'offline', label: 'Uso offline' },
 ];
 
 /** Cabeçalho das telas claras: marca e navegação principal. */
