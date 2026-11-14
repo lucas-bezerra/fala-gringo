@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { BottomSheet, Button, Chip, Popover, Tabs, ToastProvider, useToast } from '@/ui';
+import { BottomSheet, Button, Chip, Popover, Segmented, Tabs, ToastProvider, useToast } from '@/ui';
 
 /** Catálogo interno dos componentes base (T4.1): cada um com seus estados, para conferir visual e teclado. */
 export function Catalog() {
@@ -14,6 +14,7 @@ export function Catalog() {
         </header>
         <Buttons />
         <Chips />
+        <SegmentedDemo />
         <TabsDemo />
         <PopoverDemo />
         <SheetDemo />
@@ -116,6 +117,26 @@ function Chips() {
           Só sons especiais
         </Chip>
       </div>
+    </Section>
+  );
+}
+
+function SegmentedDemo() {
+  const [variant, setVariant] = useState<'en-US' | 'en-GB'>('en-US');
+  return (
+    <Section
+      title="Segmentado"
+      note="Escolha exclusiva (radiogroup): Tab entra pela opção marcada; setas trocam."
+    >
+      <Segmented
+        label="Variante"
+        value={variant}
+        onChange={setVariant}
+        options={[
+          { key: 'en-US', label: 'EUA' },
+          { key: 'en-GB', label: 'Reino Unido' },
+        ]}
+      />
     </Section>
   );
 }

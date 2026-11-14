@@ -13,6 +13,8 @@ export interface TabsProps<K extends string> {
   items: readonly TabItem<K>[];
   value: K;
   onChange: (key: K) => void;
+  /** Botões ao lado das abas (ex.: Copiar). */
+  actions?: ReactNode;
   className?: string;
 }
 
@@ -20,7 +22,7 @@ export interface TabsProps<K extends string> {
  * Abas no padrão WAI-ARIA (tablist/tab/tabpanel), com visual de controle segmentado.
  * Teclado: setas ←/→ trocam e ativam a aba; Home/End vão à primeira/última; Tab entra no painel.
  */
-export function Tabs<K extends string>({ label, items, value, onChange, className }: TabsProps<K>) {
+export function Tabs<K extends string>({ label, items, value, onChange, actions, className }: TabsProps<K>) {
   const id = useId();
   const refs = useRef(new Map<K, HTMLButtonElement>());
 
@@ -45,33 +47,36 @@ export function Tabs<K extends string>({ label, items, value, onChange, classNam
 
   return (
     <div className={className}>
-      <div role="tablist" aria-label={label} className="inline-flex gap-1 rounded-control bg-segment p-1">
-        {items.map((t) => {
-          const selected = t.key === value;
-          return (
-            <button
-              key={t.key}
-              ref={(el) => {
-                if (el) refs.current.set(t.key, el);
-                else refs.current.delete(t.key);
-              }}
-              type="button"
-              role="tab"
-              id={`${id}-tab-${t.key}`}
-              aria-selected={selected}
-              aria-controls={`${id}-panel-${t.key}`}
-              tabIndex={selected ? 0 : -1}
-              onClick={() => onChange(t.key)}
-              onKeyDown={onKeyDown}
-              className={cx(
-                'focus-ring min-h-9 cursor-pointer rounded-[7px] px-3.5 text-sm font-semibold transition-colors',
-                selected ? 'bg-surface text-ink shadow-sm' : 'text-ink-2 hover:text-ink',
-              )}
-            >
-              {t.label}
-            </button>
-          );
-        })}
+      <div className="flex flex-wrap items-center gap-2">
+        <div role="tablist" aria-label={label} className="inline-flex gap-1 rounded-control bg-segment p-1">
+          {items.map((t) => {
+            const selected = t.key === value;
+            return (
+              <button
+                key={t.key}
+                ref={(el) => {
+                  if (el) refs.current.set(t.key, el);
+                  else refs.current.delete(t.key);
+                }}
+                type="button"
+                role="tab"
+                id={`${id}-tab-${t.key}`}
+                aria-selected={selected}
+                aria-controls={`${id}-panel-${t.key}`}
+                tabIndex={selected ? 0 : -1}
+                onClick={() => onChange(t.key)}
+                onKeyDown={onKeyDown}
+                className={cx(
+                  'focus-ring min-h-9 cursor-pointer rounded-[7px] px-3.5 text-sm font-semibold transition-colors',
+                  selected ? 'bg-surface text-ink shadow-sm' : 'text-ink-2 hover:text-ink',
+                )}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+        {actions}
       </div>
       {items.map((t) => (
         <div
