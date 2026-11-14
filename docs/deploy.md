@@ -38,18 +38,19 @@ Não permite cabeçalhos HTTP. Vale só a CSP via `<meta>`. Sem HSTS, sem prote�
 
 ### Nginx (servidor próprio)
 
-Equivalente ao `_headers`. **Mantenha em sincronia com `security-headers.ts`** se a política mudar.
+Equivalente ao `_headers`. **Mantenha em sincronia com `security-headers.ts`**: o teste `apps/web/src/security/deploy-sync.test.ts` falha se o snippet abaixo divergir.
 
 `/etc/nginx/snippets/falagringo-security.conf`:
 
 ```nginx
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests" always;
+    add_header Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'; trusted-types default; frame-ancestors 'none'; upgrade-insecure-requests" always;
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-Frame-Options "DENY" always;
     add_header Referrer-Policy "no-referrer" always;
-    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), browsing-topics=()" always;
     add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
 ```
 
 Site:

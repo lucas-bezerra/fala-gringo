@@ -3,3 +3,8 @@ packages:
   - packages/*
 allowBuilds:
   esbuild: true
+# T6.2 — correções de segurança em dependências de build/lint (nenhuma vai para o site).
+# Remover quando as dependências diretas (workbox-build, eslint) atualizarem sozinhas.
+overrides:
+  glob@>=9.0.0 <14.0.2: ^14.0.2
+  minimatch@>=7.0.0 <11.0.1: ^11.0.1

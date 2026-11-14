@@ -1,3 +1,4 @@
+import './app/trustedTypes'; // 1º: política de Trusted Types antes de qualquer sink
 import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';

@@ -12,7 +12,8 @@
 import type { Plugin } from 'vite';
 
 const CSP_DIRECTIVES: Record<string, string> = {
-  'default-src': "'self'",
+  // T6.2: nega tudo por padrão e libera só o que o site usa (tudo da própria origem)
+  'default-src': "'none'",
   'script-src': "'self'",
   'style-src': "'self'",
   'img-src': "'self'",
@@ -21,8 +22,12 @@ const CSP_DIRECTIVES: Record<string, string> = {
   'worker-src': "'self'",
   'manifest-src': "'self'",
   'object-src': "'none'",
-  'base-uri': "'self'",
+  'base-uri': "'none'",
   'form-action': "'none'",
+  // Trusted Types: sinks de HTML/script (innerHTML, eval, new Worker, register do SW…) só aceitam valores de
+  // uma política. A única é a "default" (src/app/trustedTypes.ts): libera URL de script da própria origem.
+  'require-trusted-types-for': "'script'",
+  'trusted-types': 'default',
   // As diretivas abaixo são ignoradas em <meta>; valem só como cabeçalho HTTP.
   'frame-ancestors': "'none'",
   'upgrade-insecure-requests': '',
@@ -43,8 +48,10 @@ export const SECURITY_HEADERS: Record<string, string> = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'no-referrer',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
+  'Permissions-Policy':
+    'camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), browsing-topics=()',
   'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Resource-Policy': 'same-origin',
 };
 
 /** Cabeçalhos para `vite preview`. Sem HSTS (o preview é HTTP local). */

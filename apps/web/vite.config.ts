@@ -45,6 +45,8 @@ export default defineConfig({
         navigateFallback: 'index.html',
         navigateFallbackDenylist: [/\/dict\//, /catalogo\.html/],
         cleanupOutdatedCaches: true,
+        // runtime do Workbox dentro do sw.js: sem importScripts, que a CSP com Trusted Types bloquearia no worker
+        inlineWorkboxRuntime: true,
         clientsClaim: true,
         runtimeCaching: [
           {

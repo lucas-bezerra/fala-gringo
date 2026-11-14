@@ -1,0 +1,15 @@
+# T6.2 — avisos de atualização de segurança (PRs revisados por humano; nada é mergeado sozinho).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      dev-tools:
+        dependency-type: development
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
