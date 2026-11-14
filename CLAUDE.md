@@ -73,6 +73,8 @@ engine/useConversion.ts              → EngineClient (um worker por página), e
 engine/langs.ts                      → idiomas e variantes oferecidos na tela
 translate/TranslateScreen.tsx        → tela Traduzir (idioma, variante, entrada, cartões, leitura, copiar)
 translate/Pronunciation.tsx          → sílabas com tônica e destaque laranja por segmento (notação, seção 5.1)
+translate/WordDetail.tsx             → detalhe: som a som, fonte, variantes, áudio (painel lateral ≥ 1024 px; inferior abaixo)
+translate/useSpeech.ts               → voz sintética do navegador (Web Speech); sem voz no idioma, desativa e explica
 ```
 
 ## Convenções e armadilhas
