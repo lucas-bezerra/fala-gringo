@@ -139,9 +139,9 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T3.4 | ✅ **Concluída em 2026-11-13** ([SYLLABLES.md](../packages/engine/SYLLABLES.md): fronteiras it 99,8%; tônica por regra en-US 78,9%, en-GB 69,8%, de 66%, nl 70%, it 69,5%). Silabação e tônica (usar as marcas da fonte; fallback pelo princípio do ataque máximo) | high | 100 casos por idioma da onda 1 | T3.3 |
 | T3.5 | ✅ **Concluída em 2026-11-13** ([ADR 0002](adr/0002-motor-de-regras.md); cobertura 99,9997% dos sons reais; 66/69 exemplos da notação). **Motor de regras contextuais**: DSL de regras ordenadas por perfil (contexto anterior/posterior, posição na sílaba/palavra) | xhigh | ADR documentando a DSL; regras declarativas por idioma; testes | T3.4 |
 | T3.6 | ✅ **Concluída em 2026-11-13**: decisões (a)–(d) aprovadas e registradas na notação; armadilhas omitidas acrescentadas; R11 das palavras funcionais em frase. **Os 69 exemplos da notação são o golden set** — o teste lê a própria notação e confere grafia e armadilhas (69/69). Renderização PT-BR | high | Segue `docs/notacao.md` à risca | T3.5 |
-| T3.7 | **Depende da revisão de `golden/en-US.tsv` e `golden/en-GB.tsv`** (meta 95% já configurada em `golden/metas.json`). Perfil do inglês (US e UK) | high | Golden set EN ≥ 300 palavras revisadas, com 95% ou mais de acerto 👤 | T3.6, T2.3 |
+| T3.7 | ✅ **Concluída em 2026-11-13**: 300 palavras revisadas em cada variante (en-US e en-GB), 100% de acerto contra a meta de 95%. O revisor aprovou a saída do motor sem correções; daqui em diante, o gabarito protege o inglês contra regressões. Perfil do inglês (US e UK) | high | Golden set EN ≥ 300 palavras revisadas, com 95% ou mais de acerto 👤 | T3.6, T2.3 |
 | T3.8 | ✅ **Concluída em 2026-11-13** (`pnpm test:golden`, no CI; rascunhos gerados: 300 por inglês, 200 es/fr/it/de, 100 nl/sv/ko — [golden/README.md](../packages/engine/golden/README.md) para o revisor). **Falta a revisão humana** 👤. Golden sets + harness de testes (métrica de acerto por idioma no CI) | medium | `pnpm test:golden` mostra o % de acerto por idioma | T3.6 |
-| T3.9 | Estimativa para palavras fora do dicionário em EN/FR (decidir: regras ou modelo de ML) 👤 | xhigh | ADR com a decisão. Com ML: Idea Case, documentação do modelo e aviso "estimado" na UI | T3.7 |
+| T3.9 | Estimativa para palavras fora do dicionário em EN/FR (decidir: regras ou modelo de ML) 👤. **Direção escolhida em 2026-11-13:** modelo G2P pequeno, treinado localmente (PC com GTX 1060 6 GB) só com dados liberados no SOURCES.md, servido como arquivo estático e executado no navegador. Custo zero: sem API paga, sem servidor e sem LLM | xhigh | ADR com a decisão. Com ML: Idea Case, documentação do modelo e aviso "estimado" na UI | T3.7 |
 | T3.10 | ✅ **Concluída em 2026-11-13** (`serveEngine`/`EngineClient` em `src/worker/`, `cachedDictionary`; `pnpm --filter @falagringo/engine bench`: 2.000 caracteres em ~10–15 ms com cache, 0,1–0,4 s a frio lendo os shards; o arquivo do worker no app e a publicação dos shards ficam na T4.2/T4.8). Wrapper em Web Worker + cache LRU de palavras | medium | A UI não trava com 2.000 caracteres | T3.6 |
 
 ### Fase 4 — Frontend (depois da T0.1)
@@ -190,7 +190,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 
 1. **M0 — Decisões** (Fase 0): notação aprovada e protótipo aprovado.
 2. **M1 — Esqueleto** (Fase 1 + T2.1–T2.2 + T3.1): monorepo, CI e o motor convertendo EN com o dicionário atual.
-3. **M2 — Motor confiável em EN** (T2.3–T2.7, T3.2–T3.10): golden set EN com 95% ou mais de acerto.
+3. **M2 — Motor confiável em EN** (T2.3–T2.7, T3.2–T3.10): golden set EN com 95% ou mais de acerto. Meta de acerto atingida em 2026-11-13 (100% em en-US e en-GB, 300 revisadas cada); falta a T3.9.
 4. **M3 — Nova interface** (Fase 4): paridade com o protótipo, PWA offline e a11y.
 5. **M4 — Onda 1 de idiomas** (T5.1–T5.4, T5.8).
 6. **M5 — Onda 2** (T5.5–T5.7) e lançamento (Fase 6).
