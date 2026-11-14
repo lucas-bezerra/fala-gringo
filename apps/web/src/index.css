@@ -24,6 +24,7 @@
   --color-segment: #e9ecf1; /* fundo de controles segmentados */
   --color-line: #e3e6eb; /* bordas */
   --color-line-strong: #d5dae1;
+  --color-field: #848e9f; /* borda de campo de texto: ≥ 3:1 (WCAG 1.4.11) */
   --color-ink: #0f172a; /* texto principal */
   --color-ink-2: #334155; /* texto secundário */
   --color-muted: #5b6474; /* rótulos (contraste AA sobre branco e canvas) */
@@ -33,7 +34,7 @@
   --color-accent-strong: #1e3a8a;
   --color-accent-soft: #eef2ff;
   --color-accent-ink: #1e3a8a; /* texto sobre accent-soft */
-  --color-focus: #93c5fd;
+  --color-focus: #2563eb; /* contorno de foco: ≥ 3:1 sobre canvas e surface (WCAG 1.4.11) */
 
   --color-special: #b54708; /* som que não existe em PT-BR (laranja) */
   --color-special-ink: #8a3a06;
@@ -62,6 +63,7 @@
     --color-segment: #1e293b;
     --color-line: #263451;
     --color-line-strong: #3a4a68;
+    --color-field: #6b7a93;
     --color-ink: #f1f5f9;
     --color-ink-2: #cbd5e1;
     --color-muted: #a3afc2;
@@ -70,6 +72,7 @@
     --color-accent-strong: #1e40af;
     --color-accent-soft: #1b2a55;
     --color-accent-ink: #c7d7fe;
+    --color-focus: #93c5fd;
     --color-special: #fdba74;
     --color-special-ink: #fed7aa;
     --color-special-soft: #3a2412;
@@ -85,6 +88,7 @@
   --color-segment: #1e293b;
   --color-line: #263451;
   --color-line-strong: #3a4a68;
+  --color-field: #6b7a93;
   --color-ink: #f1f5f9;
   --color-ink-2: #cbd5e1;
   --color-muted: #a3afc2;
@@ -93,6 +97,7 @@
   --color-accent-strong: #1e40af;
   --color-accent-soft: #1b2a55;
   --color-accent-ink: #c7d7fe;
+  --color-focus: #93c5fd;
   --color-special: #fdba74;
   --color-special-ink: #fed7aa;
   --color-special-soft: #3a2412;

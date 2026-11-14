@@ -1,5 +1,5 @@
 import { SOURCES } from '@falagringo/data/sources';
-import type { Pronunciation, UnknownToken, WordToken } from '@falagringo/engine';
+import type { Lang, Pronunciation, UnknownToken, WordToken } from '@falagringo/engine';
 import { useId } from 'react';
 import { Button, cx } from '@/ui';
 import { PronunciationText } from './Pronunciation';
@@ -91,15 +91,16 @@ function SoundBySound({ p }: { p: Pronunciation }) {
 
 export interface WordDetailProps {
   token: WordToken | UnknownToken;
+  lang: Lang;
   speech: SpeechState;
   /** No painel lateral o título é a palavra; no painel inferior, o título já vem do diálogo. */
   showTitle?: boolean;
 }
 
-export function WordDetail({ token, speech, showTitle = true }: WordDetailProps) {
+export function WordDetail({ token, lang, speech, showTitle = true }: WordDetailProps) {
   const title = showTitle && (
     <h2 className="font-display text-[22px] font-bold" id="titulo-detalhe">
-      {token.original}
+      <span lang={lang}>{token.original}</span>
     </h2>
   );
 
@@ -124,7 +125,9 @@ export function WordDetail({ token, speech, showTitle = true }: WordDetailProps)
       <p className="mt-1 text-3xl leading-tight">
         <PronunciationText p={p} mode="syllabic" />
       </p>
-      <p className="mt-0.5 font-ipa text-sm text-muted">/{p.ipa}/</p>
+      <p className="mt-0.5 font-ipa text-sm text-muted">
+        <span className="sr-only">Transcrição IPA: </span>/{p.ipa}/
+      </p>
 
       {token.origin === 'estimated' ? (
         <p className={NOTE}>
@@ -152,7 +155,9 @@ export function WordDetail({ token, speech, showTitle = true }: WordDetailProps)
             {token.variants.map((v, i) => (
               <li key={i} className="rounded-control border border-line px-3 py-2">
                 <PronunciationText p={v} mode="syllabic" className="text-lg" />
-                <span className="ml-2 font-ipa text-xs text-muted">/{v.ipa}/</span>
+                <span aria-hidden="true" className="ml-2 font-ipa text-xs text-muted">
+                  /{v.ipa}/
+                </span>
               </li>
             ))}
           </ul>

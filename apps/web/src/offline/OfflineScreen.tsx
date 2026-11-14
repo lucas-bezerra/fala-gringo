@@ -68,7 +68,11 @@ export function OfflineScreen({ headingRef }: { headingRef: Ref<HTMLHeadingEleme
   }, [supported, refreshStorage]);
 
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-5 px-4 py-6 sm:px-6">
+    <main
+      id="conteudo"
+      tabIndex={-1}
+      className="outline-none mx-auto flex max-w-3xl flex-col gap-5 px-4 py-6 sm:px-6"
+    >
       <h1 ref={headingRef} tabIndex={-1} className="font-display text-3xl font-bold">
         Uso offline
       </h1>
