@@ -149,3 +149,10 @@ test-results/
 
 # Saídas do pipeline de dados
 packages/data/build/
+
+# Treino do G2P (tools/g2p): dados preparados, checkpoints e exports ficam fora do git
+tools/g2p/data/
+tools/g2p/runs/
+tools/g2p/export/
+tools/g2p/.venv/
+__pycache__/
