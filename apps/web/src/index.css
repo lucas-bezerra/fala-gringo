@@ -91,6 +91,45 @@
   }
 }
 
+/* ---- Componentes base (T4.1, src/ui) ---- */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* Painel inferior: sobe ao abrir; a página atrás não rola. */
+html:has(dialog.sheet[open]) {
+  overflow: hidden;
+}
+dialog.sheet[open] {
+  animation: sheet-in 200ms ease-out;
+}
+dialog.sheet[open]::backdrop {
+  animation: fade-in 200ms ease-out;
+}
+.toast {
+  animation: toast-in 160ms ease-out;
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes toast-in {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

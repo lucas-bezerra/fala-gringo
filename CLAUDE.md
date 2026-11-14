@@ -87,6 +87,7 @@ services/ipaMappings.ts              → IPA → PT-BR caractere a caractere (no
 - **Nada de CDN:** fontes vêm de `@fontsource` e são servidas pelo próprio site. Não adicione scripts, estilos ou fontes externos.
 - **CSP rígida** (sem `unsafe-inline`, sem `data:`): fonte única em [apps/web/security-headers.ts](apps/web/security-headers.ts), aplicada no `dist/_headers`, no `<meta>` do build e no `vite preview`. Não vale no `pnpm dev`. Recurso novo bloqueado? Ajuste lá e rode `pnpm test:e2e`, que falha em qualquer violação ou requisição externa. O `assetsInlineLimit: 0` no Vite é proposital. Deploy: [docs/deploy.md](docs/deploy.md).
 - Conteúdo visível ao usuário fica em PT-BR. A v1 ainda mistura rótulos em inglês.
+- **Componentes base** (`apps/web/src/ui/`, T4.1): `Button`, `Chip`, `Tabs`, `Popover`, `BottomSheet`, `ToastProvider`/`useToast`, sobre elementos nativos (`<dialog>`, Popover API), **sem Radix**, porque ele injeta `<style>` e a CSP bloqueia ([ADR 0003](docs/adr/0003-componentes-nativos.md)). Use-os nas telas em vez de recriar. O catálogo fica em `/catalogo.html`. O e2e `e2e/componentes.spec.ts` roda axe (WCAG 2.2 AA), teclado e CSP; componente novo entra no catálogo e no teste. Biblioteca nova de UI: confira antes se ela injeta estilos.
 - Alias `@/*` → `apps/web/src/*`.
 
 ## Governança
