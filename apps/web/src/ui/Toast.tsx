@@ -72,7 +72,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {items.map((t) => (
           <div
             key={t.id}
-            className="toast pointer-events-auto flex min-h-11 items-center gap-3 rounded-control bg-ink py-1 pr-1 pl-4 text-sm font-semibold text-white shadow-lg"
+            className="toast pointer-events-auto flex min-h-11 items-center gap-3 rounded-control bg-stage py-1 ring-1 ring-white/15 pr-1 pl-4 text-sm font-semibold text-white shadow-lg"
           >
             <span>{t.message}</span>
             <button

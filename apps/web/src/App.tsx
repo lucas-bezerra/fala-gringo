@@ -1,6 +1,9 @@
 import type { Lang } from '@falagringo/engine';
 import { useEffect, useRef, useState } from 'react';
+import { AppFooter } from '@/app/AppFooter';
 import { AppHeader } from '@/app/AppHeader';
+import { CreditsScreen } from '@/app/CreditsScreen';
+import { readShared } from '@/app/share';
 import { ROUTE_TITLE, useRoute } from '@/app/route';
 import { DEFAULT_LANG } from '@/engine/langs';
 import { PresenterScreen } from '@/present/PresenterScreen';
@@ -13,8 +16,10 @@ const SCRIPT_EXAMPLE =
 
 export default function App() {
   const route = useRoute();
-  const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
-  const [text, setText] = useState(EXAMPLE);
+  // link compartilhado (?t=&l=) abre direto com o texto e o idioma
+  const [shared] = useState(readShared);
+  const [lang, setLang] = useState<Lang>(shared.lang ?? DEFAULT_LANG);
+  const [text, setText] = useState(shared.text ?? EXAMPLE);
   // O roteiro do apresentador é separado: entra com o texto da tela Traduzir ao clicar em "Apresentar".
   const [script, setScript] = useState(SCRIPT_EXAMPLE);
   const firstRender = useRef(true);
@@ -30,7 +35,18 @@ export default function App() {
   return (
     <ToastProvider>
       {route === 'apresentar' ? (
-        <PresenterScreen headingRef={mainHeading} script={script} setScript={setScript} lang={lang} />
+        <>
+          <PresenterScreen headingRef={mainHeading} script={script} setScript={setScript} lang={lang} />
+          <div className="bg-stage">
+            <AppFooter dark />
+          </div>
+        </>
+      ) : route === 'creditos' ? (
+        <>
+          <AppHeader route={route} />
+          <CreditsScreen headingRef={mainHeading} />
+          <AppFooter />
+        </>
       ) : (
         <>
           <AppHeader route={route} />
@@ -42,6 +58,7 @@ export default function App() {
             setLang={setLang}
             onPresent={() => setScript(text)}
           />
+          <AppFooter />
         </>
       )}
     </ToastProvider>

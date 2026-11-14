@@ -1,4 +1,6 @@
-import { cx } from '@/ui';
+import { useState } from 'react';
+import { Segmented, cx } from '@/ui';
+import { applyTheme, readTheme, type ThemePref } from './theme';
 import { ROUTE_HREF, type Route } from './route';
 
 const NAV: { route: Route; label: string }[] = [
@@ -8,6 +10,7 @@ const NAV: { route: Route; label: string }[] = [
 
 /** Cabeçalho das telas claras: marca e navegação principal. */
 export function AppHeader({ route }: { route: Route }) {
+  const [theme, setTheme] = useState<ThemePref>(readTheme);
   return (
     <header className="border-b border-line bg-surface">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2 sm:px-6">
@@ -28,13 +31,27 @@ export function AppHeader({ route }: { route: Route }) {
               aria-current={n.route === route ? 'page' : undefined}
               className={cx(
                 'focus-ring flex min-h-11 items-center rounded-control px-3 text-sm font-semibold',
-                n.route === route ? 'bg-accent-soft text-accent-strong' : 'text-ink-2 hover:bg-segment',
+                n.route === route ? 'bg-accent-soft text-accent-ink' : 'text-ink-2 hover:bg-segment',
               )}
             >
               {n.label}
             </a>
           ))}
         </nav>
+        <Segmented
+          label="Tema"
+          className="ml-auto"
+          value={theme}
+          onChange={(t) => {
+            setTheme(t);
+            applyTheme(t);
+          }}
+          options={[
+            { key: 'system', label: 'Auto' },
+            { key: 'light', label: 'Claro' },
+            { key: 'dark', label: 'Escuro' },
+          ]}
+        />
       </div>
     </header>
   );

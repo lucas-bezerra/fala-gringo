@@ -32,6 +32,7 @@
   --color-accent: #1d4ed8; /* ação principal, seleção */
   --color-accent-strong: #1e3a8a;
   --color-accent-soft: #eef2ff;
+  --color-accent-ink: #1e3a8a; /* texto sobre accent-soft */
   --color-focus: #93c5fd;
 
   --color-special: #b54708; /* som que não existe em PT-BR (laranja) */
@@ -50,6 +51,54 @@
 
   --radius-card: 16px;
   --radius-control: 10px;
+}
+
+/* ---- Tema escuro (T4.10): segue o sistema; a escolha manual (data-theme no <html>) vence ---- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-canvas: #0b1120;
+    --color-surface: #111a2e;
+    --color-subtle: #17223a;
+    --color-segment: #1e293b;
+    --color-line: #263451;
+    --color-line-strong: #3a4a68;
+    --color-ink: #f1f5f9;
+    --color-ink-2: #cbd5e1;
+    --color-muted: #a3afc2;
+    --color-separator: #7c8aa3;
+    --color-accent: #2563eb;
+    --color-accent-strong: #1e40af;
+    --color-accent-soft: #1b2a55;
+    --color-accent-ink: #c7d7fe;
+    --color-special: #fdba74;
+    --color-special-ink: #fed7aa;
+    --color-special-soft: #3a2412;
+    --color-ok: #6ee7b7;
+    --color-ok-soft: #0f2f25;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --color-canvas: #0b1120;
+  --color-surface: #111a2e;
+  --color-subtle: #17223a;
+  --color-segment: #1e293b;
+  --color-line: #263451;
+  --color-line-strong: #3a4a68;
+  --color-ink: #f1f5f9;
+  --color-ink-2: #cbd5e1;
+  --color-muted: #a3afc2;
+  --color-separator: #7c8aa3;
+  --color-accent: #2563eb;
+  --color-accent-strong: #1e40af;
+  --color-accent-soft: #1b2a55;
+  --color-accent-ink: #c7d7fe;
+  --color-special: #fdba74;
+  --color-special-ink: #fed7aa;
+  --color-special-soft: #3a2412;
+  --color-ok: #6ee7b7;
+  --color-ok-soft: #0f2f25;
+  color-scheme: dark;
 }
 
 /* ---- Componentes base (T4.1, src/ui) ---- */

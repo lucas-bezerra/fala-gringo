@@ -1,10 +1,13 @@
 import type { ConversionResult, Lang, UnknownToken, WordToken } from '@falagringo/engine';
-import { useState, type Ref } from 'react';
+import { useEffect, useState, type Ref } from 'react';
 import { ROUTE_HREF } from '@/app/route';
+import { shareUrl } from '@/app/share';
+import { useSavedTexts } from '@/app/storage';
 import { LANG_GROUPS, groupOf } from '@/engine/langs';
 import { useConversion, type ConversionState } from '@/engine/useConversion';
 import { BottomSheet, Button, Chip, Segmented, Tabs, useToast } from '@/ui';
 import type { ReadingMode } from './Pronunciation';
+import { SavedTexts } from './SavedTexts';
 import { useMediaQuery } from './useMediaQuery';
 import { useSpeech, type SpeechState } from './useSpeech';
 import { WordCard } from './WordCard';
@@ -95,13 +98,34 @@ export function TranslateScreen({
   const current = words.length ? words[Math.min(selected, words.length - 1)] : undefined;
   const currentIndex = current ? words.indexOf(current) : -1;
 
+  const toast = useToast();
+  const saved = useSavedTexts();
+  const isFavorite = saved.favorites.includes(text.trim());
+
+  // vai para os recentes quando o texto fica parado 1,5 s com resultado
+  const { addRecent } = saved;
+  useEffect(() => {
+    if (state.status !== 'ready') return;
+    const timer = setTimeout(() => addRecent(text), 1500);
+    return () => clearTimeout(timer);
+  }, [state.status, text, addRecent]);
+
+  const share = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl(text, lang));
+      toast.show('Link copiado. Quem abrir verá este texto.');
+    } catch {
+      toast.show('Não foi possível copiar o link.');
+    }
+  };
+
   const select = (i: number) => {
     setSelected(i);
     if (!desktop) setSheetOpen(true);
   };
 
   return (
-    <div className="min-h-screen bg-canvas text-ink">
+    <div className="bg-canvas text-ink">
       <main className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6 sm:py-6">
         <h1 ref={headingRef} tabIndex={-1} className="sr-only">
           Como pronunciar em {group.inLabel}
@@ -145,11 +169,33 @@ export function TranslateScreen({
                 <span className="text-xs text-muted">
                   {text.length.toLocaleString('pt-BR')} caracteres · máx. {MAX.toLocaleString('pt-BR')}
                 </span>
-                <Button variant="ghost" size="sm" onClick={() => setText('')} disabled={!text}>
-                  Limpar
-                </Button>
+                <span className="flex flex-wrap gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-pressed={isFavorite}
+                    onClick={() => saved.toggleFavorite(text)}
+                    disabled={!text.trim()}
+                  >
+                    <span aria-hidden="true">{isFavorite ? '★' : '☆'}</span>
+                    Favoritar
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={share} disabled={!text.trim()}>
+                    Compartilhar link
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => setText('')} disabled={!text}>
+                    Limpar
+                  </Button>
+                </span>
               </div>
             </section>
+
+            <SavedTexts
+              recent={saved.recent}
+              favorites={saved.favorites}
+              onPick={setText}
+              onClearRecent={saved.clearRecent}
+            />
 
             <Results
               state={state}
