@@ -7,8 +7,8 @@ Só as linhas **revisadas** por humano contam. Rascunho = saída atual do motor 
 | Idioma | Revisadas | Rascunhos | Acerto | Meta |
 |---|---|---|---|---|
 | de-DE | 0 | 200 | **—** | — |
-| en-GB | 0 | 300 | **—** | aguardando revisão (0/30) |
-| en-US | 0 | 300 | **—** | aguardando revisão (0/30) |
+| en-GB | 300 | 0 | **100.0%** | ✅ meta 95% |
+| en-US | 300 | 0 | **100.0%** | ✅ meta 95% |
 | es-419 | 0 | 200 | **—** | — |
 | es-ES | 0 | 200 | **—** | — |
 | fr-FR | 0 | 200 | **—** | — |
