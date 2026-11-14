@@ -67,6 +67,11 @@ export interface Dictionary {
 export interface Estimator {
   /** `key` é a chave de busca (NFC, minúsculas do idioma): a estimativa pela grafia não depende de caixa. */
   estimate(key: string, lang: Lang): string | undefined | Promise<string | undefined>;
+  /**
+   * Opcional: índice, entre as pronúncias do dicionário (`ipas`, na ordem da fonte), da mais próxima da estimativa.
+   * O motor a usa como principal. `undefined` = manter a ordem do dicionário.
+   */
+  prefer?(key: string, lang: Lang, ipas: readonly string[]): number | undefined;
 }
 
 /** IPA → sílabas PT-BR com tônica, destaques e armadilhas (notação inteira). */

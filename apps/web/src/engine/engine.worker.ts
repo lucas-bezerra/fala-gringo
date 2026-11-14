@@ -8,6 +8,8 @@
 import type { Manifest, ShardFile } from '@falagringo/data/shards';
 import {
   cachedDictionary,
+  chainEstimators,
+  createRuleEstimator,
   createEngine,
   createG2pEstimator,
   loadG2pModel,
@@ -37,7 +39,8 @@ async function setup(): Promise<Engine> {
     }),
   );
   const phonology = createPhonology();
-  const estimator = manifest.g2p
+  // regras (espanhol, italiano: sem download) antes do modelo G2P (inglês: baixado no 1º uso)
+  const g2p = manifest.g2p
     ? createG2pEstimator({
         load: async (lang) => {
           const ref = manifest.g2p?.[lang];
@@ -50,6 +53,7 @@ async function setup(): Promise<Engine> {
         },
       })
     : undefined;
+  const estimator = chainEstimators(createRuleEstimator(), g2p);
   const plain = createEngine({ dictionary, phonology, estimator });
 
   let mixed: Promise<Engine> | undefined;

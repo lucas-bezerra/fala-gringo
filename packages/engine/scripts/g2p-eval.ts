@@ -14,7 +14,7 @@ import type { Lang, Pronunciation } from '../src/types';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const G2P = path.resolve(here, '../../../tools/g2p');
-const LANGS: Lang[] = ['en-US', 'en-GB', 'fr-FR'];
+const LANGS: Lang[] = ['en-US', 'en-GB', 'fr-FR', 'de-DE'];
 const limitArg = process.argv.indexOf('--limit');
 const limit = limitArg > 0 ? Number(process.argv[limitArg + 1]) : Infinity;
 

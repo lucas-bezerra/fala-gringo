@@ -166,7 +166,16 @@ export function createEngine(stages: EngineStages): Engine {
         const key = keyOf(r);
         const entry = found.get(key);
         if (entry) {
-          const [first, ...rest] = entry.prons;
+          // variante principal: a que o estimador indicar (ex.: o padrão do espanhol em vez da 1ª do WikiPron)
+          const pick =
+            stages.estimator?.prefer?.(
+              key,
+              lang,
+              entry.prons.map((p) => p.ipa),
+            ) ?? 0;
+          const prons =
+            pick > 0 ? [entry.prons[pick], ...entry.prons.filter((_, i) => i !== pick)] : entry.prons;
+          const [first, ...rest] = prons;
           return [
             {
               kind: 'word',
