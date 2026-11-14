@@ -98,9 +98,13 @@ def main() -> None:
 
     train_rows = read_tsv(data / "train.tsv")
     dev_rows = read_tsv(data / "dev.tsv")
+    # Os arquivos estão em ordem alfabética: subconjuntos são SORTEADOS (semente fixa), senão o modelo só veria
+    # palavras de "a" a "g" e a validação, também alfabética, pareceria ótima (aconteceu no 1º treino do de-DE).
+    pick = random.Random(args.seed)
     if args.limit:
-        train_rows, dev_rows = train_rows[: args.limit], dev_rows[: max(200, args.limit // 10)]
-    dev_eval = dev_rows[:3000]  # validação rápida; o teste completo fica no evaluate.py
+        train_rows = pick.sample(train_rows, min(args.limit, len(train_rows)))
+        dev_rows = pick.sample(dev_rows, min(max(200, args.limit // 10), len(dev_rows)))
+    dev_eval = pick.sample(dev_rows, min(3000, len(dev_rows)))  # validação rápida; o teste completo: evaluate.py
 
     if args.resume:
         ckpt = torch.load(out / "last.pt", map_location=device, weights_only=False)
