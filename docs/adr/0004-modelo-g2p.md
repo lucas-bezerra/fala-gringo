@@ -42,6 +42,8 @@ Palavras de teste, que o modelo nunca viu. "Grafia PT-BR" é a forma silabada co
 - No **inglês**, os erros que sobram são, em boa parte, vogais reduzidas (`â`/`i`), tônica de nomes estrangeiros (`abacha`, `abuladze`) e palavras com mais de uma leitura no dicionário. Uma em cada quatro estimativas difere do dicionário, por isso a marca "estimado" e o pedido de confirmação são obrigatórios.
 - No **francês**, a ortografia regular deixa o modelo quase sempre certo. As falhas são letras finais mudas ou pronunciadas (`absolus`, `angélus`).
 
+**Alemão (2026-11-14, Fase 5):** 150 mil palavras sorteadas do german-ipa-dict, 40 épocas (~50 min no M1 Pro). No teste (34.748 palavras), o IPA foi idêntico em **89,8%** (94,5% sem contar a tônica; erro por caractere de 1,7%). É publicado com o idioma, sob CC BY-SA 4.0, como o en-GB. Um 1º treino foi descartado: o `--limit` pegava as primeiras palavras do arquivo, em ordem alfabética, e o `train.py` passou a sorteá-las.
+
 ## Consequências
 
 - Nomes novos ganham uma leitura plausível em vez de nada, sempre marcada como estimada.

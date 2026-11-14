@@ -34,6 +34,8 @@ test('espanhol, italiano e alemão (Fase 5): dicionário, variante padrão e est
   await page.getByRole('button', { name: /Alemão/ }).click();
   await page.getByLabel('Texto em alemão').fill('danke');
   await expect(words(page).first()).toContainText('DAN');
+  await page.getByLabel('Texto em alemão').fill('Merzkoalition'); // composto novo: modelo G2P do alemão
+  await expect(words(page).first()).toContainText('estimado', { timeout: 15_000 });
 });
 
 test('variante Reino Unido usa o dicionário britânico', async ({ page }) => {
