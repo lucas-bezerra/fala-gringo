@@ -30,6 +30,8 @@ jobs:
       - name: Créditos dos dados (NOTICE) em dia
         run: pnpm --filter @falagringo/data notice:check
       - run: pnpm test
+      - name: Golden sets (acerto do motor por idioma)
+        run: pnpm test:golden
       - run: pnpm build
       - name: Auditoria de dependências (falha só em high/critical)
         run: pnpm audit --audit-level high
