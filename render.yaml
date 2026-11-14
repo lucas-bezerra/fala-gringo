@@ -1,0 +1,58 @@
+# GERADO por apps/web/security-headers.ts (renderBlueprint). Não edite à mão: rode `pnpm render:yaml`.
+# Site estático no Render (T6.6). Passo a passo em docs/deploy.md.
+services:
+  - type: web
+    name: falagringo
+    runtime: static
+    branch: master
+    # só publica depois que o CI do commit passar
+    autoDeployTrigger: checksPass
+    # o pipeline de dados (~40 s) roda dentro do build: os dicionários são gerados a partir de raw/
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
+    staticPublishPath: ./apps/web/dist
+    envVars:
+      - key: NODE_VERSION
+        value: '22'
+    headers:
+      - path: '/*'
+        name: 'Content-Security-Policy'
+        value: 'default-src ''none''; script-src ''self''; style-src ''self''; img-src ''self''; font-src ''self''; connect-src ''self''; worker-src ''self''; manifest-src ''self''; object-src ''none''; base-uri ''none''; form-action ''none''; require-trusted-types-for ''script''; trusted-types default; frame-ancestors ''none''; upgrade-insecure-requests'
+      - path: '/*'
+        name: 'Strict-Transport-Security'
+        value: 'max-age=63072000; includeSubDomains'
+      - path: '/*'
+        name: 'X-Content-Type-Options'
+        value: 'nosniff'
+      - path: '/*'
+        name: 'X-Frame-Options'
+        value: 'DENY'
+      - path: '/*'
+        name: 'Referrer-Policy'
+        value: 'no-referrer'
+      - path: '/*'
+        name: 'Permissions-Policy'
+        value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), browsing-topics=()'
+      - path: '/*'
+        name: 'Cross-Origin-Opener-Policy'
+        value: 'same-origin'
+      - path: '/*'
+        name: 'Cross-Origin-Resource-Policy'
+        value: 'same-origin'
+      - path: '/assets/*'
+        name: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+      - path: '/dict/**/*.json'
+        name: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+      - path: '/dict/*.txt'
+        name: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+      - path: '/dict/manifest.json'
+        name: 'Cache-Control'
+        value: 'no-cache'
+      - path: '/sw.js'
+        name: 'Cache-Control'
+        value: 'no-cache'
+      - path: '/manifest.webmanifest'
+        name: 'Cache-Control'
+        value: 'no-cache'

@@ -1,0 +1,39 @@
+name: Monitoramento do site
+
+# T6.6 — confere todo dia o site publicado: no ar, cabeçalhos de segurança e de cache, compressão, dados e service
+# worker (pnpm check:deploy). Só faz GETs; não coleta dado de quem usa. Precisa da variável SITE_URL
+# (Settings → Secrets and variables → Actions → Variables). Sem ela, o workflow só avisa e sai.
+
+on:
+  schedule:
+    - cron: '17 9 * * *' # todo dia, 06:17 em Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: SITE_URL configurada?
+        id: url
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          if [ -z "$SITE_URL" ]; then echo "::notice::Defina a variável SITE_URL para monitorar o site."; echo "skip=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        if: steps.url.outputs.skip != 'true'
+        with:
+          persist-credentials: false
+          sparse-checkout: apps/web/scripts
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        if: steps.url.outputs.skip != 'true'
+        with:
+          node-version: 22
+      - name: Conferir o site publicado
+        if: steps.url.outputs.skip != 'true'
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: node apps/web/scripts/check-deploy.mjs "$SITE_URL"
