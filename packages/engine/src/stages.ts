@@ -60,10 +60,13 @@ export interface Dictionary {
   lookup(lang: Lang, key: string): Promise<DictEntry | undefined>;
 }
 
-/** Estima o IPA de uma palavra fora do dicionário (G2P). `undefined` = não sabe estimar. */
+/**
+ * Estima o IPA de uma palavra fora do dicionário (G2P). `undefined` = não sabe estimar. Pode ser assíncrono
+ * (o modelo é baixado no primeiro uso); se falhar, a palavra fica sem pronúncia e a conversão continua.
+ */
 export interface Estimator {
   /** `key` é a chave de busca (NFC, minúsculas do idioma): a estimativa pela grafia não depende de caixa. */
-  estimate(key: string, lang: Lang): string | undefined;
+  estimate(key: string, lang: Lang): string | undefined | Promise<string | undefined>;
 }
 
 /** IPA → sílabas PT-BR com tônica, destaques e armadilhas (notação inteira). */

@@ -84,6 +84,7 @@ export function PresenterScreen({ headingRef, script, setScript, lang }: Present
   const paras = result ? paragraphs(result.tokens) : [];
   const withVariants = (result?.tokens ?? []).filter((t) => t.kind === 'word' && t.variants.length > 0);
   const unknown = (result?.tokens ?? []).some((t) => t.kind === 'unknown');
+  const estimated = (result?.tokens ?? []).some((t) => t.kind === 'word' && t.origin === 'estimated');
 
   return (
     <div className="min-h-screen bg-stage text-white">
@@ -238,6 +239,9 @@ export function PresenterScreen({ headingRef, script, setScript, lang }: Present
             palavra estrangeira detectada
           </span>
           {unknown && <span>“?”: fora do dicionário, confirme a pronúncia</span>}
+          {estimated && (
+            <span>“≈”: fora do dicionário, pronúncia estimada por IA; confirme antes de ir ao ar</span>
+          )}
           {withVariants.length > 0 && (
             <span>
               Mais de uma pronúncia aceita:{' '}
@@ -271,7 +275,8 @@ export function PresenterScreen({ headingRef, script, setScript, lang }: Present
 /** Palavra estrangeira: leitura em amarelo acima, IPA opcional, original sublinhado. O resto passa como texto. */
 function PresenterToken({ token, showIpa, lang }: { token: Token; showIpa: boolean; lang: Lang }) {
   if (token.kind === 'text') return <>{token.text}</>;
-  const reading = token.kind === 'word' ? readingOf(token.primary) : '?';
+  const estimated = token.kind === 'word' && token.origin === 'estimated';
+  const reading = token.kind === 'word' ? `${estimated ? '≈ ' : ''}${readingOf(token.primary)}` : '?';
   return (
     <span className="inline-flex flex-col items-start align-bottom">
       <span
@@ -298,7 +303,9 @@ function PresenterToken({ token, showIpa, lang }: { token: Token; showIpa: boole
       </span>
       {/* o leitor de tela ouve a palavra (na língua dela) e depois como falar */}
       <span className="sr-only">
-        {token.kind === 'word' ? ` (leia: ${spokenReading(token.primary)})` : ' (fora do dicionário)'}
+        {token.kind === 'word'
+          ? ` (${estimated ? 'pronúncia estimada, confirme; ' : ''}leia: ${spokenReading(token.primary)})`
+          : ' (fora do dicionário)'}
       </span>
     </span>
   );

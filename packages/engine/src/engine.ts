@@ -17,7 +17,15 @@ import type {
 } from './stages';
 import { createPhonology } from './phonology';
 import { createTokenizer } from './tokenizer';
-import type { ConversionResult, ConvertOptions, Lang, Pronunciation, Token, TrapId } from './types';
+import type {
+  ConversionResult,
+  ConvertOptions,
+  Lang,
+  Pronunciation,
+  Token,
+  TrapId,
+  UnknownToken,
+} from './types';
 
 export const DEFAULT_MAX_LENGTH = 2000;
 
@@ -27,7 +35,7 @@ export interface EngineStages {
   phonology?: Phonology;
   /** Padrão: `createTokenizer()`. */
   tokenizer?: Tokenizer;
-  /** Sem estimador, palavras fora do dicionário viram `unknown` (T3.9 e T5.x trazem os estimadores). */
+  /** Sem estimador, palavras fora do dicionário viram `unknown`. Com modelo G2P: `createG2pEstimator()` (T3.9). */
   estimator?: Estimator;
   /** Léxico do português — obrigatório para o modo texto misto (`convert(..., { mixed })`). */
   portuguese?: PortugueseLexicon;
@@ -176,24 +184,43 @@ export function createEngine(stages: EngineStages): Engine {
         // Composto/elisão fora do dicionário: usa as partes se ao menos uma for conhecida.
         const partsKnown = r.parts?.some((p) => p.kind === 'word' && found.get(keyOf(p)));
         if (allowParts && r.parts && partsKnown) return r.parts.flatMap((p) => resolve(p, false));
-        const estimated = stages.estimator?.estimate(key, lang);
-        if (estimated) {
-          return [
-            {
-              kind: 'word',
-              original: r.text,
-              key,
-              origin: 'estimated',
-              proper: r.capitalized && !r.sentenceStart,
-              agree: 0,
-              primary: phonology.render(estimated, lang, 'none', r.text),
-              variants: [],
-            },
-          ];
-        }
-        return [{ kind: 'unknown', original: r.text, key }];
+        const unknown: UnknownToken = { kind: 'unknown', original: r.text, key };
+        missing.set(unknown, r);
+        return [unknown];
       };
-      const tokens = raws.flatMap((r) => resolve(r, true));
+      // Palavras sem pronúncia, para o estimador (só as que de fato ficaram sem: português e partes, não).
+      const missing = new Map<UnknownToken, WordRaw>();
+      let tokens = raws.flatMap((r) => resolve(r, true));
+
+      const estimator = stages.estimator;
+      if (estimator && missing.size) {
+        const estimates = new Map<string, string | undefined>();
+        await Promise.all(
+          [...new Set([...missing.keys()].map((t) => t.key))].map(async (k) => {
+            try {
+              estimates.set(k, await estimator.estimate(k, lang));
+            } catch {
+              estimates.set(k, undefined); // modelo indisponível: a palavra fica sem pronúncia
+            }
+          }),
+        );
+        tokens = tokens.map((t): Token => {
+          if (t.kind !== 'unknown') return t;
+          const r = missing.get(t);
+          const ipa = estimates.get(t.key);
+          if (!r || !ipa) return t;
+          return {
+            kind: 'word',
+            original: r.text,
+            key: t.key,
+            origin: 'estimated',
+            proper: r.capitalized && !r.sentenceStart,
+            agree: 0,
+            primary: phonology.render(ipa, lang, 'none', r.text),
+            variants: [],
+          };
+        });
+      }
 
       // R11, 2ª parte: em frase, monossílabo funcional vai em minúsculas ("The Guardian" → dhâ GA·di·ân).
       // Sozinho, continua tônico ("the" → DHÂ).

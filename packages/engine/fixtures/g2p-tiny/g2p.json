@@ -1,0 +1,572 @@
+{
+  "format": "falagringo-g2p",
+  "version": 1,
+  "lang": "en-US",
+  "created": "2026-11-14",
+  "dtype": "float16",
+  "bin_sha256": "5a476d56ac0f3eb0dd5031609dcae92a982e16d68356ed9f324abed4ea3979c7",
+  "architecture": "transformer pre-LN, por caractere; ver tools/g2p/model.py",
+  "config": {
+    "src_vocab": 32,
+    "tgt_vocab": 48,
+    "d_model": 32,
+    "heads": 2,
+    "enc_layers": 1,
+    "dec_layers": 1,
+    "ff": 64,
+    "max_len": 64
+  },
+  "specials": {
+    "pad": 0,
+    "bos": 1,
+    "eos": 2,
+    "unk": 3
+  },
+  "src_vocab": [
+    "<pad>",
+    "<s>",
+    "</s>",
+    "<unk>",
+    "'",
+    "-",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z"
+  ],
+  "tgt_vocab": [
+    "<pad>",
+    "<s>",
+    "</s>",
+    "<unk>",
+    ".",
+    "a",
+    "b",
+    "d",
+    "e",
+    "f",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "z",
+    "æ",
+    "ð",
+    "ŋ",
+    "ɑ",
+    "ɒ",
+    "ɔ",
+    "ə",
+    "ɚ",
+    "ɛ",
+    "ɜ",
+    "ɝ",
+    "ɡ",
+    "ɪ",
+    "ɹ",
+    "ʃ",
+    "ʊ",
+    "ʌ",
+    "ʒ",
+    "ˈ",
+    "ˌ",
+    "ː",
+    "θ"
+  ],
+  "tensors": [
+    {
+      "name": "src_emb.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 0,
+      "bytes": 2048
+    },
+    {
+      "name": "tgt_emb.weight",
+      "shape": [
+        48,
+        32
+      ],
+      "offset": 2048,
+      "bytes": 3072
+    },
+    {
+      "name": "enc.0.ln1.weight",
+      "shape": [
+        32
+      ],
+      "offset": 5120,
+      "bytes": 64
+    },
+    {
+      "name": "enc.0.ln1.bias",
+      "shape": [
+        32
+      ],
+      "offset": 5184,
+      "bytes": 64
+    },
+    {
+      "name": "enc.0.ln2.weight",
+      "shape": [
+        32
+      ],
+      "offset": 5248,
+      "bytes": 64
+    },
+    {
+      "name": "enc.0.ln2.bias",
+      "shape": [
+        32
+      ],
+      "offset": 5312,
+      "bytes": 64
+    },
+    {
+      "name": "enc.0.attn.q.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 5376,
+      "bytes": 2048
+    },
+    {
+      "name": "enc.0.attn.q.bias",
+      "shape": [
+        32
+      ],
+      "offset": 7424,
+      "bytes": 64
+    },
+    {
+      "name": "enc.0.attn.k.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 7488,
+      "bytes": 2048
+    },
+    {
+      "name": "enc.0.attn.k.bias",
+      "shape": [
+        32
+      ],
+      "offset": 9536,
+      "bytes": 64
+    },
+    {
+      "name": "enc.0.attn.v.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 9600,
+      "bytes": 2048
+    },
+    {
+      "name": "enc.0.attn.v.bias",
+      "shape": [
+        32
+      ],
+      "offset": 11648,
+      "bytes": 64
+    },
+    {
+      "name": "enc.0.attn.o.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 11712,
+      "bytes": 2048
+    },
+    {
+      "name": "enc.0.attn.o.bias",
+      "shape": [
+        32
+      ],
+      "offset": 13760,
+      "bytes": 64
+    },
+    {
+      "name": "enc.0.ff.lin1.weight",
+      "shape": [
+        64,
+        32
+      ],
+      "offset": 13824,
+      "bytes": 4096
+    },
+    {
+      "name": "enc.0.ff.lin1.bias",
+      "shape": [
+        64
+      ],
+      "offset": 17920,
+      "bytes": 128
+    },
+    {
+      "name": "enc.0.ff.lin2.weight",
+      "shape": [
+        32,
+        64
+      ],
+      "offset": 18048,
+      "bytes": 4096
+    },
+    {
+      "name": "enc.0.ff.lin2.bias",
+      "shape": [
+        32
+      ],
+      "offset": 22144,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.ln1.weight",
+      "shape": [
+        32
+      ],
+      "offset": 22208,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.ln1.bias",
+      "shape": [
+        32
+      ],
+      "offset": 22272,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.ln2.weight",
+      "shape": [
+        32
+      ],
+      "offset": 22336,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.ln2.bias",
+      "shape": [
+        32
+      ],
+      "offset": 22400,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.ln3.weight",
+      "shape": [
+        32
+      ],
+      "offset": 22464,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.ln3.bias",
+      "shape": [
+        32
+      ],
+      "offset": 22528,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.self_attn.q.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 22592,
+      "bytes": 2048
+    },
+    {
+      "name": "dec.0.self_attn.q.bias",
+      "shape": [
+        32
+      ],
+      "offset": 24640,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.self_attn.k.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 24704,
+      "bytes": 2048
+    },
+    {
+      "name": "dec.0.self_attn.k.bias",
+      "shape": [
+        32
+      ],
+      "offset": 26752,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.self_attn.v.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 26816,
+      "bytes": 2048
+    },
+    {
+      "name": "dec.0.self_attn.v.bias",
+      "shape": [
+        32
+      ],
+      "offset": 28864,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.self_attn.o.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 28928,
+      "bytes": 2048
+    },
+    {
+      "name": "dec.0.self_attn.o.bias",
+      "shape": [
+        32
+      ],
+      "offset": 30976,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.cross_attn.q.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 31040,
+      "bytes": 2048
+    },
+    {
+      "name": "dec.0.cross_attn.q.bias",
+      "shape": [
+        32
+      ],
+      "offset": 33088,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.cross_attn.k.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 33152,
+      "bytes": 2048
+    },
+    {
+      "name": "dec.0.cross_attn.k.bias",
+      "shape": [
+        32
+      ],
+      "offset": 35200,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.cross_attn.v.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 35264,
+      "bytes": 2048
+    },
+    {
+      "name": "dec.0.cross_attn.v.bias",
+      "shape": [
+        32
+      ],
+      "offset": 37312,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.cross_attn.o.weight",
+      "shape": [
+        32,
+        32
+      ],
+      "offset": 37376,
+      "bytes": 2048
+    },
+    {
+      "name": "dec.0.cross_attn.o.bias",
+      "shape": [
+        32
+      ],
+      "offset": 39424,
+      "bytes": 64
+    },
+    {
+      "name": "dec.0.ff.lin1.weight",
+      "shape": [
+        64,
+        32
+      ],
+      "offset": 39488,
+      "bytes": 4096
+    },
+    {
+      "name": "dec.0.ff.lin1.bias",
+      "shape": [
+        64
+      ],
+      "offset": 43584,
+      "bytes": 128
+    },
+    {
+      "name": "dec.0.ff.lin2.weight",
+      "shape": [
+        32,
+        64
+      ],
+      "offset": 43712,
+      "bytes": 4096
+    },
+    {
+      "name": "dec.0.ff.lin2.bias",
+      "shape": [
+        32
+      ],
+      "offset": 47808,
+      "bytes": 64
+    },
+    {
+      "name": "enc_ln.weight",
+      "shape": [
+        32
+      ],
+      "offset": 47872,
+      "bytes": 64
+    },
+    {
+      "name": "enc_ln.bias",
+      "shape": [
+        32
+      ],
+      "offset": 47936,
+      "bytes": 64
+    },
+    {
+      "name": "dec_ln.weight",
+      "shape": [
+        32
+      ],
+      "offset": 48000,
+      "bytes": 64
+    },
+    {
+      "name": "dec_ln.bias",
+      "shape": [
+        32
+      ],
+      "offset": 48064,
+      "bytes": 64
+    },
+    {
+      "name": "out.weight",
+      "shape": [
+        48,
+        32
+      ],
+      "offset": 48128,
+      "bytes": 3072
+    },
+    {
+      "name": "out.bias",
+      "shape": [
+        48
+      ],
+      "offset": 51200,
+      "bytes": 96
+    }
+  ],
+  "training": {
+    "epoch": 6,
+    "args": {
+      "lang": "en-US",
+      "epochs": 6,
+      "batch": 256,
+      "lr": 0.001,
+      "warmup": 200,
+      "d_model": 32,
+      "heads": 2,
+      "layers": 1,
+      "ff": 64,
+      "dropout": 0.1,
+      "eval_every": 3,
+      "patience": 10,
+      "limit": 20000,
+      "device": "cpu",
+      "seed": 13,
+      "resume": false
+    },
+    "data": {
+      "lang": "en-US",
+      "created": "2026-11-14",
+      "merged_sha256": "0d6cde9444c24a16",
+      "sources": {
+        "cmudict": 125098,
+        "wikidata": 105
+      },
+      "sources_filter": null,
+      "require_stress": true,
+      "counts": {
+        "test": 6206,
+        "train": 112629,
+        "dev": 6368
+      },
+      "skipped": {
+        "grafia fora do padrão (espaço, dígito, símbolo) ou longa": 1188,
+        "sem tônica no dado": 29
+      }
+    },
+    "test_metrics": null
+  }
+}

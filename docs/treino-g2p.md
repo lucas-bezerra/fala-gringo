@@ -84,7 +84,7 @@ Cada export tem ~6 MB (3,1–3,2 M parâmetros em float16).
 - O **fr-FR** tem ortografia regular, e o modelo quase não erra.
 - No **en-US**, boa parte dos erros são nomes próprios e estrangeirismos (`abacha`, `abuladze`) ou diferenças pequenas de tônica secundária.
 - O número do **en-GB** é inflado pela fonte. O Wiktionary mistura notações (pontos de sílaba às vezes, `a`/`æ`, `ɹ`/`r`), e a métrica exige a string idêntica: `ˈæbdɪˌkeɪt` conta como erro contra `ˈæb.dɪˌkeɪt`.
-- O acerto que interessa é medido **na grafia PT-BR**, já normalizada, na parte B.
+- O acerto que interessa é **na grafia PT-BR**, que absorve essas diferenças de notação: **74,4% (en-US), 67,9% (en-GB) e 95,8% (fr-FR)**. Detalhes em [G2P.md](../packages/engine/G2P.md).
 
 ## 2. No PC: instalar o ambiente (uma vez)
 
@@ -252,8 +252,11 @@ Hoje isto é um experimento local. Para o modelo entrar no FalaGringo, a Políti
 
 Problemas como vazamento, uso indevido, erro grave ou viés devem ser reportados a governanca@redegazeta.com.br.
 
-## Próximos passos da T3.9 (no repositório)
+## Depois do treino: no repositório (T3.9, parte B)
 
-1. Inferência em TypeScript puro no motor (`Estimator`), lendo `g2p.json` + `g2p.bin` e reproduzindo o `fixtures.tsv`. A interface `Estimator.estimate()` é síncrona, então o modelo é carregado antes, como o léxico.
-2. Medir o acerto **na grafia PT-BR**: previsão → motor → grafia, comparada com a grafia do IPA do dicionário, nas palavras de teste.
-3. ADR com a decisão e os números, e o aviso "estimado" na interface.
+1. **Inferência em TypeScript** (`packages/engine/src/g2p/`): reproduz o PyTorch exatamente. Com os exports em `tools/g2p/export/`, o `pnpm test` confere as 300 fixtures de cada idioma.
+2. **Acerto na grafia PT-BR:** `pnpm --filter @falagringo/engine g2p-eval` regenera o [G2P.md](../packages/engine/G2P.md).
+3. **No site, só local:** `pnpm dev:g2p` publica os modelos e ativa o selo "estimado".
+4. Decisão, números e o que falta para o site publicado: [ADR 0004](adr/0004-modelo-g2p.md).
+
+**Treinou de novo?** Rode `export.py`, depois `pnpm test` (fixtures) e `g2p-eval`, e atualize a tabela de resultado do ADR. **Mudou o `model.py`?** Mude junto `src/g2p/model.ts` e gere de novo o modelo de teste (comandos no topo de `src/g2p/model.test.ts`).

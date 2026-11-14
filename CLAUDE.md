@@ -38,6 +38,7 @@ Não há backend. O site é 100% estático: os shards dos idiomas ativos são pu
 ```bash
 pnpm install       # Node >= 20, pnpm 11 (o pnpm-workspace.yaml libera só o build do esbuild)
 pnpm dev           # publica os shards ativos (roda o pipeline de dados se faltar, ~40 s) e sobe o Vite em http://localhost:5173
+pnpm dev:g2p       # idem, publicando também os modelos G2P locais (tools/g2p/export, experimental; ver ADR 0004)
 pnpm build         # build estático em apps/web/dist
 pnpm preview       # serve o build
 pnpm typecheck     # tsc (strict) em todos os pacotes que têm o script
@@ -58,7 +59,7 @@ O CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) roda tudo acima, mai
 - **Silabação e tônica** (`src/ipa/syllabify.ts`): o `.` da fonte manda (exceto no inglês, que sempre usa ataque máximo); as marcas `ˈ/ˌ` só dizem qual núcleo é tônico, nunca a fronteira. Sem marca, regra do idioma (`stress: 'rule'`). **Toda mudança de regra deve ser medida**: `pnpm --filter @falagringo/engine syllables-eval` regenera o [SYLLABLES.md](packages/engine/SYLLABLES.md) — compare antes/depois.
 - **Regras IPA → PT-BR** (`src/rules/`, desenho no [ADR 0002](docs/adr/0002-motor-de-regras.md)): `core.ts` (notação, seção 4 + R6–R10 + armadilhas), `profiles.ts` (perfis, antes do núcleo; a 1ª regra que casa vence). Padrões em IPA (`'ɔ̃'` antes de `'ɔ'`) ou classes (`'@nasal'`). Ao mexer: (1) `pnpm test` — inclui o **golden set**, que o teste lê direto da seção 7 de `docs/notacao.md` (grafia e armadilhas dos 69 exemplos; mudar a notação muda o teste), e o teste de regra sombreada; (2) `pnpm --filter @falagringo/engine rules-coverage` para conferir que nenhum som caiu no reserva `?`. A fonologia (`createPhonology`) é o padrão do motor.
 - **Worker e cache** (`src/worker/`, `src/cache.ts`): no navegador o motor roda num Web Worker. Lado do worker: `serveEngine(self, () => criarMotor())` (motor criado no 1º pedido; falha é repetida no seguinte). Lado da tela: `new EngineClient(worker)` com `convert()` e `convertLatest()` (resolve `undefined` se um pedido mais novo chegou — use na digitação). Envolva o dicionário com `cachedDictionary()` (LRU por palavra): sem ele, textos longos em idiomas com muitos shards ficam ~20× mais lentos. `pnpm --filter @falagringo/engine bench` mede 2.000 caracteres com os dados reais (precisa do `shards`).
-- **Modelo G2P (T3.9, em andamento):** treinado fora do repositório, num PC com GPU, por [docs/treino-g2p.md](docs/treino-g2p.md) com os scripts de `tools/g2p/` (`prepare` → `train` → `evaluate` → `export`). O export (`g2p.json` + `g2p.bin` + `fixtures.tsv`) é o contrato da futura inferência em TypeScript, que tem de reproduzir o `fixtures.tsv`. Ao mudar `model.py`, mude junto o export e a inferência. Dados, checkpoints e exports não vão para o git.
+- **Modelo G2P (T3.9, experimental, [ADR 0004](docs/adr/0004-modelo-g2p.md)):** estima palavras fora do dicionário. Treino em `tools/g2p/` (`prepare` → `train` → `evaluate` → `export`, guia em [docs/treino-g2p.md](docs/treino-g2p.md)); dados, checkpoints e exports **não vão para o git**. Inferência em TS puro em `src/g2p/` (`loadG2pModel`, `createG2pEstimator`: carga sob demanda, LRU, falha tentada de novo). O `Estimator` pode ser assíncrono; o motor só estima as palavras que ficaram `unknown` (português e partes conhecidas, não) e uma falha vira `unknown`. **A inferência tem de reproduzir o PyTorch exatamente:** `src/g2p/model.test.ts` confere o modelo minúsculo de `fixtures/g2p-tiny/` (CI) e os modelos reais, se existirem localmente. Mudou `model.py`? Mude o export e `src/g2p/model.ts` juntos e gere as fixtures de novo (comandos no topo do teste). `pnpm --filter @falagringo/engine g2p-eval` mede o acerto na grafia PT-BR e regenera o [G2P.md](packages/engine/G2P.md). No site, o modelo só existe com `pnpm dev:g2p` (o build, o CI e o Render não o têm): uso real exige o que está no ADR 0004.
 - **Golden sets** (`packages/engine/golden/{idioma}.tsv`): gabaritos revisados por humano; só as linhas `revisado` contam. `pnpm test:golden` mede o acerto (roda no CI; falha abaixo das metas de `golden/metas.json`) e regenera o [GOLDEN.md](packages/engine/GOLDEN.md). `golden:draft` acrescenta rascunhos sem mexer nas linhas existentes. **Nunca marque `revisado` no lugar do revisor.**
 - **Texto misto** (`convert(texto, idioma, { mixed })`): decide o que é português com o léxico `pt-BR` (gerado em `shards`; leia com `parsePtLexicon`) + dicionário + atração de palavras funcionais. Regras e casos reais em [packages/data/LEXICON.md](packages/data/LEXICON.md) — atualize a tabela de verificação se mudar as regras.
 - **TypeScript puro**: `tsconfig.json` sem DOM nem Node (o compilador garante); os testes usam `tsconfig.test.json`. Não importe `fetch`, `fs` etc. no código do motor — injete.
@@ -70,7 +71,8 @@ packages/data/scripts/sync-web.mjs  → publica em apps/web/public/dict/: manife
                                       sem build/dict, roda o pipeline (import → merge → shards) a partir de raw/
 app/route.ts + App.tsx               → rotas por hash (#/ Traduzir, #/apresentar); foco vai ao título ao trocar de tela
 engine/engine.worker.ts              → serveEngine + createEngine(ShardDictionary via fetch de /dict/, cachedDictionary);
-                                      um 2º motor com o léxico do português é criado no 1º pedido `mixed`
+                                      um 2º motor com o léxico do português é criado no 1º pedido `mixed`;
+                                      estimador G2P só se o manifest tiver `g2p` (pnpm dev:g2p)
 engine/useConversion.ts              → EngineClient (um worker por página), espera de 250 ms, convertLatest
 engine/langs.ts                      → idiomas e variantes oferecidos na tela
 translate/TranslateScreen.tsx        → tela Traduzir (idioma, variante, entrada, cartões, leitura, copiar)
@@ -82,7 +84,8 @@ app/                                 → cabeçalho (navegação + tema), rodap�
 offline/                             → PWA (T4.8): offlineStore.ts (Cache Storage "fg-dict", o MESMO cache CacheFirst do service
                                       worker em vite.config.ts — mude os dois juntos), OfflineScreen (#/offline), selo offline
 present/PresenterScreen.tsx          → modo apresentador: roteiro com texto misto, leitura em amarelo acima do nome, IPA,
-                                      tamanhos 40–96 px, atalhos (Espaço, + −, I, E) listados na própria tela
+                                      tamanhos 40–96 px, atalhos (Espaço, + −, I, E) listados na própria tela;
+                                      palavra estimada leva "≈" na leitura e aviso na legenda
 ```
 
 ## Convenções e armadilhas
