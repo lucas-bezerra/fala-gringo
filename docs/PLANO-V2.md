@@ -149,7 +149,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | ID | Tarefa | Effort | Entregável / critério de aceite | Dep. |
 |---|---|---|---|---|
 | T4.1 | ✅ **Concluída em 2026-11-13** (`apps/web/src/ui/`, catálogo em `/catalogo.html`; elementos nativos em vez de Radix por causa da CSP — [ADR 0003](adr/0003-componentes-nativos.md); e2e com axe WCAG 2.2 AA, teclado e CSP). Componentes base acessíveis (botão, chip, tabs, popover, bottom sheet, toast), com Radix UI ou similar | medium | Storybook ou página de catálogo | T1.4 |
-| T4.2 | Tela **Traduzir** (desktop e mobile), fiel ao protótipo | medium | Comparação visual com o protótipo | T4.1, T3.10 |
+| T4.2 | ✅ **Concluída em 2026-11-14** (motor v2 no Web Worker com os shards em `/dict/`; en-US e en-GB; v1 removida; e2e com axe, CSP, variante, cópia e 2.000 caracteres). Ficam para as tarefas seguintes: painel de detalhe e áudio (T4.3), dicas (T4.4), navegação para Guia e Apresentador (T4.6/T4.7), selo offline (T4.8). Tela **Traduzir** (desktop e mobile), fiel ao protótipo | medium | Comparação visual com o protótipo | T4.1, T3.10 |
 | T4.3 | Painel de detalhe da palavra: som a som, variantes, IPA e botão de áudio (Web Speech API com rótulo "voz sintética do navegador") | medium | Funciona por teclado; o áudio degrada bem sem voz instalada | T4.2 |
 | T4.4 | Dicas contextuais (aparecem conforme os sons especiais presentes na frase) | low | Dicas vêm de `packages/content` | T4.2 |
 | T4.5 | Conteúdo das dicas e do guia de sons por idioma 👤 | medium | Textos revisados por humano | T0.3 |

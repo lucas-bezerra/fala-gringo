@@ -50,45 +50,6 @@
 
   --radius-card: 16px;
   --radius-control: 10px;
-
-  /* ---- Tokens legados da v1 (remover na T4.2, quando a tela for reescrita) ---- */
-  --color-brand-400: #38bdf8;
-  --color-brand-500: #0ea5e9;
-  --color-brand-600: #0284c7;
-  --color-space-950: #020617;
-  --color-space-900: #0f172a;
-  --color-space-800: #1e293b;
-  --color-accent-cyan: #22d3ee;
-  --color-accent-lime: #a3e635;
-  --color-accent-violet: #a78bfa;
-
-  --animate-blob: blob 7s infinite;
-  --animate-fade-in: fadeIn 0.5s ease-out forwards;
-
-  @keyframes blob {
-    0% {
-      transform: translate(0px, 0px) scale(1);
-    }
-    33% {
-      transform: translate(30px, -50px) scale(1.1);
-    }
-    66% {
-      transform: translate(-20px, 20px) scale(0.9);
-    }
-    100% {
-      transform: translate(0px, 0px) scale(1);
-    }
-  }
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 }
 
 /* ---- Componentes base (T4.1, src/ui) ---- */
@@ -140,31 +101,10 @@ dialog.sheet[open]::backdrop {
   }
 }
 
-/* ---- Estilos legados da v1 (remover na T4.2) ---- */
 @layer base {
   body {
-    background-color: #020617;
-    color: #e2e8f0;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
   }
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 3px;
-  }
-}
-
-@utility glass-panel {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-@utility text-glow {
-  text-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
 }

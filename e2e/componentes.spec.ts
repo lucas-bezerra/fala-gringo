@@ -144,3 +144,15 @@ test('catálogo roda sob a CSP de produção, sem violações nem requisições 
   await expect(page.getByRole('status')).toContainText('Leitura copiada');
   expect(problems).toEqual([]);
 });
+
+test('segmentado: setas trocam a opção marcada (radiogroup)', async ({ page }) => {
+  const group = page.getByRole('radiogroup', { name: 'Variante' });
+  const us = group.getByRole('radio', { name: 'EUA' });
+  const uk = group.getByRole('radio', { name: 'Reino Unido' });
+  await us.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(uk).toBeFocused();
+  await expect(uk).toHaveAttribute('aria-checked', 'true');
+  await expect(us).toHaveAttribute('aria-checked', 'false');
+  await expect(us).toHaveAttribute('tabindex', '-1');
+});
