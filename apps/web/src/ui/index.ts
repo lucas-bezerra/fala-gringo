@@ -12,4 +12,5 @@ export type { SegmentedOption, SegmentedProps } from './Segmented';
 export { Tabs } from './Tabs';
 export type { TabItem, TabsProps } from './Tabs';
 export { ToastProvider, useToast } from './Toast';
+export type { ToastAction } from './Toast';
 export { cx } from './cx';

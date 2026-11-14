@@ -3,18 +3,38 @@ import { useEffect, useRef, useState } from 'react';
 import { AppFooter } from '@/app/AppFooter';
 import { AppHeader } from '@/app/AppHeader';
 import { CreditsScreen } from '@/app/CreditsScreen';
+import { setupPwa } from '@/app/pwa';
+import { OfflineScreen } from '@/offline/OfflineScreen';
 import { readShared } from '@/app/share';
 import { ROUTE_TITLE, useRoute } from '@/app/route';
 import { DEFAULT_LANG } from '@/engine/langs';
 import { PresenterScreen } from '@/present/PresenterScreen';
 import { TranslateScreen } from '@/translate/TranslateScreen';
-import { ToastProvider } from '@/ui';
+import { ToastProvider, useToast } from '@/ui';
 
 const EXAMPLE = 'Thank you for watching the news';
 const SCRIPT_EXAMPLE =
   'Correspondentes em Worcester, Massachusetts, e em Greenwich, em Londres, acompanham o caso.';
 
 export default function App() {
+  return (
+    <ToastProvider>
+      <Screens />
+    </ToastProvider>
+  );
+}
+
+function Screens() {
+  const toast = useToast();
+  useEffect(() => {
+    setupPwa((apply) =>
+      toast.show('Nova versão do FalaGringo disponível.', 30 * 60_000, {
+        label: 'Atualizar',
+        onClick: apply,
+      }),
+    );
+  }, [toast]);
+
   const route = useRoute();
   // link compartilhado (?t=&l=) abre direto com o texto e o idioma
   const [shared] = useState(readShared);
@@ -33,13 +53,19 @@ export default function App() {
   }, [route]);
 
   return (
-    <ToastProvider>
+    <>
       {route === 'apresentar' ? (
         <>
           <PresenterScreen headingRef={mainHeading} script={script} setScript={setScript} lang={lang} />
           <div className="bg-stage">
             <AppFooter dark />
           </div>
+        </>
+      ) : route === 'offline' ? (
+        <>
+          <AppHeader route={route} />
+          <OfflineScreen headingRef={mainHeading} />
+          <AppFooter />
         </>
       ) : route === 'creditos' ? (
         <>
@@ -61,6 +87,6 @@ export default function App() {
           <AppFooter />
         </>
       )}
-    </ToastProvider>
+    </>
   );
 }

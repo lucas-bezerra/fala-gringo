@@ -58,7 +58,13 @@ function renderHeadersFile(): string {
   return [
     block('/*', SECURITY_HEADERS),
     block('/assets/*', { 'Cache-Control': 'public, max-age=31536000, immutable' }),
-    block('/dict/*', { 'Cache-Control': 'public, max-age=86400' }),
+    // shards e léxico têm hash no nome: nunca mudam. O manifest dos dados não tem: precisa revalidar sempre.
+    block('/dict/*/*', { 'Cache-Control': 'public, max-age=31536000, immutable' }),
+    block('/dict/pt-BR-lexicon.*', { 'Cache-Control': 'public, max-age=31536000, immutable' }),
+    block('/dict/manifest.json', { 'Cache-Control': 'no-cache' }),
+    // service worker (T4.8): o navegador precisa ver a versão nova logo
+    block('/sw.js', { 'Cache-Control': 'no-cache' }),
+    block('/manifest.webmanifest', { 'Cache-Control': 'no-cache' }),
     '',
   ].join('\n\n');
 }

@@ -8,6 +8,7 @@ import { useConversion, type ConversionState } from '@/engine/useConversion';
 import { BottomSheet, Button, Chip, Segmented, Tabs, useToast } from '@/ui';
 import type { ReadingMode } from './Pronunciation';
 import { SavedTexts } from './SavedTexts';
+import { useOfflineReady } from '@/offline/useOfflineReady';
 import { useMediaQuery } from './useMediaQuery';
 import { useSpeech, type SpeechState } from './useSpeech';
 import { WordCard } from './WordCard';
@@ -98,6 +99,7 @@ export function TranslateScreen({
   const current = words.length ? words[Math.min(selected, words.length - 1)] : undefined;
   const currentIndex = current ? words.indexOf(current) : -1;
 
+  const offlineReady = useOfflineReady(lang);
   const toast = useToast();
   const saved = useSavedTexts();
   const isFavorite = saved.favorites.includes(text.trim());
@@ -139,6 +141,11 @@ export function TranslateScreen({
               </Chip>
             ))}
             <span className="text-sm text-muted">Outros idiomas em breve</span>
+            {offlineReady && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-ok-soft px-3 py-1 text-sm font-semibold text-ok">
+                <span aria-hidden="true">✓</span> Disponível offline
+              </span>
+            )}
           </div>
           {group.variants.length > 1 && (
             <Segmented
@@ -304,7 +311,18 @@ function Results({
           role="alert"
           className="mb-3 rounded-control border border-special bg-special-soft px-3 py-2 text-sm text-special-ink"
         >
-          Não foi possível converter: {state.message}
+          {typeof navigator !== 'undefined' && !navigator.onLine ? (
+            <>
+              Sem internet, e esta parte do dicionário ainda não está no aparelho. Para usar offline, baixe o
+              idioma em{' '}
+              <a href={ROUTE_HREF.offline} className="underline">
+                Uso offline
+              </a>
+              .
+            </>
+          ) : (
+            <>Não foi possível converter: {state.message}</>
+          )}
         </p>
       )}
 

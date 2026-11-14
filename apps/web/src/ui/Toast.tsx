@@ -9,14 +9,20 @@ import {
   type ReactNode,
 } from 'react';
 
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
 interface ToastItem {
   id: number;
   message: string;
+  action?: ToastAction;
 }
 
 interface ToastApi {
   /** Mostra um aviso curto ("Copiado"). Some em `duration` ms (padrão 4 s) ou no botão fechar. */
-  show: (message: string, duration?: number) => void;
+  show: (message: string, duration?: number, action?: ToastAction) => void;
 }
 
 const ToastContext = createContext<ToastApi | null>(null);
@@ -43,9 +49,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const show = useCallback(
-    (message: string, duration = 4000) => {
+    (message: string, duration = 4000, action?: ToastAction) => {
       const id = nextId.current++;
-      setItems((list) => [...list.slice(-2), { id, message }]); // no máximo 3 na tela
+      setItems((list) => [...list.slice(-2), { id, message, action }]); // no máximo 3 na tela
       timers.current.set(
         id,
         setTimeout(() => dismiss(id), duration),
@@ -75,6 +81,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             className="toast pointer-events-auto flex min-h-11 items-center gap-3 rounded-control bg-stage py-1 ring-1 ring-white/15 pr-1 pl-4 text-sm font-semibold text-white shadow-lg"
           >
             <span>{t.message}</span>
+            {t.action && (
+              <button
+                type="button"
+                onClick={() => {
+                  dismiss(t.id);
+                  t.action!.onClick();
+                }}
+                className="focus-ring min-h-9 cursor-pointer rounded-[8px] px-2 font-bold text-[#93c5fd] underline hover:bg-white/10"
+              >
+                {t.action.label}
+              </button>
+            )}
             <button
               type="button"
               onClick={() => dismiss(t.id)}
