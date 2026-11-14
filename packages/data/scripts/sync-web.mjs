@@ -1,6 +1,6 @@
 // Publica no site (apps/web/public/dict/) os shards dos idiomas ATIVOS, o léxico do português e os créditos.
 // Se os shards ainda não existem (clone novo, CI), roda o pipeline a partir dos dados versionados em raw/ (~40 s).
-// Com --g2p (pnpm dev:g2p), publica também os modelos G2P de tools/g2p/export (T3.9, experimental, fora do git).
+// Publica também os modelos G2P versionados em packages/data/models/g2p (T3.9, ADR 0004) em dict/g2p/.
 import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
@@ -47,26 +47,19 @@ const lexicon = manifest.lexicons?.['pt-BR'];
 if (lexicon) await cp(path.join(dictDir, lexicon.file), path.join(outDir, lexicon.file));
 await cp(path.join(dictDir, 'NOTICE.md'), path.join(outDir, 'NOTICE.md'));
 
-// Modelos G2P: só com --g2p. Sem a opção (build, CI, deploy), o site não estima palavras fora do dicionário.
+// Modelos G2P (palavras fora do dicionário): os versionados em models/g2p, para os idiomas ativos.
 const g2p = {};
-if (process.argv.includes('--g2p')) {
-  const exports = path.resolve(pkg, '../../tools/g2p/export');
-  for (const lang of ACTIVE) {
-    const dir = path.join(exports, lang);
-    if (!existsSync(path.join(dir, 'g2p.bin'))) continue;
-    const json = await readFile(path.join(dir, 'g2p.json'));
-    const bin = await readFile(path.join(dir, 'g2p.bin'));
-    const base = `g2p-${lang}-${createHash('sha256').update(json).update(bin).digest('hex').slice(0, 12)}`;
-    await writeFile(path.join(outDir, `${base}.json`), json);
-    await writeFile(path.join(outDir, `${base}.bin`), bin);
-    g2p[lang] = { json: `${base}.json`, bin: `${base}.bin`, bytes: bin.length };
-  }
-  const langs = Object.keys(g2p);
-  console.log(
-    langs.length
-      ? `[data] modelo G2P (experimental) publicado: ${langs.join(', ')}`
-      : '[data] --g2p: nenhum modelo em tools/g2p/export para os idiomas ativos (veja docs/treino-g2p.md)',
-  );
+const models = path.join(pkg, 'models/g2p');
+await mkdir(path.join(outDir, 'g2p'), { recursive: true });
+for (const lang of ACTIVE) {
+  const dir = path.join(models, lang);
+  if (!existsSync(path.join(dir, 'g2p.bin'))) continue;
+  const json = await readFile(path.join(dir, 'g2p.json'));
+  const bin = await readFile(path.join(dir, 'g2p.bin'));
+  const base = `g2p/${lang}-${createHash('sha256').update(json).update(bin).digest('hex').slice(0, 12)}`;
+  await writeFile(path.join(outDir, `${base}.json`), json);
+  await writeFile(path.join(outDir, `${base}.bin`), bin);
+  g2p[lang] = { json: `${base}.json`, bin: `${base}.bin`, bytes: bin.length };
 }
 
 // manifest só com os idiomas ativos (o resto não é publicado)

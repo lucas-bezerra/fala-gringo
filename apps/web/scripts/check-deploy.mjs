@@ -72,6 +72,20 @@ if (lang) {
   check('manifest dos dados é JSON válido', false, `HTTP ${man.res.status}; resposta vazia ou inválida`);
 }
 
+// modelo G2P (T3.9): anunciado no manifest e servido com cache imutável
+const model = manifest?.g2p && Object.values(manifest.g2p)[0];
+check('manifest anuncia o modelo G2P', !!model);
+if (model) {
+  const bin = await get(`/dict/${model.bin}`);
+  check('modelo G2P responde 200', bin.res.status === 200, `HTTP ${bin.res.status}`);
+  check(
+    'modelo G2P com cache imutável',
+    bin.h('cache-control').includes('immutable'),
+    bin.h('cache-control'),
+  );
+  await bin.res.body?.cancel();
+}
+
 const pwa = await get('/manifest.webmanifest');
 check('manifest do PWA responde 200', pwa.res.status === 200, `HTTP ${pwa.res.status}`);
 

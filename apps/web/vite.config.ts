@@ -57,7 +57,7 @@ export default defineConfig({
           },
           {
             // shards e léxico (com hash): cache primeiro. É o mesmo cache que a página "Uso offline" enche.
-            urlPattern: /\/dict\/.+\.(json|txt)$/,
+            urlPattern: /\/dict\/.+\.(json|txt|bin)$/,
             handler: 'CacheFirst',
             options: { cacheName: 'fg-dict', cacheableResponse: { statuses: [200] } },
           },

@@ -256,7 +256,7 @@ Problemas como vazamento, uso indevido, erro grave ou viés devem ser reportados
 
 1. **Inferência em TypeScript** (`packages/engine/src/g2p/`): reproduz o PyTorch exatamente. Com os exports em `tools/g2p/export/`, o `pnpm test` confere as 300 fixtures de cada idioma.
 2. **Acerto na grafia PT-BR:** `pnpm --filter @falagringo/engine g2p-eval` regenera o [G2P.md](../packages/engine/G2P.md).
-3. **No site, só local:** `pnpm dev:g2p` publica os modelos e ativa o selo "estimado".
+3. **No site:** os modelos publicados ficam em `packages/data/models/g2p/` (en-US e en-GB). Para trocar por um treino novo, copie `g2p.json`, `g2p.bin` e `fixtures.tsv` de `export/<idioma>/` para lá (veja o README da pasta).
 4. Decisão, números e o que falta para o site publicado: [ADR 0004](adr/0004-modelo-g2p.md).
 
 **Treinou de novo?** Rode `export.py`, depois `pnpm test` (fixtures) e `g2p-eval`, e atualize a tabela de resultado do ADR. **Mudou o `model.py`?** Mude junto `src/g2p/model.ts` e gere de novo o modelo de teste (comandos no topo de `src/g2p/model.test.ts`).

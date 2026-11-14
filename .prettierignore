@@ -10,3 +10,4 @@ render.yaml
 
 # modelo G2P de teste, gerado por tools/g2p/export.py (T3.9)
 packages/engine/fixtures
+packages/data/models
