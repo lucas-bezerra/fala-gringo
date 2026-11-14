@@ -195,6 +195,21 @@ export function createEngine(stages: EngineStages): Engine {
       };
       const tokens = raws.flatMap((r) => resolve(r, true));
 
+      // R11, 2ª parte: em frase, monossílabo funcional vai em minúsculas ("The Guardian" → dhâ GA·di·ân).
+      // Sozinho, continua tônico ("the" → DHÂ).
+      const wordCount = tokens.filter((t) => t.kind === 'word').length;
+      if (wordCount > 1) {
+        const fw = FUNCTION_WORDS[lang];
+        for (const t of tokens) {
+          if (t.kind !== 'word' || !fw.has(t.key) || t.primary.syllables.length !== 1) continue;
+          const [only] = t.primary.syllables;
+          t.primary = {
+            ...t.primary,
+            syllables: [{ ...only, text: only.text.toLocaleLowerCase('pt-BR'), stressed: false }],
+          };
+        }
+      }
+
       const traps: TrapId[] = [];
       let syllabic = '';
       let flat = '';

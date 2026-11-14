@@ -167,7 +167,7 @@ A grafia não consegue impedir algumas leituras automáticas do brasileiro. Elas
 | `TRAP_TI_DI` | `t`/`d` + `i` | Chia: "tchi", "dji" | "Não chie: *ti* como em *típico* no Nordeste" |
 | `TRAP_CODA_L` | `l` em fim de sílaba | Vira "u": "uéu" | "Encoste a língua no céu da boca no *l*" |
 | `TRAP_CODA_NASAL` | `m`/`n` em fim de sílaba | Nasaliza a vogal e não fecha a consoante: "tĩ" | "Feche os lábios no *m* / encoste a língua no *n*" |
-| `TRAP_FINAL_CONS` | Palavra terminada em consoante oclusiva, fricativa ou africada | Acrescenta "i": "plízi", "bigui" | "Termine na consoante, sem *i*" |
+| `TRAP_FINAL_CONS` | Palavra terminada em consoante oclusiva, fricativa ou africada, **exceto `s` e `z`** (o português já termina palavras em -s: *mês*; o `z` tem armadilha própria) e o r forte (escrito `rr`) | Acrescenta "i": "plízi", "bigui" | "Termine na consoante, sem *i*" |
 | `TRAP_S_CLUSTER` | `s` + consoante no início da palavra | Acrescenta "i/e" antes: "istrit" | "Comece direto no *s*" |
 | `TRAP_FINAL_Z` | `z` no fim da palavra | Ensurdece: "plis" | "Mantenha o zumbido do *z*" |
 | `TRAP_INITIAL_TAP` | `ɾ` no início da palavra (JA, KO) | Lê como r forte ("hamen") | "R leve, como em *caro*" |
@@ -202,26 +202,26 @@ Colunas: forma silabada; forma corrida (as mesmas letras, sem `·`); 🟧 = dest
 | 5 | you | ju | IU | IU | — |
 | 6 | very | ˈvɛɹi | VÉ·ri | VÉri | 🟧 r |
 | 7 | red | ɹɛd | RÉD | RÉD | 🟧 r · ⚑ FINAL_CONS |
-| 8 | house | haʊs | RAUS | RAUS | ⚑ FINAL_CONS |
+| 8 | house | haʊs | RAUS | RAUS | — |
 | 9 | behind | bɪˈhaɪnd | bi·RRAIND | biRRAIND | ⚑ CODA_NASAL, FINAL_CONS |
 | 10 | city | ˈsɪɾi | SI·ri | SIri | — |
 | 11 | team | tim | TIM | TIM | ⚑ TI_DI, CODA_NASAL |
 | 12 | little | ˈlɪɾəl | LI·râl | LIrâl | ⚑ CODA_L |
 | 13 | sing | sɪŋ | SING | SING | 🟧 ng |
-| 14 | street | stɹit | STRIT | STRIT | 🟧 r · ⚑ S_CLUSTER, TI_DI, FINAL_CONS |
+| 14 | street | stɹit | STRIT | STRIT | 🟧 r · ⚑ S_CLUSTER, FINAL_CONS |
 | 15 | cat | kæt | KÉT | KÉT | ⚑ FINAL_CONS |
 | 16 | cup | kʌp | KÂP | KÂP | ⚑ FINAL_CONS |
 | 17 | about | əˈbaʊt | â·BAUT | âBAUT | ⚑ FINAL_CONS |
 | 18 | give | ɡɪv | GUIV | GUIV | ⚑ FINAL_CONS |
 | 19 | measure | ˈmɛʒɚ | MÉ·jer | MÉjer | 🟧 er |
-| 20 | chocolate | ˈtʃɑklət | TCHAK·lât | TCHAKlât | ⚑ FINAL_CONS |
+| 20 | chocolate | ˈtʃɑklət | TCHA·klât | TCHAklât | ⚑ FINAL_CONS |
 | 21 | judge | dʒʌdʒ | DJÂDJ | DJÂDJ | ⚑ FINAL_CONS |
 | 22 | go | ɡoʊ | GÔU | GÔU | — |
 | 23 | day | deɪ | DÊI | DÊI | — |
 | 24 | boy | bɔɪ | BÓI | BÓI | — |
 | 25 | woman | ˈwʊmən | U·mân | Umân | ⚑ CODA_NASAL |
-| 26 | Worcester | ˈwʊstɚ | US·ter | USter | 🟧 er |
-| 27 | Massachusetts | ˌmæsəˈtʃusɪts | mé·ssâ·TCHU·ssits | méssâTCHUssits | ⚑ FINAL_CONS |
+| 26 | Worcester | ˈwʊstɚ | U·ster | Uster | 🟧 er |
+| 27 | Massachusetts | ˌmæsəˈtʃusɪts | mé·ssâ·TCHU·ssits | méssâTCHUssits | — |
 | 28 | welcome | ˈwɛlkəm | UÉL·kâm | UÉLkâm | ⚑ CODA_L, CODA_NASAL |
 
 ### Inglês (Reino Unido)
@@ -230,7 +230,7 @@ Colunas: forma silabada; forma corrida (as mesmas letras, sem `·`); 🟧 = dest
 |---|---|---|---|---|---|
 | 29 | water | ˈwɔːtə | UÓ·tâ | UÓtâ | — |
 | 30 | tomato | təˈmɑːtəʊ | tâ·MA·tôu | tâMAtôu | — |
-| 31 | Greenwich | ˈɡrɛnɪtʃ | GRÉ·nitch | GRÉnitch | 🟧 r · variantes: ˈɡrɪnɪdʒ, ˈɡrɛnɪdʒ |
+| 31 | Greenwich | ˈɡrɛnɪtʃ | GRÉ·nitch | GRÉnitch | 🟧 r · ⚑ FINAL_CONS · variantes: ˈɡrɪnɪdʒ, ˈɡrɛnɪdʒ |
 | 32 | bird | bɜːd | BÂD | BÂD | 🟧 â · ⚑ FINAL_CONS |
 
 ### Espanhol
@@ -278,7 +278,7 @@ Colunas: forma silabada; forma corrida (as mesmas letras, sem `·`); 🟧 = dest
 
 | # | Palavra | IPA | Silabada | Corrida | 🟧 / ⚑ |
 |---|---|---|---|---|---|
-| 59 | 안녕하세요 | annjʌŋhasejo | an·nióng·rra·ssê·iô | annióngrrassêiô | 🟧 ó, ng |
+| 59 | 안녕하세요 | annjʌŋhasejo | an·nióng·rra·ssê·iô | annióngrrassêiô | 🟧 ó, ng · ⚑ CODA_NASAL |
 | 60 | 감사합니다 | kamsahamnida | kam·sa·rram·ni·da | kamsarramnida | ⚑ CODA_NASAL |
 | 61 | 서울 | sʌul | só·ul | sóul | 🟧 ó · ⚑ CODA_L |
 | 62 | 빵 | p͈aŋ | ppang | ppang | 🟧 pp, ng |
@@ -287,13 +287,25 @@ Colunas: forma silabada; forma corrida (as mesmas letras, sem `·`); 🟧 = dest
 
 | # | Palavra | IPA | Silabada | Corrida | 🟧 / ⚑ |
 |---|---|---|---|---|---|
-| 63 | ich | ɪç | ICH | ICH | 🟧 ch |
+| 63 | ich | ɪç | ICH | ICH | 🟧 ch · ⚑ FINAL_CONS |
 | 64 | Bach | bax | BARR | BARR | — |
 | 65 | über | ˈyːbɐ | Ü·bâ | Übâ | 🟧 ü |
 | 66 | Straße | ˈʃtʁaːsə | CHTRRA·ssâ | CHTRRAssâ | 🟧 rr · ⚑ S_CLUSTER |
-| 67 | ciao | ˈtʃao | TCHAU | TCHAU | — |
+| 67 | ciao | ˈtʃa.o | TCHA·ô | TCHAô | — (a fonte registra hiato; "tchau" é a forma aportuguesada) |
 | 68 | gnocchi | ˈɲɔkki | NHÓ·ki | NHÓki | — |
 | 69 | grazie | ˈɡrattsje | GRA·tsiê | GRAtsiê | 🟧 ts |
+
+### Decisões de 2026-11-13 (T3.6, aprovadas pelo responsável do projeto)
+
+| Ponto | Decisão |
+|---|---|
+| Armadilha de consoante final depois de `s` | **Não se aplica**: o português já termina palavras em -s (*mês*). Exemplos 8 e 27 corrigidos |
+| *street* com TI_DI | Erro da tabela: o `t` vem depois do `i`. Corrigido |
+| Divisão silábica de *chocolate* e *Worcester* | Vale a regra do motor (ataque máximo do inglês, T3.4): `TCHA·klât`, `U·ster` |
+| *ciao* | Vale a fonte (hiato, italiano padrão): `TCHA·ô` |
+| Armadilhas omitidas na tabela | Acrescentadas: *Greenwich* e *ich* (FINAL_CONS), *안녕하세요* (CODA_NASAL) |
+
+Com isso, os 69 exemplos acima são o **golden set** do motor: grafia e armadilhas são testadas exatamente como estão aqui (`packages/engine/src/phonology.test.ts`).
 
 ## 8. Divergências com o protótipo aprovado
 
@@ -310,7 +322,7 @@ Estas mudanças devem ser aplicadas nos dados do protótipo e entram na Fase 4 c
 | Guia | `DIS` (ð) | `DHIS` (Q6) |
 | Guia | `su·xi`, `xi` | `su·chi`, `chi` (`ʃ`/`ɕ` = `ch`) |
 | Guia | `THIÉ·lô`, `ês·PA·nha` | `THIÊ·lô`, `ês·PÁ·nha` |
-| Apresentador | `UÚS·ter`, `mé·sâ·TCHU·sits`, `rrê·RÉTH` | `US·ter`, `mé·ssâ·TCHU·ssits`, `rê·RÉTH` |
+| Apresentador | `UÚS·ter`, `mé·sâ·TCHU·sits`, `rrê·RÉTH` | `U·ster`, `mé·ssâ·TCHU·ssits`, `rê·RÉTH` |
 
 ## 9. Questões para o revisor
 

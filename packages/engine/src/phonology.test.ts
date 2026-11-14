@@ -1,60 +1,77 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { createEngine } from './engine';
 import { createPhonology, renderPronunciation } from './phonology';
 import type { Dictionary } from './stages';
 import type { Lang } from './types';
 
-/** Exemplos da notação (docs/notacao.md, seção 7): [idioma, palavra, IPA, grafia silabada esperada]. */
-const NOTATION: [Lang, string, string, string][] = [
-  ['en-US', 'thank', 'θæŋk', 'THÉNK'], ['en-US', 'this', 'ðɪs', 'DHIS'], ['en-US', 'water', 'ˈwɑɾɚ', 'UA·rer'],
-  ['en-US', 'please', 'pliz', 'PLIZ'], ['en-US', 'you', 'ju', 'IU'], ['en-US', 'very', 'ˈvɛɹi', 'VÉ·ri'],
-  ['en-US', 'red', 'ɹɛd', 'RÉD'], ['en-US', 'house', 'haʊs', 'RAUS'], ['en-US', 'behind', 'bɪˈhaɪnd', 'bi·RRAIND'],
-  ['en-US', 'city', 'ˈsɪɾi', 'SI·ri'], ['en-US', 'team', 'tim', 'TIM'], ['en-US', 'little', 'ˈlɪɾəl', 'LI·râl'],
-  ['en-US', 'sing', 'sɪŋ', 'SING'], ['en-US', 'street', 'stɹit', 'STRIT'], ['en-US', 'cat', 'kæt', 'KÉT'],
-  ['en-US', 'cup', 'kʌp', 'KÂP'], ['en-US', 'about', 'əˈbaʊt', 'â·BAUT'], ['en-US', 'give', 'ɡɪv', 'GUIV'],
-  ['en-US', 'measure', 'ˈmɛʒɚ', 'MÉ·jer'], ['en-US', 'chocolate', 'ˈtʃɑklət', 'TCHAK·lât'], ['en-US', 'judge', 'dʒʌdʒ', 'DJÂDJ'],
-  ['en-US', 'go', 'ɡoʊ', 'GÔU'], ['en-US', 'day', 'deɪ', 'DÊI'], ['en-US', 'boy', 'bɔɪ', 'BÓI'],
-  ['en-US', 'woman', 'ˈwʊmən', 'U·mân'], ['en-US', 'Worcester', 'ˈwʊstɚ', 'US·ter'],
-  ['en-US', 'Massachusetts', 'ˌmæsəˈtʃusɪts', 'mé·ssâ·TCHU·ssits'], ['en-US', 'welcome', 'ˈwɛlkəm', 'UÉL·kâm'],
-  ['en-GB', 'water', 'ˈwɔːtə', 'UÓ·tâ'], ['en-GB', 'tomato', 'təˈmɑːtəʊ', 'tâ·MA·tôu'], ['en-GB', 'Greenwich', 'ˈɡrɛnɪtʃ', 'GRÉ·nitch'],
-  ['en-GB', 'bird', 'bɜːd', 'BÂD'],
-  ['es-ES', 'dónde', 'ˈdonde', 'DÔN·dê'], ['es-ES', 'estación', 'estaˈθjon', 'ês·ta·THIÔN'], ['es-419', 'estación', 'estaˈsjon', 'ês·ta·SSIÔN'],
-  ['es-ES', 'perro', 'ˈpero', 'PÊ·rrô'], ['es-ES', 'jamón', 'xaˈmon', 'ra·MÔN'], ['es-ES', 'cama', 'ˈkama', 'KÁ·ma'],
-  ['es-419', 'gracias', 'ˈɡɾasjas', 'GRA·ssias'], ['es-ES', 'gracias', 'ˈɡɾaθjas', 'GRA·thias'], ['es-ES', 'España', 'esˈpaɲa', 'ês·PÁ·nha'],
-  ['es-ES', 'agua', 'ˈaɣwa', 'A·gua'], ['es-419', 'llamar', 'ʝaˈmaɾ', 'ia·MAR'],
-  ['fr-FR', 'bonjour', 'bɔ̃ʒuʁ', 'bõ·JURR'], ['fr-FR', 'merci', 'mɛʁsi', 'mérr·SI'], ['fr-FR', 'tu', 'ty', 'TÜ'],
-  ['fr-FR', 'deux', 'dø', 'DÊ'], ['fr-FR', 'peur', 'pœʁ', 'PÉRR'], ['fr-FR', 'enfant', 'ɑ̃fɑ̃', 'ã·FÃ'],
-  ['fr-FR', 'rouge', 'ʁuʒ', 'RUJ'], ['fr-FR', 'Paris', 'paʁi', 'pa·RRI'],
-  ['ja-JP', 'ありがとう', 'aɾiɡatoː', 'a·ri·ga·tôo'], ['ja-JP', 'ございます', 'ɡozaimasɯ̥', 'gô·zai·ma·s(u)'],
-  ['ja-JP', 'ラーメン', 'ɾaːmeɴ', 'raa·mên'], ['ja-JP', '東京', 'toːkʲoː', 'tôo·kiôo'], ['ja-JP', '富士', 'ɸɯdʑi', 'fu·dji'],
-  ['ja-JP', '津波', 'tsɯnami', 'tsu·na·mi'], ['ja-JP', '寿司', 'sɯɕi', 'su·chi'],
-  ['ko-KR', '안녕하세요', 'annjʌŋhasejo', 'an·nióng·rra·ssê·iô'], ['ko-KR', '감사합니다', 'kamsahamnida', 'kam·sa·rram·ni·da'],
-  ['ko-KR', '서울', 'sʌul', 'só·ul'], ['ko-KR', '빵', 'p͈aŋ', 'ppang'],
-  ['de-DE', 'ich', 'ɪç', 'ICH'], ['de-DE', 'Bach', 'bax', 'BARR'], ['de-DE', 'über', 'ˈyːbɐ', 'Ü·bâ'],
-  ['de-DE', 'Straße', 'ˈʃtʁaːsə', 'CHTRRA·ssâ'],
-  ['it-IT', 'ciao', 'ˈtʃao', 'TCHAU'], ['it-IT', 'gnocchi', 'ˈɲɔkki', 'NHÓ·ki'], ['it-IT', 'grazie', 'ˈɡrattsje', 'GRA·tsiê'],
-]; // prettier-ignore
-
 /**
- * Diferenças conhecidas: o motor segue a regra adotada ou a fonte; a notação foi escrita à mão. A decisão final
- * é da T3.6 com o revisor (notação, seção 9). Mudar qualquer uma destas é decisão consciente, não acidente.
+ * Golden set = a própria notação (docs/notacao.md, seção 7): o teste lê as tabelas, então mudar a notação muda o
+ * teste. Confere a grafia silabada e as armadilhas (⚑) de cada exemplo.
  */
-const KNOWN_DIFFS: Record<string, { got: string; why: string }> = {
-  chocolate: { got: 'TCHA·klât', why: 'ataque máximo do inglês (T3.4): "kl" abre sílaba' },
-  Worcester: { got: 'U·ster', why: 'ataque máximo do inglês: "st" abre sílaba' },
-  ciao: { got: 'TCHA·ô', why: 'a fonte registra hiato (ˈt͡ʃa.o); "tchau" é a forma aportuguesada' },
-};
+interface Example {
+  lang: Lang;
+  n: string;
+  word: string;
+  ipa: string;
+  syllabic: string;
+  traps: string[];
+}
 
-describe('notação, seção 7 — grafia silabada', () => {
-  it.each(NOTATION)('%s %s /%s/ → %s', (lang, word, ipa, expected) => {
-    const got = renderPronunciation(ipa, lang, 'dictionary', word)
-      .syllables.map((s) => s.text)
-      .join('·');
-    expect(got).toBe(KNOWN_DIFFS[word]?.got ?? expected);
+function notationExamples(): Example[] {
+  const md = readFileSync(fileURLToPath(new URL('../../../docs/notacao.md', import.meta.url)), 'utf-8');
+  const section = md.slice(md.indexOf('## 7.'), md.indexOf('### Decisões de 2026-11-13'));
+  const HEADERS: Record<string, Lang | 'es' | 'de-it'> = {
+    'Inglês (EUA)': 'en-US',
+    'Inglês (Reino Unido)': 'en-GB',
+    Espanhol: 'es',
+    Francês: 'fr-FR',
+    Japonês: 'ja-JP',
+    Coreano: 'ko-KR',
+    'Alemão e italiano': 'de-it',
+  };
+  const out: Example[] = [];
+  let group: Lang | 'es' | 'de-it' | undefined;
+  for (const line of section.split('\n')) {
+    const h = /^### (.+)$/.exec(line);
+    if (h) group = HEADERS[h[1].trim()];
+    const cells = line.split('|').map((c) => c.trim());
+    if (!group || !/^\d+$/.test(cells[1] ?? '')) continue;
+    const [, n, word] = cells;
+    const variant = group === 'es' ? cells[3] : undefined;
+    const [ipa, syllabic, , flags] = group === 'es' ? cells.slice(4) : cells.slice(3);
+    const traps =
+      /⚑ ([A-Z_, ]+)/
+        .exec(flags)?.[1]
+        .split(',')
+        .map((t) => t.trim()) ?? [];
+    const langs: Lang[] =
+      group === 'es'
+        ? variant === 'ES'
+          ? ['es-ES']
+          : variant === '419'
+            ? ['es-419']
+            : ['es-ES', 'es-419']
+        : group === 'de-it'
+          ? [Number(n) <= 66 ? 'de-DE' : 'it-IT']
+          : [group];
+    for (const lang of langs) out.push({ lang, n, word, ipa, syllabic, traps });
+  }
+  return out;
+}
+
+const EXAMPLES = notationExamples();
+
+describe('notação, seção 7 — golden set (grafia e armadilhas)', () => {
+  it('lê os 69 exemplos da notação', () => {
+    expect(new Set(EXAMPLES.map((e) => e.n)).size).toBe(69);
   });
 
-  it('as diferenças conhecidas continuam sendo só estas', () => {
-    expect(Object.keys(KNOWN_DIFFS)).toHaveLength(3);
+  it.each(EXAMPLES.map((e) => [`${e.n} ${e.lang} ${e.word}`, e] as const))('%s', (_label, e) => {
+    const p = renderPronunciation(e.ipa, e.lang, 'dictionary', e.word);
+    expect(p.syllables.map((s) => s.text).join('·')).toBe(e.syllabic);
+    expect([...p.traps].sort()).toEqual([...e.traps].sort());
   });
 });
 
@@ -139,5 +156,25 @@ describe('correções achadas no teste com frases reais', () => {
   });
   it('espanhol: ditongo decrescente escrito com vogal (Aires) é uma sílaba', () => {
     expect(sy('aiɾes', 'es-419', 'Aires', 'none')).toBe('AI·rês');
+  });
+});
+
+describe('R11, 2ª parte — monossílabo funcional em frase', () => {
+  const words: Record<string, string> = { the: 'ðə', guardian: 'ˈɡɑːdi.ən', of: 'ˈɒv', bank: 'ˈbæŋk' };
+  const dictionary: Dictionary = {
+    lookup: async (_l, key) =>
+      words[key]
+        ? {
+            display: key,
+            proper: false,
+            prons: [{ ipa: words[key], stress: 'dictionary', source: 'wiktextract', agree: 0 }],
+          }
+        : undefined,
+  };
+  const engine = createEngine({ dictionary });
+  it('em frase, minúsculas; sozinho, tônico', async () => {
+    expect((await engine.convert('The Guardian', 'en-GB')).reading.syllabic).toBe('dhâ GA·di·ân');
+    expect((await engine.convert('Bank of', 'en-GB')).reading.syllabic).toBe('BÉNK óv');
+    expect((await engine.convert('the', 'en-GB')).reading.syllabic).toBe('DHÂ');
   });
 });
