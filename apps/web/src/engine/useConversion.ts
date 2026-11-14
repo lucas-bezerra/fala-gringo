@@ -31,9 +31,14 @@ interface Done {
  * Converte `text` com espera de digitação (`delay` ms). Respostas superadas são descartadas.
  * O estado é derivado no render: "carregando" = o último resultado é de outro texto.
  */
-export function useConversion(text: string, lang: Lang, delay = 250): ConversionState {
+export function useConversion(
+  text: string,
+  lang: Lang,
+  options: { mixed?: boolean; delay?: number } = {},
+): ConversionState {
+  const { mixed = false, delay = 250 } = options;
   const [done, setDone] = useState<Done | null>(null);
-  const key = `${lang}\u0000${text}`;
+  const key = `${lang}\u0000${mixed ? 'm' : ''}\u0000${text}`;
   const empty = !text.trim();
 
   useEffect(() => {
@@ -41,7 +46,7 @@ export function useConversion(text: string, lang: Lang, delay = 250): Conversion
     let live = true;
     const timer = setTimeout(() => {
       engine()
-        .convertLatest(text, lang)
+        .convertLatest(text, lang, { mixed })
         .then(
           (result) => {
             if (live && result) setDone({ key, result });
@@ -57,7 +62,7 @@ export function useConversion(text: string, lang: Lang, delay = 250): Conversion
       live = false;
       clearTimeout(timer);
     };
-  }, [text, lang, delay, key, empty]);
+  }, [text, lang, mixed, delay, key, empty]);
 
   if (empty) return { status: 'idle' };
   if (!done || done.key !== key) return { status: 'loading', result: done?.result };

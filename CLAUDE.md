@@ -68,13 +68,17 @@ O CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) roda tudo acima, mai
 ```
 packages/data/scripts/sync-web.mjs  → publica em apps/web/public/dict/: manifest (só idiomas ACTIVE) + shards + NOTICE.md;
                                       sem build/dict, roda o pipeline (import → merge → shards) a partir de raw/
-engine/engine.worker.ts              → serveEngine + createEngine(ShardDictionary via fetch de /dict/, cachedDictionary)
+app/route.ts + App.tsx               → rotas por hash (#/ Traduzir, #/apresentar); foco vai ao título ao trocar de tela
+engine/engine.worker.ts              → serveEngine + createEngine(ShardDictionary via fetch de /dict/, cachedDictionary);
+                                      um 2º motor com o léxico do português é criado no 1º pedido `mixed`
 engine/useConversion.ts              → EngineClient (um worker por página), espera de 250 ms, convertLatest
 engine/langs.ts                      → idiomas e variantes oferecidos na tela
 translate/TranslateScreen.tsx        → tela Traduzir (idioma, variante, entrada, cartões, leitura, copiar)
 translate/Pronunciation.tsx          → sílabas com tônica e destaque laranja por segmento (notação, seção 5.1)
 translate/WordDetail.tsx             → detalhe: som a som, fonte, variantes, áudio (painel lateral ≥ 1024 px; inferior abaixo)
 translate/useSpeech.ts               → voz sintética do navegador (Web Speech); sem voz no idioma, desativa e explica
+present/PresenterScreen.tsx          → modo apresentador: roteiro com texto misto, leitura em amarelo acima do nome, IPA,
+                                      tamanhos 40–96 px, atalhos (Espaço, + −, I, E) listados na própria tela
 ```
 
 ## Convenções e armadilhas

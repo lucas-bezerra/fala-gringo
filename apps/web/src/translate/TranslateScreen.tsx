@@ -1,6 +1,7 @@
 import type { ConversionResult, Lang, UnknownToken, WordToken } from '@falagringo/engine';
-import { useState } from 'react';
-import { DEFAULT_LANG, LANG_GROUPS, groupOf } from '@/engine/langs';
+import { useState, type Ref } from 'react';
+import { ROUTE_HREF } from '@/app/route';
+import { LANG_GROUPS, groupOf } from '@/engine/langs';
 import { useConversion, type ConversionState } from '@/engine/useConversion';
 import { BottomSheet, Button, Chip, Segmented, Tabs, useToast } from '@/ui';
 import type { ReadingMode } from './Pronunciation';
@@ -10,7 +11,6 @@ import { WordCard } from './WordCard';
 import { WordDetail } from './WordDetail';
 
 const MAX = 2000;
-const EXAMPLE = 'Thank you for watching the news';
 /** A partir daqui o detalhe fica no painel lateral; abaixo, no painel inferior. */
 const DESKTOP = '(min-width: 1024px)';
 
@@ -48,9 +48,40 @@ const SpeakerIcon = () => (
   </svg>
 );
 
-export function TranslateScreen() {
-  const [lang, setLang] = useState<Lang>(DEFAULT_LANG);
-  const [text, setText] = useState(EXAMPLE);
+const PresentIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="2" y="4" width="20" height="13" rx="2" />
+    <path d="M8 21h8M12 17v4" />
+  </svg>
+);
+
+export interface TranslateScreenProps {
+  headingRef: Ref<HTMLHeadingElement>;
+  text: string;
+  setText: (t: string) => void;
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  /** Chamado antes de ir ao modo apresentador (leva o texto como roteiro). */
+  onPresent: () => void;
+}
+
+export function TranslateScreen({
+  headingRef,
+  text,
+  setText,
+  lang,
+  setLang,
+  onPresent,
+}: TranslateScreenProps) {
   const [mode, setMode] = useState<ReadingMode>('syllabic');
   const [selected, setSelected] = useState(0);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -71,22 +102,10 @@ export function TranslateScreen() {
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <header className="border-b border-line bg-surface">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-6">
-          <span className="flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="flex h-[30px] w-[30px] items-center justify-center rounded-[8px] bg-accent font-display text-[15px] font-bold text-white"
-            >
-              Fg
-            </span>
-            <span className="font-display text-lg font-bold">FalaGringo</span>
-          </span>
-        </div>
-      </header>
-
       <main className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6 sm:py-6">
-        <h1 className="sr-only">Como pronunciar em {group.inLabel}</h1>
+        <h1 ref={headingRef} tabIndex={-1} className="sr-only">
+          Como pronunciar em {group.inLabel}
+        </h1>
         <section aria-label="Idioma de origem" className="flex flex-wrap items-center gap-x-4 gap-y-3">
           <div role="group" aria-label="Idioma" className="flex flex-wrap items-center gap-2">
             {LANG_GROUPS.map((g) => (
@@ -141,6 +160,7 @@ export function TranslateScreen() {
               selectedIndex={desktop || sheetOpen ? currentIndex : -1}
               onSelect={select}
               speech={speech}
+              onPresent={onPresent}
             />
           </div>
 
@@ -178,6 +198,7 @@ function Results({
   selectedIndex,
   onSelect,
   speech,
+  onPresent,
 }: {
   state: ConversionState;
   result: ConversionResult | undefined;
@@ -187,6 +208,7 @@ function Results({
   selectedIndex: number;
   onSelect: (i: number) => void;
   speech: SpeechState;
+  onPresent: () => void;
 }) {
   const toast = useToast();
   const reading = result ? (mode === 'syllabic' ? result.reading.syllabic : result.reading.flat) : '';
@@ -265,6 +287,16 @@ function Results({
                 <Button size="sm" icon={<CopyIcon />} onClick={copy}>
                   Copiar leitura
                 </Button>
+                <a
+                  href={ROUTE_HREF.apresentar}
+                  onClick={onPresent}
+                  className="focus-ring inline-flex min-h-9 items-center gap-2 rounded-control border border-line bg-surface px-3 text-sm font-semibold text-ink hover:border-line-strong hover:bg-subtle"
+                >
+                  <span aria-hidden="true" className="inline-flex">
+                    <PresentIcon />
+                  </span>
+                  Apresentar
+                </a>
               </span>
             }
             items={[
