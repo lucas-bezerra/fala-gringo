@@ -142,7 +142,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T3.7 | **Depende da revisão de `golden/en-US.tsv` e `golden/en-GB.tsv`** (meta 95% já configurada em `golden/metas.json`). Perfil do inglês (US e UK) | high | Golden set EN ≥ 300 palavras revisadas, com 95% ou mais de acerto 👤 | T3.6, T2.3 |
 | T3.8 | ✅ **Concluída em 2026-11-13** (`pnpm test:golden`, no CI; rascunhos gerados: 300 por inglês, 200 es/fr/it/de, 100 nl/sv/ko — [golden/README.md](../packages/engine/golden/README.md) para o revisor). **Falta a revisão humana** 👤. Golden sets + harness de testes (métrica de acerto por idioma no CI) | medium | `pnpm test:golden` mostra o % de acerto por idioma | T3.6 |
 | T3.9 | Estimativa para palavras fora do dicionário em EN/FR (decidir: regras ou modelo de ML) 👤 | xhigh | ADR com a decisão. Com ML: Idea Case, documentação do modelo e aviso "estimado" na UI | T3.7 |
-| T3.10 | Wrapper em Web Worker + cache LRU de palavras | medium | A UI não trava com 2.000 caracteres | T3.6 |
+| T3.10 | ✅ **Concluída em 2026-11-13** (`serveEngine`/`EngineClient` em `src/worker/`, `cachedDictionary`; `pnpm --filter @falagringo/engine bench`: 2.000 caracteres em ~10–15 ms com cache, 0,1–0,4 s a frio lendo os shards; o arquivo do worker no app e a publicação dos shards ficam na T4.2/T4.8). Wrapper em Web Worker + cache LRU de palavras | medium | A UI não trava com 2.000 caracteres | T3.6 |
 
 ### Fase 4 — Frontend (depois da T0.1)
 

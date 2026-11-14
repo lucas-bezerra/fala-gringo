@@ -27,3 +27,7 @@ export { CORE_ORTHOGRAPHY, CORE_RULES, CORE_TRAPS } from './rules/core';
 export { PROFILES } from './rules/profiles';
 export { applyRules, ruleSetFor } from './rules/apply';
 export type { Context, MapRule, Matcher, OrthoRule, Profile, TrapRule } from './rules/dsl';
+export { LruCache, cachedDictionary } from './cache';
+export { EngineClient } from './worker/client';
+export { serveEngine } from './worker/serve';
+export type { EngineRequest, EngineRequestBody, EngineResponse, MessagePortLike } from './worker/protocol';

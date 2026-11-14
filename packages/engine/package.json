@@ -11,7 +11,8 @@
     "syllables-eval": "tsx scripts/syllables-eval.ts",
     "rules-coverage": "tsx scripts/rules-coverage.ts",
     "golden": "tsx scripts/golden.ts",
-    "golden:draft": "tsx scripts/golden-draft.ts"
+    "golden:draft": "tsx scripts/golden-draft.ts",
+    "bench": "tsx scripts/bench.ts"
   },
   "dependencies": {
     "@falagringo/data": "workspace:*"
