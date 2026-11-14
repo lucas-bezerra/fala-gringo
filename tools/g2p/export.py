@@ -7,7 +7,7 @@ Saídas em export/{lang}/:
   g2p.json     configuração, vocabulários, índice dos tensores (nome, forma, posição no .bin) e métricas
   g2p.bin      pesos, little-endian, na ordem do índice
   fixtures.tsv 300 palavras de teste com a saída do PyTorch usando os MESMOS pesos exportados;
-               a inferência em TypeScript (etapa seguinte da T3.9) tem de reproduzir esta coluna exatamente
+               a inferência em TypeScript (packages/engine/src/g2p) tem de reproduzir esta coluna exatamente
 """
 
 from __future__ import annotations

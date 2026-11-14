@@ -131,8 +131,9 @@ export function WordDetail({ token, lang, speech, showTitle = true }: WordDetail
 
       {token.origin === 'estimated' ? (
         <p className={NOTE}>
-          Esta palavra não está no dicionário. A pronúncia foi <strong>estimada</strong> pela grafia e pode
-          estar errada. Confirme com uma fonte confiável.
+          Esta palavra não está no dicionário. A pronúncia foi <strong>estimada</strong> pela grafia, por um
+          modelo de inteligência artificial treinado com dicionários, e pode estar errada. Confirme com uma
+          fonte confiável antes de usar no ar ou em conteúdo publicado.
         </p>
       ) : (
         <p className="mt-2 text-xs text-muted">

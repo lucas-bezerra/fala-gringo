@@ -7,3 +7,6 @@ docs
 
 # gerado por apps/web/security-headers.ts (pnpm render:yaml)
 render.yaml
+
+# modelo G2P de teste, gerado por tools/g2p/export.py (T3.9)
+packages/engine/fixtures

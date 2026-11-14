@@ -281,3 +281,74 @@ describe('modo texto misto e partes de reserva (T3.2)', () => {
     expect(unknownBoth.tokens).toEqual([{ kind: 'unknown', original: 'xx-yy', key: 'xx-yy' }]);
   });
 });
+
+describe('estimador assíncrono (T3.9)', () => {
+  const EN: Dictionary = {
+    lookup: async (_lang, key) =>
+      ({ worcester: 'ˈwʊstɚ', well: 'ˈwɛl' })[key]
+        ? {
+            display: key,
+            proper: false,
+            prons: [
+              { ipa: key === 'well' ? 'ˈwɛl' : 'ˈwʊstɚ', stress: 'dictionary', source: 'cmudict', agree: 0 },
+            ],
+          }
+        : undefined,
+  };
+  const PT: PortugueseLexicon = { has: (k) => ['em', 'ontem', 'falou'].includes(k), isName: () => false };
+
+  const recording = () => {
+    const asked: string[] = [];
+    const estimator: Estimator = {
+      estimate: async (k) => {
+        asked.push(k);
+        return k === 'zelensky' ? 'zəˈlɛnski' : undefined;
+      },
+    };
+    return { asked, estimator };
+  };
+
+  it('no texto misto, o português e as palavras do dicionário não passam pelo estimador', async () => {
+    const { asked, estimator } = recording();
+    const engine = createEngine({
+      dictionary: EN,
+      phonology: placeholderPhonology,
+      portuguese: PT,
+      estimator,
+    });
+    const r = await engine.convert('Zelensky falou ontem em Worcester.', 'en-US', { mixed: true });
+    expect(asked).toEqual(['zelensky']);
+    const words = r.tokens.filter((t) => t.kind === 'word');
+    expect(words.map((t) => `${t.original}:${t.origin}`)).toEqual([
+      'Zelensky:estimated',
+      'Worcester:dictionary',
+    ]);
+    expect(words[0]).toMatchObject({ proper: false, agree: 0, primary: { ipa: 'zəˈlɛnski' } });
+  });
+
+  it('estima cada chave uma vez; num composto, só a parte que faltou', async () => {
+    const { asked, estimator } = recording();
+    const engine = createEngine({ dictionary: EN, phonology: placeholderPhonology, estimator });
+    const r = await engine.convert('Zelensky, zelensky, qwxz e well-zork', 'en-US');
+    expect(asked.sort()).toEqual(['e', 'qwxz', 'zelensky', 'zork']);
+    expect(r.tokens.filter((t) => t.kind !== 'text').map((t) => `${t.original}:${t.kind}`)).toEqual([
+      'Zelensky:word',
+      'zelensky:word',
+      'qwxz:unknown',
+      'e:unknown',
+      'well:word',
+      'zork:unknown',
+    ]);
+  });
+
+  it('falha do estimador não derruba a conversão', async () => {
+    const estimator: Estimator = {
+      estimate: async () => {
+        throw new Error('modelo indisponível');
+      },
+    };
+    const engine = createEngine({ dictionary: EN, phonology: placeholderPhonology, estimator });
+    const r = await engine.convert('Worcester zork', 'en-US');
+    expect(r.tokens.map((t) => t.kind)).toEqual(['word', 'text', 'unknown']);
+  });
+});

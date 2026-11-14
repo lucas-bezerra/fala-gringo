@@ -11,6 +11,7 @@ export default tseslint.config(
       'apps/web/public/**',
       'playwright-report/**',
       'test-results/**',
+      'tools/g2p/.venv/**', // ambiente Python do treino (T3.9): traz JS do PyTorch
     ],
   },
   js.configs.recommended,

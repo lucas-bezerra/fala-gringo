@@ -12,7 +12,8 @@
     "rules-coverage": "tsx scripts/rules-coverage.ts",
     "golden": "tsx scripts/golden.ts",
     "golden:draft": "tsx scripts/golden-draft.ts",
-    "bench": "tsx scripts/bench.ts"
+    "bench": "tsx scripts/bench.ts",
+    "g2p-eval": "tsx scripts/g2p-eval.ts"
   },
   "dependencies": {
     "@falagringo/data": "workspace:*"

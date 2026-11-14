@@ -1,7 +1,8 @@
 """Transformer codificador-decodificador por caractere (grafia → IPA).
 
 Escrito à mão, sem nn.Transformer, para que cada peso tenha nome e forma óbvios: o export (export.py) grava
-os tensores com estes nomes e a inferência em TypeScript (etapa seguinte da T3.9) reproduz exatamente estas contas.
+os tensores com estes nomes e a inferência em TypeScript (packages/engine/src/g2p/model.ts) reproduz exatamente
+estas contas. Mudou algo aqui? Mude lá também (o teste model.test.ts compara as duas).
 
 Arquitetura (pre-LN):
   x = emb(tokens) * sqrt(d) + posição senoidal

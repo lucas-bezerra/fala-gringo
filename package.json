@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "pnpm --filter @falagringo/data sync:web && pnpm --filter @falagringo/web dev",
+    "dev:g2p": "pnpm --filter @falagringo/data sync:web --g2p && pnpm --filter @falagringo/web dev",
     "build": "pnpm --filter @falagringo/data sync:web && pnpm --filter @falagringo/web build",
     "preview": "pnpm --filter @falagringo/web preview",
     "typecheck": "pnpm -r typecheck",
