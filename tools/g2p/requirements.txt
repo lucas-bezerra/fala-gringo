@@ -1,0 +1,2 @@
+# Instale o torch ANTES, com o índice certo para a sua placa (ver docs/treino-g2p.md, passo 3).
+numpy>=1.26
