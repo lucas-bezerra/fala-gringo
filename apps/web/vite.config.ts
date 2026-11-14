@@ -12,6 +12,10 @@ export default defineConfig({
   build: {
     // Não embutir assets como data: URIs — a CSP (font-src 'self') os bloquearia.
     assetsInlineLimit: 0,
+    rollupOptions: {
+      // catalogo.html: catálogo interno dos componentes base (T4.1)
+      input: { main: path.resolve(root, 'index.html'), catalogo: path.resolve(root, 'catalogo.html') },
+    },
   },
   preview: {
     headers: PREVIEW_HEADERS,
