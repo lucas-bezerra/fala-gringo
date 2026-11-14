@@ -1,3 +1,4 @@
+import '../app/trustedTypes'; // 1º: política de Trusted Types antes de qualquer sink
 import '../index.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

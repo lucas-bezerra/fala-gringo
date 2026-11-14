@@ -180,7 +180,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | ID | Tarefa | Effort | Entregável / critério de aceite | Dep. |
 |---|---|---|---|---|
 | T6.1 | Testes E2E (Playwright): traduzir, detalhe, offline, apresentador, mobile | medium | CI verde | Fase 4 |
-| T6.2 | Revisão de segurança (CSP, dependências, headers, Service Worker) | high | `/security-review` sem achados abertos | Fase 4 |
+| T6.2 | ✅ **Concluída em 2026-11-14** ([seguranca.md](seguranca.md): CSP `default-src 'none'` + Trusted Types, CORP, link compartilhado no fragmento, SW sem `importScripts`, overrides de `glob`/`minimatch`, actions por SHA, Dependabot, teste de sincronia do Nginx; e2e de segurança). Revisão de segurança (CSP, dependências, headers, Service Worker) | high | `/security-review` sem achados abertos | Fase 4 |
 | T6.3 | Orçamento de performance (JS inicial, LCP, tempo de conversão) | medium | Metas definidas e medidas no CI (Lighthouse) | Fase 4 |
 | T6.4 | Revisão linguística final dos golden sets 👤 | — (humano) | Assinatura do revisor por idioma | Fase 5 |
 | T6.5 | Atualizar CLAUDE.md e README | low | — | todas |
