@@ -173,7 +173,7 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T5.6 | Coreano | high | **Cobertura do dicionário é só 44,5% do uso** (faltam formas flexionadas): a conversão de Hangul por regra é o caminho principal. Hangul é fonético, mas tem regras (ligação, nasalização, tensificação) | T3.2 |
 | T5.7 | Mandarim | high | Hanzi → pinyin (polifonia), pinyin → IPA, representação dos tons na UI | T3.2 |
 | T5.8 | Nomes próprios (multi-idioma, Wikidata) | medium | Prioridade: esportes, política internacional, cidades | T2.5 |
-| T5.9 | Template "novo idioma via WikiPron" + 1 piloto (ex.: holandês ou polonês) | medium; depois **low** por idioma | Checklist de 1 página para adicionar idiomas | T5.1 |
+| T5.9 | 🟡 **Checklist feito em 2026-11-14** ([novo-idioma.md](novo-idioma.md)); piloto holandês avaliado e **não ativado** (cobertura de 84,8%: falta treinar o G2P). Template "novo idioma via WikiPron" + 1 piloto (ex.: holandês ou polonês) | medium; depois **low** por idioma | Checklist de 1 página para adicionar idiomas | T5.1 |
 
 ### Fase 6 — Qualidade, segurança e lançamento
 

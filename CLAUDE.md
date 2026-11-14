@@ -90,7 +90,7 @@ present/PresenterScreen.tsx          → modo apresentador: roteiro com texto mi
 
 ## Convenções e armadilhas
 
-- **Ativar um idioma no site** exige duas mudanças sincronizadas: `ACTIVE` em [packages/data/scripts/sync-web.mjs](packages/data/scripts/sync-web.mjs) e `LANG_GROUPS` em [apps/web/src/engine/langs.ts](apps/web/src/engine/langs.ts). Só ative idiomas com perfil de regras e golden set revisado (Fase 5), e acrescente a meta em `golden/metas.json`. Hoje: en-US, en-GB, es-419, es-ES, it-IT e de-DE.
+- **Ativar um idioma no site** (roteiro completo em [docs/novo-idioma.md](docs/novo-idioma.md)) exige duas mudanças sincronizadas: `ACTIVE` em [packages/data/scripts/sync-web.mjs](packages/data/scripts/sync-web.mjs) e `LANG_GROUPS` em [apps/web/src/engine/langs.ts](apps/web/src/engine/langs.ts). Só ative idiomas com perfil de regras e golden set revisado (Fase 5), e acrescente a meta em `golden/metas.json`. Hoje: en-US, en-GB, es-419, es-ES, it-IT e de-DE.
 - **Dados novos no site:** `packages/data/build/dict` é reaproveitado se existir; depois de mudar dados ou pipeline, rode `merge` e `shards` (ou apague `build/dict`) antes do `pnpm dev`. Os nomes dos shards levam hash, então o cache do navegador não serve dado velho.
 - **Licenças:** só existem dicionários permitidos (`en_US`, `de`, `ja`, `ko`, `nl`, `sv`), com créditos em [packages/data/raw/ipa-dict/LICENSES.md](packages/data/raw/ipa-dict/LICENSES.md). **Nenhuma fonte entra sem registro no SOURCES.md.** Dados NC (não comercial), GPL e sem licença estão proibidos. O uso declarado é individual, sem fins lucrativos e fora dos canais oficiais; se isso mudar, as licenças precisam ser revistas.
 - **EN-US é obrigatório** e é o idioma principal.
