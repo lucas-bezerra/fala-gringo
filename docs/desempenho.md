@@ -8,7 +8,7 @@ As metas valem para o pior caso realista: **celular médio, primeira visita, cac
 |---|--:|--:|---|
 | LCP (maior elemento visível) | 1,18 s | 2,5 s ("bom" no Core Web Vitals) | `e2e/desempenho.spec.ts` |
 | 1ª conversão (da navegação ao 1º cartão, cache vazio) | 3,1 s | 4 s | idem |
-| Trocar um texto de 2.000 caracteres (inclui 250 ms de espera da digitação) | 0,5 s | 1,2 s | idem |
+| Trocar um texto de 2.000 caracteres (inclui 250 ms de espera da digitação) | 0,5 s (Mac) · 1,0 s (CI) | 1,5 s | idem |
 | Maior travada da tela ao digitar com o motor trabalhando | 0 ms | 100 ms (num aparelho médio) | idem |
 | JS inicial (gzip) | 84,8 KB | 100 KB | `pnpm budget` |
 | CSS inicial (gzip) | 6,8 KB | 15 KB | idem |
@@ -16,7 +16,7 @@ As metas valem para o pior caso realista: **celular médio, primeira visita, cac
 | Service worker (gzip) | 6,2 KB | 30 KB | idem |
 | Maior shard do dicionário (gzip) | 43,5 KB | 50 KB | idem |
 
-Os valores medidos aparecem no log do CI (linhas `[desempenho]` e a tabela do `pnpm budget`).
+A limitação de CPU é relativa à máquina: o runner do GitHub mede valores maiores que um computador de desenvolvimento. As metas de tempo dão folga para essa variação. Os valores medidos aparecem no log do CI (linhas `[desempenho]` e a tabela do `pnpm budget`).
 
 ## O que mudou para cumprir as metas
 

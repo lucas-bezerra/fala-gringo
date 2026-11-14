@@ -6,7 +6,9 @@ import { expect, test, type Page } from '@playwright/test';
 const BUDGET = {
   lcpMs: 2500, // "bom" no Core Web Vitals
   firstConversionMs: 4000, // da navegação ao 1º cartão (worker + manifest + 1º shard, cache vazio)
-  conversion2000Ms: 1200, // trocar um texto de 2.000 caracteres até o resultado (inclui a espera de 250 ms)
+  // trocar um texto de 2.000 caracteres até o resultado (inclui a espera de 250 ms). Medido: 0,5 s no Mac, 1,0 s
+  // no runner do CI (a limitação de CPU é relativa à máquina) — a meta dá folga para essa variação
+  conversion2000Ms: 1500,
   typingFrameMs: 100, // digitar com o motor trabalhando: nenhuma tecla trava a tela
 };
 
