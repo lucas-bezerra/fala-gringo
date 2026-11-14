@@ -9,7 +9,7 @@ import type { MergedEntry } from './merge';
 import { lookupKey, type Lang } from './schema';
 import { SHARD_FORMAT, toShardWord, type ShardFile, type ShardRef, type ShardWord } from './shards';
 
-export const DEFAULT_MAX_GZIP = 200 * 1024;
+export const DEFAULT_MAX_GZIP = 48 * 1024;
 
 export interface BuiltShard {
   ref: ShardRef;

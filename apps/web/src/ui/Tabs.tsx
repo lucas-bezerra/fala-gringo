@@ -88,7 +88,8 @@ export function Tabs<K extends string>({ label, items, value, onChange, actions,
           tabIndex={0}
           className="focus-ring mt-3 rounded-control"
         >
-          {t.panel}
+          {/* só a aba ativa é renderizada: com listas longas, renderizar as escondidas dobra o custo */}
+          {t.key === value && t.panel}
         </div>
       ))}
     </div>
