@@ -52,6 +52,40 @@ Regras do preparo:
 
 **Leve para o PC a pasta `tools/g2p/` inteira**, com `data/` dentro, por pendrive, Google Drive ou outro meio. Ela tem os scripts e os dados, e nada mais do repositório é necessário. A pasta `data/` fica fora do git de propósito.
 
+## Alternativa: treinar no próprio Mac (Apple Silicon)
+
+**Escolhida em 2026-11-14.** Num MacBook Pro M1 Pro, o treino usa a GPU do Mac (MPS) com o PyTorch atual, sem fixar versão. Ele fica na mesma ordem de velocidade da GTX 1060 (~45 s por época no en-US) e dispensa CUDA, driver e cópia dos dados.
+
+```bash
+cd tools/g2p
+uv venv --python 3.12 .venv            # ou: python3.12 -m venv .venv
+VIRTUAL_ENV=$PWD/.venv uv pip install torch numpy
+.venv/bin/python prepare.py --lang en-US
+caffeinate -i .venv/bin/python train.py --lang en-US --device mps   # caffeinate: o Mac não dorme durante o treino
+.venv/bin/python evaluate.py --lang en-US --device mps
+.venv/bin/python export.py --lang en-US
+```
+
+Mantenha o Mac na tomada. A tampa pode ser fechada só com monitor externo. Os passos 3 a 6 abaixo valem igualmente: troque `python` por `.venv/bin/python` e acrescente `--device mps`. As seções do PC (passo 2) ficam como alternativa.
+
+Para acompanhar ao vivo, em outro terminal: `bash tools/g2p/acompanhar.sh`. Ele lê o `runs/<idioma>/log.tsv` a cada 10 s; Ctrl+C fecha só o painel, não o treino.
+
+### Resultado do 1º treino (2026-11-14, M1 Pro, 80 épocas, ~2 h 10 min no total)
+
+| Idioma | Palavras de teste | Erro por palavra | Sem a tônica | Erro por caractere | Melhor época | s/época |
+|---|--:|--:|--:|--:|--:|--:|
+| en-US | 6.206 | 28,9% | 24,7% | 8,3% | 76 | ~45 |
+| fr-FR | 4.165 | 4,3% | 4,3% | 0,9% | 70 | ~32 |
+| en-GB | 2.893 | 55,8% | 46,2% | 16,4% | 64 | ~27 |
+
+Cada export tem ~6 MB (3,1–3,2 M parâmetros em float16).
+
+**Leitura:**
+- O **fr-FR** tem ortografia regular, e o modelo quase não erra.
+- No **en-US**, boa parte dos erros são nomes próprios e estrangeirismos (`abacha`, `abuladze`) ou diferenças pequenas de tônica secundária.
+- O número do **en-GB** é inflado pela fonte. O Wiktionary mistura notações (pontos de sílaba às vezes, `a`/`æ`, `ɹ`/`r`), e a métrica exige a string idêntica: `ˈæbdɪˌkeɪt` conta como erro contra `ˈæb.dɪˌkeɪt`.
+- O acerto que interessa é medido **na grafia PT-BR**, já normalizada, na parte B.
+
 ## 2. No PC: instalar o ambiente (uma vez)
 
 ### 2.1 Driver da NVIDIA
