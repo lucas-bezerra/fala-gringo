@@ -55,17 +55,22 @@ check(
   /no-cache|max-age=0/.test(man.h('cache-control')),
   man.h('cache-control'),
 );
-const manifest = await man.res.json();
-const lang = Object.keys(manifest.langs)[0];
-const shard = manifest.langs[lang].shards[0].file;
-const sh = await get(`/dict/${shard}`);
-check(`shard (${lang}) responde 200`, sh.res.status === 200, `HTTP ${sh.res.status}`);
-check('shard com cache imutável', sh.h('cache-control').includes('immutable'), sh.h('cache-control'));
-check(
-  'shard comprimido',
-  /gzip|br/.test(sh.h('content-encoding')),
-  sh.h('content-encoding') || 'sem compressão',
-);
+// site fora do ar ou ainda publicando: reporta como falha em vez de quebrar o script
+const manifest = await man.res.json().catch(() => undefined);
+const lang = manifest?.langs && Object.keys(manifest.langs)[0];
+if (lang) {
+  const shard = manifest.langs[lang].shards[0].file;
+  const sh = await get(`/dict/${shard}`);
+  check(`shard (${lang}) responde 200`, sh.res.status === 200, `HTTP ${sh.res.status}`);
+  check('shard com cache imutável', sh.h('cache-control').includes('immutable'), sh.h('cache-control'));
+  check(
+    'shard comprimido',
+    /gzip|br/.test(sh.h('content-encoding')),
+    sh.h('content-encoding') || 'sem compressão',
+  );
+} else {
+  check('manifest dos dados é JSON válido', false, `HTTP ${man.res.status}; resposta vazia ou inválida`);
+}
 
 const pwa = await get('/manifest.webmanifest');
 check('manifest do PWA responde 200', pwa.res.status === 200, `HTTP ${pwa.res.status}`);
@@ -76,6 +81,6 @@ for (const r of results) {
   console.log(`${r.ok ? '✅' : '❌'} ${r.label}${r.detail ? ` — ${r.detail}` : ''}`);
 }
 console.log(
-  `\n${results.length - failed}/${results.length} verificações ok (dados ${manifest.dataVersion}).`,
+  `\n${results.length - failed}/${results.length} verificações ok (dados ${manifest?.dataVersion ?? '?'}).`,
 );
 process.exit(failed ? 1 : 0);
