@@ -156,9 +156,9 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 | T4.6 | Página **Guia de sons** | low | Dirigida por dados, filtro por idioma | T4.5 |
 | T4.7 | ✅ **Concluída em 2026-11-14** (rota `#/apresentar`; texto misto com o léxico baixado só aqui; leitura em amarelo acima do nome, IPA opcional, 40–96 px (padrão 64), roteiro editável, avisos de variantes e de palavra fora do dicionário; atalhos Espaço/+/−/I/E documentados na tela; e2e com axe e CSP). Ajuste manual português/estrangeiro por palavra fica para depois. **Modo apresentador** (teleprompter: fonte grande, leitura acima da palavra, alto contraste, rolagem) | medium | Legível a 3 m; atalhos de teclado documentados | T4.2 |
 | T4.8 | Gerenciador de idiomas offline + PWA (Workbox; cache sob demanda e completo; aviso de cota) | high | Funciona em modo avião depois do download; mostra o tamanho estimado | T2.7 |
-| T4.9 | Histórico e favoritos locais + compartilhar por URL (`?t=&l=`) | low | Nada sai do navegador | T4.2 |
-| T4.10 | Tema claro/escuro e `prefers-reduced-motion` | low | — | T4.1 |
-| T4.12 | Página **Fontes e créditos** + crédito no rodapé de cada tela (exigência da EDRDG e do CC BY-SA) | low | Lista gerada do SOURCES.md | T2.9 |
+| T4.9 | ✅ **Concluída em 2026-11-14** (recentes e favoritos em localStorage; "Compartilhar link" com `?t=&l=`). Histórico e favoritos locais + compartilhar por URL (`?t=&l=`) | low | Nada sai do navegador | T4.2 |
+| T4.10 | ✅ **Concluída em 2026-11-14** (tokens escuros; Auto segue o sistema, Claro/Escuro forçam via `data-theme`; axe nos dois temas; movimento reduzido já respeitado). Tema claro/escuro e `prefers-reduced-motion` | low | — | T4.1 |
+| T4.12 | ✅ **Concluída em 2026-11-14** (rota `#/creditos` gerada de `sources.ts`; crédito no rodapé de todas as telas). Página **Fontes e créditos** + crédito no rodapé de cada tela (exigência da EDRDG e do CC BY-SA) | low | Lista gerada do SOURCES.md | T2.9 |
 | T4.11 | Auditoria de acessibilidade (axe, teclado, leitor de tela, contraste) | medium | Zero violações graves no axe; leitor de tela lê a pronúncia | T4.2–T4.7 |
 
 ### Fase 5 — Idiomas (cada um = perfil de regras + G2P se aplicável + golden set + dicas)

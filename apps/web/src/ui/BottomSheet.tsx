@@ -50,7 +50,7 @@ export function BottomSheet({ open, onClose, title, children, className }: Botto
         if (e.target === e.currentTarget) onClose();
       }}
       className={cx(
-        'sheet mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-full overflow-hidden rounded-t-[20px] bg-surface p-0 text-ink shadow-2xl backdrop:bg-ink/45 sm:max-w-xl',
+        'sheet mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-full overflow-hidden rounded-t-[20px] bg-surface p-0 text-ink shadow-2xl backdrop:bg-stage/60 sm:max-w-xl',
         className,
       )}
     >
