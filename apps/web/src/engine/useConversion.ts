@@ -13,6 +13,16 @@ function engine(): EngineClient {
   return client;
 }
 
+/**
+ * Cria o worker e já carrega o motor (manifest), em paralelo com o primeiro render do React.
+ * Um texto só com espaço não consulta o dicionário: não baixa shard nenhum.
+ */
+export function warmUpEngine(lang: Lang): void {
+  engine()
+    .convert(' ', lang)
+    .catch(() => {});
+}
+
 export type ConversionState =
   | { status: 'idle' }
   /** `result` = o resultado anterior, mantido na tela enquanto o novo não chega (evita piscar). */
@@ -40,10 +50,12 @@ export function useConversion(
   const [done, setDone] = useState<Done | null>(null);
   const key = `${lang}\u0000${mixed ? 'm' : ''}\u0000${text}`;
   const empty = !text.trim();
+  const wait = done ? delay : 0;
 
   useEffect(() => {
     if (empty) return;
     let live = true;
+    // a 1ª conversão sai sem a espera de digitação (o texto inicial já está pronto)
     const timer = setTimeout(() => {
       engine()
         .convertLatest(text, lang, { mixed })
@@ -57,12 +69,12 @@ export function useConversion(
             setDone((d) => ({ key, result: d?.result, error: message }));
           },
         );
-    }, delay);
+    }, wait);
     return () => {
       live = false;
       clearTimeout(timer);
     };
-  }, [text, lang, mixed, delay, key, empty]);
+  }, [text, lang, mixed, wait, key, empty]);
 
   if (empty) return { status: 'idle' };
   if (!done || done.key !== key) return { status: 'loading', result: done?.result };

@@ -56,26 +56,28 @@ Para achar uma palavra:
 
 ## Tamanho
 
-O limite é **200 KB com gzip por shard** (`DEFAULT_MAX_GZIP`). O empacotamento é guloso; um shard que passe do limite é dividido ao meio, recursivamente. Mesma entrada → mesmos arquivos e mesmo `dataVersion` (verificado regerando).
+O limite é **48 KB com gzip por shard** (`DEFAULT_MAX_GZIP`). O empacotamento é guloso; um shard que passe do limite é dividido ao meio, recursivamente. Mesma entrada → mesmos arquivos e mesmo `dataVersion` (verificado regerando).
 
-### Resultado (2026-11-13)
+**Por que 48 KB (T6.3):** o limite era 200 KB. Medido no perfil "celular médio" (1,6 Mbps, CPU 4×), a frase de exemplo caía em 3 shards (~500 KB) e a 1ª conversão levava 4,6 s; com 48 KB, baixa ~120 KB e leva 3,1 s. O total por idioma praticamente não muda (o gzip perde pouco com arquivos menores); só aumenta o número de arquivos, o que o HTTP/2 absorve. Detalhes em [docs/desempenho.md](../../docs/desempenho.md).
+
+### Resultado (2026-11-14, dados fb4d2a79eab3)
 
 | Idioma | Palavras | Shards | gzip médio | gzip máximo | Total gzip |
 |---|---|---|---|---|---|
-| de-DE | 789.141 | 37 | 170 KB | 196 KB | 6,1 MB |
-| en-GB | 85.582 | 6 | 162 KB | 181 KB | 0,9 MB |
-| en-US | 126.313 | 6 | 154 KB | 176 KB | 0,9 MB |
-| es-419 | 131.057 | 6 | 138 KB | 182 KB | 0,8 MB |
-| es-ES | 131.071 | 6 | 138 KB | 182 KB | 0,8 MB |
-| fr-FR | 84.444 | 4 | 149 KB | 181 KB | 0,6 MB |
-| it-IT | 85.991 | 5 | 141 KB | 179 KB | 0,7 MB |
-| ja-JP | 221.356 | 14 | 152 KB | 180 KB | 2,1 MB |
-| ko-KR | 62.449 | 4 | 137 KB | 180 KB | 0,5 MB |
-| nl-NL | 117.878 | 7 | 159 KB | 180 KB | 1,1 MB |
-| sv-SE | 21.099 | 2 | 93 KB | 146 KB | 0,2 MB |
+| de-DE | 789.141 | 160 | 39 KB | 48 KB | 6,4 MB |
+| en-GB | 85.582 | 24 | 41 KB | 43 KB | 1,0 MB |
+| en-US | 126.313 | 23 | 40 KB | 43 KB | 0,9 MB |
+| es-419 | 131.057 | 22 | 37 KB | 45 KB | 0,8 MB |
+| es-ES | 131.071 | 22 | 38 KB | 46 KB | 0,8 MB |
+| fr-FR | 84.444 | 17 | 35 KB | 46 KB | 0,6 MB |
+| it-IT | 85.991 | 18 | 39 KB | 43 KB | 0,7 MB |
+| ja-JP | 221.356 | 52 | 41 KB | 46 KB | 2,2 MB |
+| ko-KR | 62.449 | 14 | 39 KB | 46 KB | 0,6 MB |
+| nl-NL | 117.878 | 28 | 40 KB | 47 KB | 1,1 MB |
+| sv-SE | 21.099 | 5 | 37 KB | 43 KB | 0,2 MB |
 | zh-CN | 3 | 1 | — | — | — |
 
-São 98 shards, com cerca de 14,7 MB comprimidos no total. Hoje (v1), o app baixa o `en_US.txt` inteiro, com 3,2 MB sem compressão; com shards, a primeira palavra custa um shard de **até 200 KB**. O "baixar idioma para offline" (T4.8) soma os shards do idioma: 0,9 MB para o en-US.
+São 386 shards, com cerca de 15,5 MB comprimidos no total. A primeira palavra custa um shard de **até 48 KB**. O "baixar idioma para offline" (T4.8) soma os shards do idioma: 0,9 MB para o en-US.
 
 ## Lacuna encontrada: japonês em kana
 

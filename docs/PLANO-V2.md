@@ -179,9 +179,9 @@ Legenda: **Dep.** = depende de; 👤 = precisa de decisão ou revisão humana.
 
 | ID | Tarefa | Effort | Entregável / critério de aceite | Dep. |
 |---|---|---|---|---|
-| T6.1 | Testes E2E (Playwright): traduzir, detalhe, offline, apresentador, mobile | medium | CI verde | Fase 4 |
+| T6.1 | ✅ **Concluída em 2026-11-14** (construída junto com cada tela da Fase 4: 66 testes e2e no CI — traduzir, detalhe, offline, apresentador, celular, componentes, acessibilidade, segurança e desempenho). Testes E2E (Playwright): traduzir, detalhe, offline, apresentador, mobile | medium | CI verde | Fase 4 |
 | T6.2 | ✅ **Concluída em 2026-11-14** ([seguranca.md](seguranca.md): CSP `default-src 'none'` + Trusted Types, CORP, link compartilhado no fragmento, SW sem `importScripts`, overrides de `glob`/`minimatch`, actions por SHA, Dependabot, teste de sincronia do Nginx; e2e de segurança). Revisão de segurança (CSP, dependências, headers, Service Worker) | high | `/security-review` sem achados abertos | Fase 4 |
-| T6.3 | Orçamento de performance (JS inicial, LCP, tempo de conversão) | medium | Metas definidas e medidas no CI (Lighthouse) | Fase 4 |
+| T6.3 | ✅ **Concluída em 2026-11-14** ([desempenho.md](desempenho.md): LCP 1,2 s, 1ª conversão 3,1 s, 2.000 caracteres 0,5 s no perfil celular médio; `pnpm budget` para tamanhos; shards de 48 KB; medido com Playwright + CDP em vez do Lighthouse). Orçamento de performance (JS inicial, LCP, tempo de conversão) | medium | Metas definidas e medidas no CI (Lighthouse) | Fase 4 |
 | T6.4 | Revisão linguística final dos golden sets 👤 | — (humano) | Assinatura do revisor por idioma | Fase 5 |
 | T6.5 | Atualizar CLAUDE.md e README | low | — | todas |
 | T6.6 | Deploy + monitoramento de erros **sem dados pessoais** (sem o texto digitado) | medium | Se houver analytics: validar com o DPO (LGPD) | T6.2 |

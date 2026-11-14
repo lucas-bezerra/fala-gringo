@@ -35,6 +35,8 @@ jobs:
       - name: Golden sets (acerto do motor por idioma)
         run: pnpm test:golden
       - run: pnpm build
+      - name: Orçamento de tamanho (JS, CSS, worker, shards)
+        run: pnpm budget
       - name: Auditoria de dependências (falha só em high/critical)
         run: pnpm audit --audit-level high
       - run: pnpm exec playwright install --with-deps chromium

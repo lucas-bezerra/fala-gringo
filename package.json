@@ -17,7 +17,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "test:golden": "pnpm --filter @falagringo/engine golden"
+    "test:golden": "pnpm --filter @falagringo/engine golden",
+    "budget": "pnpm --filter @falagringo/web budget"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

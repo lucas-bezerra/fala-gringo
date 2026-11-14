@@ -1,0 +1,8 @@
+{
+  "$comment": "Orçamento de tamanho (T6.3), em KB com gzip. Medido por scripts/budget.mjs depois do build. Valores medidos em docs/desempenho.md.",
+  "initialJs": 100,
+  "initialCss": 15,
+  "worker": 25,
+  "serviceWorker": 30,
+  "largestShard": 50
+}
