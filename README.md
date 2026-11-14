@@ -2,7 +2,7 @@
 
 Mostra a um falante de português brasileiro **como pronunciar palavras estrangeiras**, escritas com a grafia do português: `think` → **TH**ÉNK, `Worcester` → U·ster. Para cada palavra, mostra a transcrição IPA (tirada de dicionários abertos), a aproximação em PT-BR com a tônica em MAIÚSCULAS, os sons que não existem em português destacados em laranja e o detalhe som a som.
 
-Hoje o site oferece **inglês dos EUA e do Reino Unido**. Outros idiomas estão no plano (Fase 5).
+Hoje o site oferece **inglês (EUA e Reino Unido), espanhol (América Latina e Espanha), italiano e alemão**. Outros idiomas estão no plano (Fase 5).
 
 ## Funções
 

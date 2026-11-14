@@ -15,6 +15,27 @@ test('converte uma frase em inglês com o motor no worker', async ({ page }) => 
   await expect(page.getByText('MAIÚSCULAS')).toBeVisible();
 });
 
+test('espanhol, italiano e alemão (Fase 5): dicionário, variante padrão e estimativa por regras', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Espanhol/ }).click();
+  await page.getByLabel('Texto em espanhol').fill('la casa quieres');
+  await expect(words(page)).toHaveCount(3);
+  await expect(words(page).nth(0)).toContainText('/la/'); // o WikiPron põe "a" antes de "la"
+  await expect(words(page).nth(2)).toContainText('estimado'); // forma verbal fora do dicionário
+  await expect(words(page).nth(2)).toContainText('KIÊ');
+  await page.getByRole('radio', { name: 'Espanha' }).click();
+  await page.getByLabel('Texto em espanhol').fill('cerveza');
+  await expect(words(page).first()).toContainText('θ');
+  await page.getByRole('button', { name: /Italiano/ }).click();
+  await page.getByLabel('Texto em italiano').fill('grazie');
+  await expect(words(page).first()).toContainText('GRA');
+  await page.getByRole('button', { name: /Alemão/ }).click();
+  await page.getByLabel('Texto em alemão').fill('danke');
+  await expect(words(page).first()).toContainText('DAN');
+});
+
 test('variante Reino Unido usa o dicionário britânico', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Texto em inglês').fill('water');

@@ -19,6 +19,17 @@ export const LANG_GROUPS: readonly LangGroup[] = [
       { lang: 'en-GB', label: 'Reino Unido' },
     ],
   },
+  {
+    code: 'ES',
+    label: 'Espanhol',
+    inLabel: 'espanhol',
+    variants: [
+      { lang: 'es-419', label: 'América Latina' },
+      { lang: 'es-ES', label: 'Espanha' },
+    ],
+  },
+  { code: 'IT', label: 'Italiano', inLabel: 'italiano', variants: [{ lang: 'it-IT', label: 'Itália' }] },
+  { code: 'DE', label: 'Alemão', inLabel: 'alemão', variants: [{ lang: 'de-DE', label: 'Alemanha' }] },
 ];
 
 export const DEFAULT_LANG: Lang = 'en-US';
