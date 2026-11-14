@@ -1,0 +1,1363 @@
+{
+  "format": "falagringo-g2p",
+  "version": 1,
+  "lang": "en-GB",
+  "created": "2026-11-14",
+  "dtype": "float16",
+  "bin_sha256": "a89df2801e5894e0d0df268d9c40e4a269bb0535a5eb006917bec019c94102d8",
+  "architecture": "transformer pre-LN, por caractere; ver tools/g2p/model.py",
+  "config": {
+    "src_vocab": 82,
+    "tgt_vocab": 75,
+    "d_model": 192,
+    "heads": 4,
+    "enc_layers": 3,
+    "dec_layers": 3,
+    "ff": 768,
+    "max_len": 64
+  },
+  "specials": {
+    "pad": 0,
+    "bos": 1,
+    "eos": 2,
+    "unk": 3
+  },
+  "src_vocab": [
+    "<pad>",
+    "<s>",
+    "</s>",
+    "<unk>",
+    "'",
+    "-",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "à",
+    "á",
+    "â",
+    "ã",
+    "ä",
+    "å",
+    "æ",
+    "ç",
+    "è",
+    "é",
+    "ê",
+    "ë",
+    "í",
+    "î",
+    "ï",
+    "ð",
+    "ñ",
+    "ò",
+    "ó",
+    "ô",
+    "õ",
+    "ö",
+    "ø",
+    "ù",
+    "ú",
+    "û",
+    "ü",
+    "þ",
+    "ā",
+    "ć",
+    "č",
+    "ē",
+    "ğ",
+    "ī",
+    "ł",
+    "ń",
+    "œ",
+    "ũ",
+    "ū",
+    "ž",
+    "ƹ",
+    "ǀ",
+    "ǁ",
+    "ǂ",
+    "ǃ",
+    "ș",
+    "ț",
+    "ə",
+    "ʼ",
+    "ṭ"
+  ],
+  "tgt_vocab": [
+    "<pad>",
+    "<s>",
+    "</s>",
+    "<unk>",
+    " ",
+    ".",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "z",
+    "ã",
+    "ä",
+    "æ",
+    "ç",
+    "ð",
+    "ø",
+    "ŋ",
+    "ɐ",
+    "ɑ",
+    "ɒ",
+    "ɔ",
+    "ɘ",
+    "ə",
+    "ɛ",
+    "ɜ",
+    "ɡ",
+    "ɨ",
+    "ɪ",
+    "ɵ",
+    "ɹ",
+    "ʃ",
+    "ʉ",
+    "ʊ",
+    "ʌ",
+    "ʍ",
+    "ʒ",
+    "ʔ",
+    "ʰ",
+    "ʲ",
+    "ˈ",
+    "ˌ",
+    "ː",
+    "ˑ",
+    "̃",
+    "̆",
+    "̝",
+    "̞",
+    "̩",
+    "̯",
+    "͡",
+    "θ",
+    "ᵊ",
+    "ᵻ",
+    "ᵿ",
+    "‿"
+  ],
+  "tensors": [
+    {
+      "name": "src_emb.weight",
+      "shape": [
+        82,
+        192
+      ],
+      "offset": 0,
+      "bytes": 31488
+    },
+    {
+      "name": "tgt_emb.weight",
+      "shape": [
+        75,
+        192
+      ],
+      "offset": 31488,
+      "bytes": 28800
+    },
+    {
+      "name": "enc.0.ln1.weight",
+      "shape": [
+        192
+      ],
+      "offset": 60288,
+      "bytes": 384
+    },
+    {
+      "name": "enc.0.ln1.bias",
+      "shape": [
+        192
+      ],
+      "offset": 60672,
+      "bytes": 384
+    },
+    {
+      "name": "enc.0.ln2.weight",
+      "shape": [
+        192
+      ],
+      "offset": 61056,
+      "bytes": 384
+    },
+    {
+      "name": "enc.0.ln2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 61440,
+      "bytes": 384
+    },
+    {
+      "name": "enc.0.attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 61824,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.0.attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 135552,
+      "bytes": 384
+    },
+    {
+      "name": "enc.0.attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 135936,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.0.attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 209664,
+      "bytes": 384
+    },
+    {
+      "name": "enc.0.attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 210048,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.0.attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 283776,
+      "bytes": 384
+    },
+    {
+      "name": "enc.0.attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 284160,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.0.attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 357888,
+      "bytes": 384
+    },
+    {
+      "name": "enc.0.ff.lin1.weight",
+      "shape": [
+        768,
+        192
+      ],
+      "offset": 358272,
+      "bytes": 294912
+    },
+    {
+      "name": "enc.0.ff.lin1.bias",
+      "shape": [
+        768
+      ],
+      "offset": 653184,
+      "bytes": 1536
+    },
+    {
+      "name": "enc.0.ff.lin2.weight",
+      "shape": [
+        192,
+        768
+      ],
+      "offset": 654720,
+      "bytes": 294912
+    },
+    {
+      "name": "enc.0.ff.lin2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 949632,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.ln1.weight",
+      "shape": [
+        192
+      ],
+      "offset": 950016,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.ln1.bias",
+      "shape": [
+        192
+      ],
+      "offset": 950400,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.ln2.weight",
+      "shape": [
+        192
+      ],
+      "offset": 950784,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.ln2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 951168,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 951552,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.1.attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1025280,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1025664,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.1.attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1099392,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1099776,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.1.attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1173504,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1173888,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.1.attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1247616,
+      "bytes": 384
+    },
+    {
+      "name": "enc.1.ff.lin1.weight",
+      "shape": [
+        768,
+        192
+      ],
+      "offset": 1248000,
+      "bytes": 294912
+    },
+    {
+      "name": "enc.1.ff.lin1.bias",
+      "shape": [
+        768
+      ],
+      "offset": 1542912,
+      "bytes": 1536
+    },
+    {
+      "name": "enc.1.ff.lin2.weight",
+      "shape": [
+        192,
+        768
+      ],
+      "offset": 1544448,
+      "bytes": 294912
+    },
+    {
+      "name": "enc.1.ff.lin2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1839360,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.ln1.weight",
+      "shape": [
+        192
+      ],
+      "offset": 1839744,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.ln1.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1840128,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.ln2.weight",
+      "shape": [
+        192
+      ],
+      "offset": 1840512,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.ln2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1840896,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1841280,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.2.attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1915008,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1915392,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.2.attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 1989120,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1989504,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.2.attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2063232,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2063616,
+      "bytes": 73728
+    },
+    {
+      "name": "enc.2.attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2137344,
+      "bytes": 384
+    },
+    {
+      "name": "enc.2.ff.lin1.weight",
+      "shape": [
+        768,
+        192
+      ],
+      "offset": 2137728,
+      "bytes": 294912
+    },
+    {
+      "name": "enc.2.ff.lin1.bias",
+      "shape": [
+        768
+      ],
+      "offset": 2432640,
+      "bytes": 1536
+    },
+    {
+      "name": "enc.2.ff.lin2.weight",
+      "shape": [
+        192,
+        768
+      ],
+      "offset": 2434176,
+      "bytes": 294912
+    },
+    {
+      "name": "enc.2.ff.lin2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2729088,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.ln1.weight",
+      "shape": [
+        192
+      ],
+      "offset": 2729472,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.ln1.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2729856,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.ln2.weight",
+      "shape": [
+        192
+      ],
+      "offset": 2730240,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.ln2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2730624,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.ln3.weight",
+      "shape": [
+        192
+      ],
+      "offset": 2731008,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.ln3.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2731392,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.self_attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2731776,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.0.self_attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2805504,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.self_attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2805888,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.0.self_attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2879616,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.self_attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2880000,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.0.self_attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 2953728,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.self_attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2954112,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.0.self_attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3027840,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.cross_attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3028224,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.0.cross_attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3101952,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.cross_attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3102336,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.0.cross_attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3176064,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.cross_attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3176448,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.0.cross_attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3250176,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.cross_attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3250560,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.0.cross_attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3324288,
+      "bytes": 384
+    },
+    {
+      "name": "dec.0.ff.lin1.weight",
+      "shape": [
+        768,
+        192
+      ],
+      "offset": 3324672,
+      "bytes": 294912
+    },
+    {
+      "name": "dec.0.ff.lin1.bias",
+      "shape": [
+        768
+      ],
+      "offset": 3619584,
+      "bytes": 1536
+    },
+    {
+      "name": "dec.0.ff.lin2.weight",
+      "shape": [
+        192,
+        768
+      ],
+      "offset": 3621120,
+      "bytes": 294912
+    },
+    {
+      "name": "dec.0.ff.lin2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3916032,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.ln1.weight",
+      "shape": [
+        192
+      ],
+      "offset": 3916416,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.ln1.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3916800,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.ln2.weight",
+      "shape": [
+        192
+      ],
+      "offset": 3917184,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.ln2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3917568,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.ln3.weight",
+      "shape": [
+        192
+      ],
+      "offset": 3917952,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.ln3.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3918336,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.self_attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3918720,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.1.self_attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 3992448,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.self_attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3992832,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.1.self_attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 4066560,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.self_attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 4066944,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.1.self_attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 4140672,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.self_attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 4141056,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.1.self_attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 4214784,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.cross_attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 4215168,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.1.cross_attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 4288896,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.cross_attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 4289280,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.1.cross_attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 4363008,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.cross_attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 4363392,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.1.cross_attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 4437120,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.cross_attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 4437504,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.1.cross_attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 4511232,
+      "bytes": 384
+    },
+    {
+      "name": "dec.1.ff.lin1.weight",
+      "shape": [
+        768,
+        192
+      ],
+      "offset": 4511616,
+      "bytes": 294912
+    },
+    {
+      "name": "dec.1.ff.lin1.bias",
+      "shape": [
+        768
+      ],
+      "offset": 4806528,
+      "bytes": 1536
+    },
+    {
+      "name": "dec.1.ff.lin2.weight",
+      "shape": [
+        192,
+        768
+      ],
+      "offset": 4808064,
+      "bytes": 294912
+    },
+    {
+      "name": "dec.1.ff.lin2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5102976,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.ln1.weight",
+      "shape": [
+        192
+      ],
+      "offset": 5103360,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.ln1.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5103744,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.ln2.weight",
+      "shape": [
+        192
+      ],
+      "offset": 5104128,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.ln2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5104512,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.ln3.weight",
+      "shape": [
+        192
+      ],
+      "offset": 5104896,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.ln3.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5105280,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.self_attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 5105664,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.2.self_attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5179392,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.self_attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 5179776,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.2.self_attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5253504,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.self_attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 5253888,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.2.self_attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5327616,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.self_attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 5328000,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.2.self_attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5401728,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.cross_attn.q.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 5402112,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.2.cross_attn.q.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5475840,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.cross_attn.k.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 5476224,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.2.cross_attn.k.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5549952,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.cross_attn.v.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 5550336,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.2.cross_attn.v.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5624064,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.cross_attn.o.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 5624448,
+      "bytes": 73728
+    },
+    {
+      "name": "dec.2.cross_attn.o.bias",
+      "shape": [
+        192
+      ],
+      "offset": 5698176,
+      "bytes": 384
+    },
+    {
+      "name": "dec.2.ff.lin1.weight",
+      "shape": [
+        768,
+        192
+      ],
+      "offset": 5698560,
+      "bytes": 294912
+    },
+    {
+      "name": "dec.2.ff.lin1.bias",
+      "shape": [
+        768
+      ],
+      "offset": 5993472,
+      "bytes": 1536
+    },
+    {
+      "name": "dec.2.ff.lin2.weight",
+      "shape": [
+        192,
+        768
+      ],
+      "offset": 5995008,
+      "bytes": 294912
+    },
+    {
+      "name": "dec.2.ff.lin2.bias",
+      "shape": [
+        192
+      ],
+      "offset": 6289920,
+      "bytes": 384
+    },
+    {
+      "name": "enc_ln.weight",
+      "shape": [
+        192
+      ],
+      "offset": 6290304,
+      "bytes": 384
+    },
+    {
+      "name": "enc_ln.bias",
+      "shape": [
+        192
+      ],
+      "offset": 6290688,
+      "bytes": 384
+    },
+    {
+      "name": "dec_ln.weight",
+      "shape": [
+        192
+      ],
+      "offset": 6291072,
+      "bytes": 384
+    },
+    {
+      "name": "dec_ln.bias",
+      "shape": [
+        192
+      ],
+      "offset": 6291456,
+      "bytes": 384
+    },
+    {
+      "name": "out.weight",
+      "shape": [
+        75,
+        192
+      ],
+      "offset": 6291840,
+      "bytes": 28800
+    },
+    {
+      "name": "out.bias",
+      "shape": [
+        75
+      ],
+      "offset": 6320640,
+      "bytes": 150
+    }
+  ],
+  "training": {
+    "epoch": 64,
+    "args": {
+      "lang": "en-GB",
+      "epochs": 80,
+      "batch": 256,
+      "lr": 0.001,
+      "warmup": 2000,
+      "d_model": 192,
+      "heads": 4,
+      "layers": 3,
+      "ff": 768,
+      "dropout": 0.1,
+      "eval_every": 2,
+      "patience": 10,
+      "limit": null,
+      "device": "mps",
+      "seed": 13,
+      "resume": false
+    },
+    "data": {
+      "lang": "en-GB",
+      "created": "2026-11-14",
+      "merged_sha256": "c877340266c2805d",
+      "sources": {
+        "wiktextract": 33018,
+        "wikipron": 15108,
+        "britfone": 9049,
+        "wikidata": 2
+      },
+      "sources_filter": null,
+      "require_stress": true,
+      "counts": {
+        "test": 2893,
+        "train": 51388,
+        "dev": 2896
+      },
+      "skipped": {
+        "grafia fora do padrão (espaço, dígito, símbolo) ou longa": 3179,
+        "sem tônica no dado": 32378,
+        "IPA longo": 2
+      }
+    },
+    "test_metrics": {
+      "lang": "en-GB",
+      "epoch": 64,
+      "test_words": 2893,
+      "word_error_pct": 55.82,
+      "word_error_ignoring_stress_pct": 46.15,
+      "char_error_pct": 16.38
+    }
+  }
+}

@@ -17,6 +17,7 @@ const css = refs(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+\.css)"/g);
 const workers = readdirSync(join(dist, 'assets')).filter((f) => f.startsWith('engine.worker-'));
 const shards = [];
 for (const lang of readdirSync(join(dist, 'dict'))) {
+  if (lang === 'g2p') continue; // modelos G2P: baixados só na 1ª palavra fora do dicionário (ADR 0004)
   const dir = join(dist, 'dict', lang);
   if (statSync(dir).isDirectory()) for (const f of readdirSync(dir)) shards.push(join('dict', lang, f));
 }

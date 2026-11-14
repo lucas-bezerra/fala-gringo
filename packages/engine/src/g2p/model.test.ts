@@ -7,7 +7,8 @@
  *       --epochs 6 --limit 20000 --warmup 200 --eval-every 3 --device cpu
  *     .venv/bin/python export.py --lang en-US --model runs/tiny/best.pt --out runs/tiny/export
  *   e copie g2p.json, g2p.bin e fixtures.tsv para packages/engine/fixtures/g2p-tiny/.
- * - `tools/g2p/export/{idioma}/`: modelos reais (fora do git). Só rodam na máquina que os tem.
+ * - `packages/data/models/g2p/{idioma}/`: modelos publicados no site (ADR 0004), conferidos também no CI.
+ * - `tools/g2p/export/{idioma}/`: modelos recém-exportados (fora do git), só na máquina de treino.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -18,6 +19,7 @@ import { halfToFloat, loadG2pModel, type G2pManifest, type G2pModel } from './mo
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const TINY = path.resolve(here, '../../fixtures/g2p-tiny');
+const PUBLISHED = path.resolve(here, '../../../data/models/g2p');
 const EXPORTS = path.resolve(here, '../../../../tools/g2p/export');
 
 function readExport(dir: string) {
@@ -145,13 +147,19 @@ describe('estimador G2P', () => {
   });
 });
 
-const realLangs = ['en-US', 'en-GB', 'fr-FR'].filter((l) => existsSync(path.join(EXPORTS, l, 'g2p.bin')));
-describe.skipIf(!realLangs.length)('modelos reais (tools/g2p/export, só local)', () => {
-  it.each(realLangs)(
+const real = [
+  ...['en-US', 'en-GB'].map((l) => [`${l} (publicado)`, path.join(PUBLISHED, l)]),
+  ...['en-US', 'en-GB', 'fr-FR'].map((l) => [`${l} (tools/g2p/export)`, path.join(EXPORTS, l)]),
+].filter(([, dir]) => existsSync(path.join(dir, 'g2p.bin')));
+describe('modelos reais', () => {
+  it('os modelos publicados existem', () => {
+    expect(real.filter(([name]) => name.endsWith('(publicado)'))).toHaveLength(2);
+  });
+  it.each(real)(
     '%s: reproduz as 300 fixtures do PyTorch',
-    (lang) => {
-      const real = readExport(path.join(EXPORTS, lang));
-      expect(mismatches(loadG2pModel(real.manifest, real.weights), real.fixtures)).toEqual([]);
+    (_name, dir) => {
+      const m = readExport(dir);
+      expect(mismatches(loadG2pModel(m.manifest, m.weights), m.fixtures)).toEqual([]);
     },
     60_000,
   );

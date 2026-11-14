@@ -56,8 +56,8 @@ export interface Manifest {
   /** Léxicos auxiliares. `pt-BR`: palavras do português para o modo texto misto (uma palavra por linha). */
   lexicons?: { 'pt-BR'?: Omit<ShardRef, 'from'> };
   /**
-   * Modelos G2P para palavras fora do dicionário (T3.9, experimental). Só publicados com `sync:web --g2p`
-   * a partir de tools/g2p/export (fora do git). Formato: tools/g2p/export.py.
+   * Modelos G2P para palavras fora do dicionário (T3.9, ADR 0004), em `g2p/` (nome com hash). Publicados por
+   * `sync:web` a partir de packages/data/models/g2p. Formato: tools/g2p/export.py.
    */
   g2p?: Partial<Record<Lang, { json: string; bin: string; bytes: number }>>;
 }

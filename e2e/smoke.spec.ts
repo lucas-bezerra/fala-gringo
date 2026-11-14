@@ -24,9 +24,13 @@ test('variante Reino Unido usa o dicionário britânico', async ({ page }) => {
   await expect(words(page).first()).toContainText('ɔː');
 });
 
-test('palavra fora do dicionário aparece com aviso', async ({ page }) => {
+test('palavra fora do dicionário: estimada pelo modelo (T3.9) ou com aviso', async ({ page }) => {
   await page.goto('/');
-  await page.getByLabel('Texto em inglês').fill('zorbletonx');
+  await page.getByLabel('Texto em inglês').fill('Zelensky');
+  await expect(words(page).first()).toContainText('estimado', { timeout: 15_000 });
+  await expect(page.getByText('modelo de inteligência artificial')).toBeVisible();
+  // outra escrita: o modelo não estima
+  await page.getByLabel('Texto em inglês').fill('Москва');
   await expect(words(page).first()).toContainText('Fora do dicionário');
 });
 

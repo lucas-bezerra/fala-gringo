@@ -34,6 +34,12 @@ export function CreditsScreen({ headingRef }: { headingRef: Ref<HTMLHeadingEleme
         ))}
       </ul>
       <p className="text-sm text-ink-2">
+        Pronúncias marcadas como “estimado”: modelo de inteligência artificial treinado pelo FalaGringo com os
+        dicionários acima (inglês dos EUA: CMUdict e Wikidata; inglês britânico: Wiktionary, WikiPron,
+        Britfone e Wikidata). Cada modelo segue a licença dos dados usados; o britânico é distribuído sob CC
+        BY-SA 4.0.
+      </p>
+      <p className="text-sm text-ink-2">
         Interface, código e regras de conversão: FalaGringo. Fontes tipográficas: Inter, Space Grotesk e Noto
         Sans Mono (SIL Open Font License), servidas pelo próprio site. A voz do botão “Ouvir” é a voz
         sintética do seu navegador.

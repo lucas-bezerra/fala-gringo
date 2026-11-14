@@ -88,6 +88,7 @@ export const RENDER_HEADER_RULES: { path: string; name: string; value: string }[
   ...Object.entries(SECURITY_HEADERS).map(([name, value]) => ({ path: '/*', name, value })),
   { path: '/assets/*', name: 'Cache-Control', value: IMMUTABLE },
   { path: '/dict/**/*.json', name: 'Cache-Control', value: IMMUTABLE },
+  { path: '/dict/g2p/*.bin', name: 'Cache-Control', value: IMMUTABLE },
   { path: '/dict/*.txt', name: 'Cache-Control', value: IMMUTABLE },
   { path: '/dict/manifest.json', name: 'Cache-Control', value: 'no-cache' },
   { path: '/sw.js', name: 'Cache-Control', value: 'no-cache' },

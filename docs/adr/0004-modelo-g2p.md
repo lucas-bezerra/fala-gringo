@@ -1,7 +1,7 @@
 # ADR 0004 — Modelo G2P para palavras fora do dicionário
 
 - **Data:** 2026-11-14
-- **Situação:** aceita como **experimento local**. O uso no site publicado depende da revisão de governança (abaixo).
+- **Situação:** aceita. Modelos en-US e en-GB **publicados no site em 2026-11-14**, a pedido do responsável pelo projeto, para a avaliação de governança (é preciso vê-lo funcionando para aprovar). As pendências estão abaixo.
 - **Tarefa:** T3.9
 
 ## Contexto
@@ -25,7 +25,7 @@ A direção escolhida em 2026-11-13 foi o modelo G2P: custo zero, sem servidor e
    - o cartão leva o selo "estimado";
    - o detalhe avisa que a pronúncia foi estimada **por um modelo de inteligência artificial** e pede confirmação antes de usar no ar;
    - no apresentador, a leitura leva "≈" e a legenda explica. O leitor de tela ouve "pronúncia estimada, confirme".
-6. **No site, só sob opção:** `pnpm dev:g2p` publica os modelos locais em `/dict/` (nome com hash, anunciados no `manifest.json`). `pnpm dev`, `pnpm build`, o CI e o Render não os têm, então o site publicado continua sem estimativa.
+6. **No site:** os modelos publicados ficam versionados em `packages/data/models/g2p/` (en-US e en-GB, ~6,3 MB cada). O `sync:web` os copia para `/dict/g2p/` com hash no nome, e eles são anunciados no `manifest.json` e servidos com cache imutável. O service worker os guarda depois do 1º uso. O fr-FR não é publicado, porque o idioma ainda não está ativo.
 
 ## Resultado (2026-11-14)
 
@@ -49,7 +49,7 @@ Palavras de teste, que o modelo nunca viu. "Grafia PT-BR" é a forma silabada co
 - **Tamanho:** 6,3 MB por idioma, baixados na primeira palavra fora do dicionário. É aceitável em desenvolvimento, mas pesado demais para o celular (~30 s a 1,6 Mbps), e a conversão espera o download.
 - **Manutenção:** mudar `model.py` exige mudar junto o `export.py` e `src/g2p/model.ts` e gerar as fixtures de novo. O teste falha se divergirem.
 
-## Antes de ativar no site publicado
+## Pendências (a publicação atual é para a avaliação)
 
 1. **Governança (Política de Uso Ético e Seguro de IA):**
    - Idea Case e classificação de risco. Sugestão: **baixo**, porque não usa dados pessoais, roda no navegador e só estima pronúncias, sempre marcadas;
@@ -57,8 +57,9 @@ Palavras de teste, que o modelo nunca viu. "Grafia PT-BR" é a forma silabada co
    - revisão humana antes de qualquer uso no ar.
 2. **Licenças:**
    - **en-US:** o modelo foi treinado só com CMUdict (BSD-2) e Wikidata (CC0), sem pendência além do crédito ao CMUdict.
-   - **en-GB e fr-FR:** usam dados do Wiktionary (via kaikki e WikiPron, CC BY-SA 4.0). Publicar pesos treinados com esses dados precisa de análise (atribuição e compartilhamento pela mesma licença), ou de um novo treino só com fontes permissivas (`prepare.py --sources`).
+   - **en-GB e fr-FR:** usam dados do Wiktionary (via kaikki e WikiPron, CC BY-SA 4.0). O en-GB foi publicado com atribuição na tela de créditos e é distribuído sob a mesma licença, como os shards do Wiktionary que o site já publica. A análise de licença deve confirmar isso; a alternativa é treinar de novo só com fontes permissivas (`prepare.py --sources`).
 3. **Tamanho e espera:** quantizar para int8 ou treinar um modelo menor, e não bloquear a conversão durante o download (mostrar "fora do dicionário" e atualizar quando o modelo chegar). Medir de novo com `e2e/desempenho.spec.ts`.
-4. **Offline:** o service worker guarda os `.json` de `/dict/`, mas não o `.bin`. Decidir se o modelo entra no pacote offline.
+4. **Offline:** o service worker guarda o modelo depois do 1º uso, mas o pacote offline (`#/offline`) não o baixa. Decidir se deve.
+5. **Repositório:** cada modelo novo acrescenta ~6 MB ao histórico do git. Se os treinos ficarem frequentes, considerar Git LFS.
 
 Problemas como erro grave, viés ou uso indevido devem ser reportados a governanca@redegazeta.com.br.

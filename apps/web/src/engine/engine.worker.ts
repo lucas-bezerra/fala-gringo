@@ -2,8 +2,8 @@
  * Motor fonético num Web Worker (T3.10/T4.2): a conversão nunca trava a tela.
  * Os dados vêm de /dict/ (publicados por packages/data/scripts/sync-web.mjs): manifest + shards por idioma.
  * O léxico do português (texto misto, modo apresentador) só é baixado no primeiro pedido com `mixed`.
- * Modelo G2P (T3.9, experimental): só existe se o manifest o anuncia (`pnpm dev:g2p`); é baixado na primeira
- * palavra fora do dicionário daquele idioma.
+ * Modelo G2P (T3.9, ADR 0004): anunciado no manifest (`g2p`); é baixado na primeira palavra fora do dicionário
+ * daquele idioma.
  */
 import type { Manifest, ShardFile } from '@falagringo/data/shards';
 import {
