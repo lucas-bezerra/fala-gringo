@@ -8,7 +8,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "inventory": "tsx scripts/inventory.ts",
-    "syllables-eval": "tsx scripts/syllables-eval.ts"
+    "syllables-eval": "tsx scripts/syllables-eval.ts",
+    "rules-coverage": "tsx scripts/rules-coverage.ts"
   },
   "dependencies": {
     "@falagringo/data": "workspace:*"
