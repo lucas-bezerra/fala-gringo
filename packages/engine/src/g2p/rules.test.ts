@@ -5,6 +5,7 @@ import type { Dictionary } from '../stages';
 import type { Lang } from '../types';
 import { frenchToIpa } from './french';
 import { italianToIpa } from './italian';
+import { koreanToIpa } from './korean';
 import { chainEstimators, createRuleEstimator, ruleToIpa } from './rules';
 import { spanishToIpa } from './spanish';
 
@@ -145,5 +146,33 @@ describe('francês: regras para escolher a variante (T5.4)', () => {
 
   it('no italiano a 1ª variante do Wiktionary é mantida', () => {
     expect(rules.prefer?.('casa', 'it-IT', ['ˈka.sa', 'ˈka.za'])).toBeUndefined();
+  });
+});
+
+describe('coreano: Hangul por regras (T5.6)', () => {
+  it.each([
+    ['있어요', 'is͈ʌjo'], // ligação + ㅆ
+    ['국물', 'kuŋmul'], // nasalização
+    ['신라', 'ɕʰilla'], // liquidização
+    ['학교', 'hakk͈jo'], // tensificação
+    ['좋다', 't͡ɕotʰa'], // ㅎ + ㄷ → ㅌ
+    ['축하', 't͡ɕʰukʰa'], // ㄱ + ㅎ → ㅋ
+    ['굳이', 'kud͡ʑi'], // palatalização
+    ['침략', 't͡ɕʰimnjak'], // ㄹ → ㄴ depois de ㅁ
+    ['닭', 'tak'], // coda dupla
+    ['닮은', 'talmɯn'], // coda dupla + ligação
+    ['건설하다', 'kʌnsʰʌɾhada'], // ㄹ + ㅎ
+    ['의사', 'ɰisʰa'],
+    ['희망', 'himaŋ'],
+  ])('%s → %s', (word, ipa) => expect(koreanToIpa(word)).toBe(ipa));
+
+  it('grafia na tela, sem tônica (minúsculas)', () => {
+    expect(reading('어떻게', 'ko-KR')).toBe('ó·ttó·kê');
+    expect(reading('감사합니다', 'ko-KR')).toBe('kam·sa·rram·ni·da');
+  });
+
+  it('só Hangul completo', () => {
+    expect(koreanToIpa('ㅋㅋ')).toBeUndefined();
+    expect(koreanToIpa('abc')).toBeUndefined();
   });
 });
