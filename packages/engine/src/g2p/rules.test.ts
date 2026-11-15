@@ -5,6 +5,7 @@ import type { Dictionary } from '../stages';
 import type { Lang } from '../types';
 import { frenchToIpa } from './french';
 import { italianToIpa } from './italian';
+import { joinJapanese, kanaToIpa, normalizeJapaneseIpa, preferJapanese } from './japanese';
 import { koreanToIpa } from './korean';
 import { chainEstimators, createRuleEstimator, ruleToIpa } from './rules';
 import { spanishToIpa } from './spanish';
@@ -174,5 +175,93 @@ describe('coreano: Hangul por regras (T5.6)', () => {
   it('só Hangul completo', () => {
     expect(koreanToIpa('ㅋㅋ')).toBeUndefined();
     expect(koreanToIpa('abc')).toBeUndefined();
+  });
+});
+
+describe('japonês: kana por regras e leituras (T5.5)', () => {
+  it.each([
+    ['ありがとう', 'aɾiɡatoː'], // おう → oː
+    ['ございます', 'ɡozaimasɯ̥'], // -su final desvozeado
+    ['こんにちは', 'koɴnitɕiɰᵝa'], // は cristalizado = wa
+    ['ラーメン', 'ɾaːmeɴ'], // katakana + ー
+    ['コーヒー', 'koːçiː'],
+    ['ちょっと', 'tɕotːo'], // dígrafo + っ
+    ['がっこう', 'ɡakːoː'],
+    ['ティッシュ', 'tiɕːɯ'], // katakana estendido
+    ['ファン', 'ɸaɴ'],
+    ['おおきい', 'oːkiː'], // vogal repetida = longa
+    ['は', 'ɰᵝa'], // partículas
+    ['を', 'o'],
+    ['へ', 'e'],
+  ])('%s → %s', (word, ipa) => expect(kanaToIpa(word)).toBe(ipa));
+
+  it('kanji fica para o dicionário', () => {
+    expect(kanaToIpa('東京')).toBeUndefined();
+    expect(ruleToIpa('行き', 'ja-JP')).toBeUndefined();
+    expect(ruleToIpa('ありがとう', 'ja-JP')).toBe('aɾiɡatoː');
+  });
+
+  it('normaliza o IPA do dicionário (vogal longa, -su final), sem mexer no -u de verbo', () => {
+    expect(normalizeJapaneseIpa('toɯkjoɯ', '東京')).toBe('toːkjoː');
+    expect(normalizeJapaneseIpa('ɡakːoɯ', '学校')).toBe('ɡakːoː');
+    expect(normalizeJapaneseIpa('oosaka', '大阪')).toBe('oːsaka');
+    expect(normalizeJapaneseIpa('desɯ', 'です')).toBe('desɯ̥');
+    expect(normalizeJapaneseIpa('omoɯ', '思う')).toBe('omoɯ');
+    expect(normalizeJapaneseIpa('sɯɕi', '寿司')).toBe('sɯɕi'); // notação, exemplo 58
+    expect(normalizeJapaneseIpa('ha', 'は')).toBe('ɰᵝa');
+    const once = normalizeJapaneseIpa('toɯkjoɯ', '東京');
+    expect(normalizeJapaneseIpa(once, '東京')).toBe(once);
+  });
+
+  it('escolhe a leitura principal das palavras comuns', () => {
+    expect(preferJapanese('私', ['atai', 'ɰᵝatai', 'ɰᵝataɕi'])).toBe(2);
+    expect(preferJapanese('学生', ['ɡakɯɕoɯ', 'ɡakɯsei', 'ɡakɯsoɯ'])).toBe(1);
+    expect(preferJapanese('水', ['sɯi', 'mi', 'mizɯ'])).toBe(2);
+    expect(preferJapanese('東京', ['toɯkjoɯ'])).toBeUndefined(); // fora da lista
+    expect(createRuleEstimator().prefer!('人', 'ja-JP', ['dʑiɴ', 'taɾi', 'çito'])).toBe(2);
+  });
+
+  it.each([
+    [['ありがとう', 'ご', 'ざ', 'い', 'ます'], 'ありがとう|ございます'],
+    [['何', 'を', 'し', 'てい', 'ます', 'か'], '何|を|しています|か'],
+    [['勉強', 'し', 'てい', 'ます'], '勉強|し|ています'], // し depois de kanji é a terminação dele
+    [['待', 'って', 'くだ', 'さい'], '待|って|ください'],
+    [['いらっしゃい', 'ま', 'せ'], 'いらっしゃいませ'],
+    [['行き', 'ま', 'しょう'], '行き|ましょう'],
+    [['ごちそうさま', 'で', 'した'], 'ごちそうさま|でした'],
+    [['駅', 'は', 'どこ', 'です', 'か'], '駅|は|どこ|です|か'], // partícula e cópula soltas
+  ])('segmenta %j', (chunks, groups) =>
+    expect(
+      joinJapanese(chunks)
+        .map((g) => g.join(''))
+        .join('|'),
+    ).toBe(groups),
+  );
+
+  it('frase de ponta a ponta: dicionário (kanji, leitura curada), kana estimado, palavras separadas na leitura', async () => {
+    const prons = (...ipas: string[]) =>
+      ipas.map((ipa) => ({ ipa, stress: 'none' as const, source: 'ipa-dict' as const, agree: 0 }));
+    const data: Record<string, string[]> = {
+      私: ['atai', 'ɰᵝataɕi'],
+      は: ['ha'],
+      学生: ['ɡakɯɕoɯ', 'ɡakɯsei'],
+      です: ['desɯ'],
+    };
+    const dictionary: Dictionary = {
+      lookup: async (_lang, key) =>
+        data[key] ? { display: key, proper: false, prons: prons(...data[key]) } : undefined,
+    };
+    const engine = createEngine({ dictionary, estimator: createRuleEstimator() });
+    const r = await engine.convert('私は学生です。ありがとうございます', 'ja-JP');
+    expect(r.reading.syllabic).toBe('ua·ta·chi ua ga·ku·ssêi dê·s(u)。a·ri·ga·tôo gô·zai·ma·s(u)');
+    const origins = r.tokens.flatMap((t) => (t.kind === 'word' ? [`${t.original}:${t.origin}`] : []));
+    expect(origins).toEqual([
+      '私:dictionary',
+      'は:dictionary',
+      '学生:dictionary',
+      'です:dictionary',
+      'ありがとう:estimated',
+      'ございます:estimated',
+    ]);
   });
 });
