@@ -249,7 +249,14 @@ export function createEngine(stages: EngineStages): Engine {
       const traps: TrapId[] = [];
       let syllabic = '';
       let flat = '';
+      let prevWord = false;
       for (const t of tokens) {
+        // japonês e chinês não separam as palavras com espaço; a leitura separa (partes de uma elisão, não)
+        if (t.kind !== 'text' && prevWord && (lang === 'ja-JP' || lang === 'zh-CN')) {
+          syllabic += ' ';
+          flat += ' ';
+        }
+        prevWord = t.kind !== 'text';
         if (t.kind === 'word') {
           syllabic += sylText(t.primary, '·');
           flat += sylText(t.primary, '');

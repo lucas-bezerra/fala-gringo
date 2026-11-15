@@ -12,7 +12,7 @@ As metas valem para o pior caso realista: **celular médio, primeira visita, cac
 | Maior travada da tela ao digitar com o motor trabalhando | 0 ms | 100 ms (num aparelho médio) | idem |
 | JS inicial (gzip) | 84,8 KB | 100 KB | `pnpm budget` |
 | CSS inicial (gzip) | 6,8 KB | 15 KB | idem |
-| Worker do motor (gzip) | 14,7 KB (inclui a inferência do G2P, T3.9) | 25 KB | idem |
+| Worker do motor (gzip) | 21,3 KB (inclui a inferência do G2P e as regras de es/it/fr/ko/ja) | 25 KB | idem |
 | Service worker (gzip) | 6,2 KB | 30 KB | idem |
 | Maior shard do dicionário (gzip) | 43,5 KB | 50 KB | idem |
 
