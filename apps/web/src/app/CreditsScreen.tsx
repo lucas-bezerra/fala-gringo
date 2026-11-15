@@ -36,8 +36,9 @@ export function CreditsScreen({ headingRef }: { headingRef: Ref<HTMLHeadingEleme
       <p className="text-sm text-ink-2">
         Pronúncias marcadas como “estimado”: modelo de inteligência artificial treinado pelo FalaGringo com os
         dicionários acima (inglês dos EUA: CMUdict e Wikidata; inglês britânico: Wiktionary, WikiPron,
-        Britfone e Wikidata; alemão: german-ipa-dict, WikiPron e Wikidata). Cada modelo segue a licença dos
-        dados usados; o britânico e o alemão são distribuídos sob CC BY-SA 4.0.
+        Britfone e Wikidata; alemão: german-ipa-dict, WikiPron e Wikidata; francês: WikiPron e Wikidata). Cada
+        modelo segue a licença dos dados usados; o britânico, o alemão e o francês são distribuídos sob CC
+        BY-SA 4.0.
       </p>
       <p className="text-sm text-ink-2">
         Interface, código e regras de conversão: FalaGringo. Fontes tipográficas: Inter, Space Grotesk e Noto

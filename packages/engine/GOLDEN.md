@@ -11,7 +11,7 @@ Só as linhas **revisadas** por humano contam. Rascunho = saída atual do motor 
 | en-US | 300 | 0 | **100.0%** | ✅ meta 95% |
 | es-419 | 200 | 0 | **100.0%** | ✅ meta 95% |
 | es-ES | 200 | 0 | **100.0%** | ✅ meta 95% |
-| fr-FR | 200 | 0 | **100.0%** | — |
+| fr-FR | 200 | 0 | **100.0%** | ✅ meta 95% |
 | it-IT | 200 | 0 | **100.0%** | ✅ meta 95% |
 | ko-KR | 100 | 0 | **100.0%** | — |
 | nl-NL | 100 | 0 | **100.0%** | — |

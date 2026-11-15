@@ -6,6 +6,7 @@ Estimam a pronúncia de palavras **fora do dicionário**. A tela marca o resulta
 |---|---|---|--:|
 | en-US | CMUdict (BSD-2), Wikidata (CC0) | BSD-2 (crédito ao CMUdict) | 74,4% |
 | en-GB | Wiktionary/kaikki e WikiPron (CC BY-SA 4.0), Britfone (MIT), Wikidata (CC0) | **CC BY-SA 4.0** | 67,9% |
+| fr-FR | WikiPron (CC BY-SA 4.0, base Wiktionary), Wikidata (CC0) | **CC BY-SA 4.0** | 95,8% |
 | de-DE | german-ipa-dict via ipa-dict (CC BY-SA, base Wiktionary), WikiPron, Wikidata; 150 mil palavras sorteadas | **CC BY-SA 4.0** | IPA: 89,8% |
 
 Cada pasta tem:
