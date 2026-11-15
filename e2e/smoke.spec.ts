@@ -45,6 +45,22 @@ test('espanhol, francês, italiano, coreano e alemão (Fase 5): dicionário, var
   await expect(words(page).first()).toContainText('estimado', { timeout: 15_000 });
 });
 
+test('japonês (T5.5): kanji pelo dicionário com leitura curada, kana por regras e segmentação', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Japonês/ }).click();
+  await page.getByLabel('Texto em japonês').fill('私は東京'); // sem espaços: o segmentador separa
+  await expect(words(page)).toHaveCount(3);
+  await expect(words(page).nth(0)).toContainText('ua·ta·chi'); // a fonte põe "atai" antes de "watashi"
+  await expect(words(page).nth(1)).toContainText('ua'); // partícula は = wa
+  await expect(words(page).nth(2)).toContainText('tôo·kiôo'); // vogal longa que a fonte não marca
+  await page.getByLabel('Texto em japonês').fill('ございます'); // o ICU quebra em ご|ざ|い|ます; fora do dicionário
+  await expect(words(page)).toHaveCount(1);
+  await expect(words(page).first()).toContainText('estimado');
+  await expect(words(page).first()).toContainText('gô·zai·ma·s(u)');
+});
+
 test('variante Reino Unido usa o dicionário britânico', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Texto em inglês').fill('water');
