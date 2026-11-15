@@ -2,6 +2,7 @@
  * Fonologia (T3.5): IPA → pronúncia PT-BR. Encadeia parser (T3.3) → silabação e tônica (T3.4) → regras (T3.5)
  * → maiúsculas da tônica (R11). Substitui a `placeholderPhonology`.
  */
+import { normalizeJapaneseIpa } from './g2p/japanese';
 import { parseIpa } from './ipa/parse';
 import { syllabify } from './ipa/syllabify';
 import { applyRules } from './rules/apply';
@@ -20,6 +21,8 @@ export function renderPronunciation(
   word?: string,
   diagnostics?: RenderDiagnostics,
 ): Pronunciation {
+  // japonês: a fonte não marca vogal longa nem desvozeamento (東京 toɯkjoɯ → toːkjoː); a regra de kana já sai assim
+  if (lang === 'ja-JP') ipa = normalizeJapaneseIpa(ipa, word);
   const result = syllabify(parseIpa(ipa, lang), lang, { word, stress });
   const syllables: Syllable[] = [];
   const traps: TrapId[] = [];

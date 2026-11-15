@@ -8,11 +8,12 @@
  * | 'bout, goin'                 | separa o apóstrofo da ponta   | gruda o apóstrofo (CMUdict tem "'bout")           |
  * | 1st, 1998, 3.14              | palavra                       | número (passa direto; ver LIMITAÇÕES)             |
  * | 北京烤鸭                       | segmenta por dicionário (bom) | —                                                 |
- * | ありがとうございます              | quebra "ございます" em ご·ざ·い·ます | LIMITAÇÃO: segmentação por dicionário fica na T5.5 |
+ * | ありがとうございます              | quebra "ございます" em ご·ざ·い·ます | junta hiragana vizinho, menos partículas (T5.5)    |
  *
  * Também marca maiúscula e início de frase, usados pelo modo texto misto (engine.ts).
  */
 import type { RawToken, Tokenizer, WordRaw } from './stages';
+import { joinJapanese } from './g2p/japanese';
 import type { Lang } from './types';
 
 const APOSTROPHES = /[’‘ʼ´`]/gu;
@@ -127,6 +128,22 @@ export function createTokenizer(): Tokenizer {
           continue;
         }
         out.push(t);
+      }
+
+      // 2b. Japonês: junta os kana que o ICU separou (ver joinJapanese).
+      if (lang === 'ja-JP') {
+        const joined: RawToken[] = [];
+        for (let i = 0; i < out.length;) {
+          let j = i;
+          while (out[j]?.kind === 'word') j++;
+          if (j === i) {
+            joined.push(out[i++]);
+            continue;
+          }
+          for (const g of joinJapanese(out.slice(i, j).map((t) => t.text))) joined.push(word(g.join('')));
+          i = j;
+        }
+        out.splice(0, out.length, ...joined);
       }
 
       // 3. Início de frase: primeira palavra do texto ou depois de . ! ? … (só espaços e aspas entre eles).

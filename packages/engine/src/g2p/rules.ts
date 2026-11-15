@@ -1,5 +1,6 @@
 /**
- * Estimador por regras (Fase 5): idiomas de ortografia regular (espanhol, italiano), sem modelo nem download.
+ * Estimador por regras (Fase 5): idiomas de ortografia regular (espanhol, italiano, coreano, kana do japonês),
+ * sem modelo nem download.
  * Além de estimar palavras fora do dicionário, escolhe a variante do dicionário mais próxima da pronúncia padrão
  * (`prefer`): o WikiPron lista as variantes na ordem da página do Wiktionary, e às vezes a 1ª é dialetal
  * (`la` → `a`, `por` → `po`).
@@ -8,6 +9,7 @@ import type { Estimator } from '../stages';
 import type { Lang } from '../types';
 import { frenchToIpa } from './french';
 import { italianToIpa } from './italian';
+import { kanaToIpa, preferJapanese } from './japanese';
 import { koreanToIpa } from './korean';
 import { spanishToIpa } from './spanish';
 
@@ -17,11 +19,12 @@ export function ruleToIpa(key: string, lang: Lang): string | undefined {
   if (lang === 'it-IT') return italianToIpa(key);
   if (lang === 'fr-FR') return frenchToIpa(key);
   if (lang === 'ko-KR') return koreanToIpa(key);
+  if (lang === 'ja-JP') return kanaToIpa(key); // só kana; kanji fica para o dicionário
   return undefined;
 }
 
 /** Idiomas em que as regras também ESTIMAM. No francês, só escolhem a variante (o modelo G2P estima melhor). */
-const ESTIMATES = new Set<Lang>(['es-ES', 'es-419', 'it-IT', 'ko-KR']);
+const ESTIMATES = new Set<Lang>(['es-ES', 'es-419', 'it-IT', 'ko-KR', 'ja-JP']);
 /** Idiomas em que a 1ª variante da fonte pode ser dialetal/reduzida (WikiPron). No italiano, a do Wiktionary já é
  *  a principal, e as regras só trocariam um padrão por outro (casa: ˈka.sa → ˈka.za). */
 const PREFERS = new Set<Lang>(['es-ES', 'es-419', 'fr-FR']);
@@ -54,7 +57,9 @@ export function createRuleEstimator(): Estimator {
   return {
     estimate: (key, lang) => (ESTIMATES.has(lang) ? ruleToIpa(key, lang) : undefined),
     prefer(key, lang, ipas) {
-      if (ipas.length < 2 || !PREFERS.has(lang)) return undefined;
+      if (ipas.length < 2) return undefined;
+      if (lang === 'ja-JP') return preferJapanese(key, ipas); // leituras de kanji: lista curada
+      if (!PREFERS.has(lang)) return undefined;
       const rule = ruleToIpa(key, lang);
       if (!rule) return undefined;
       const target = comparable(rule);
