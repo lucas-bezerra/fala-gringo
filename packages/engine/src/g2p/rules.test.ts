@@ -3,6 +3,7 @@ import { createEngine, placeholderPhonology } from '../engine';
 import { renderPronunciation } from '../phonology';
 import type { Dictionary } from '../stages';
 import type { Lang } from '../types';
+import { frenchToIpa } from './french';
 import { italianToIpa } from './italian';
 import { chainEstimators, createRuleEstimator, ruleToIpa } from './rules';
 import { spanishToIpa } from './spanish';
@@ -110,5 +111,39 @@ describe('escolha de variante (prefer)', () => {
     expect(await chain.estimate('zelensky', 'en-US')).toBe('zɪˈlɛnski');
     expect(await chain.estimate('qwxz', 'en-US')).toBeUndefined();
     expect(chain.prefer?.('la', 'es-ES', ['a', 'la'])).toBe(1);
+  });
+});
+
+describe('francês: regras para escolher a variante (T5.4)', () => {
+  const rules = createRuleEstimator();
+
+  it.each([
+    ['de', 'də'],
+    ['je', 'ʒə'],
+    ['être', 'ɛtʁ'],
+    ['quand', 'kɑ̃'],
+    ['bon', 'bɔ̃'],
+    ['bonne', 'bɔn'],
+    ['une', 'yn'],
+    ['elle', 'ɛl'],
+    ['petit', 'pəti'],
+    ['parler', 'paʁle'],
+    ['nation', 'nasjɔ̃'],
+    ['château', 'ʃato'],
+    ['avaient', 'avɛ'],
+  ])('%s → %s', (word, ipa) => expect(frenchToIpa(word)).toBe(ipa));
+
+  it('troca a forma reduzida/liaison da 1ª posição pela forma de citação', () => {
+    expect(rules.prefer?.('de', 'fr-FR', ['dam', 'dø', 'də'])).toBe(2);
+    expect(rules.prefer?.('bon', 'fr-FR', ['bɔn‿', 'bɔ̃'])).toBe(1);
+    expect(rules.prefer?.('être', 'fr-FR', ['dɛt', 'ɛtrə', 'ɛtʁ', 'ɛːtʁ'])).toBe(2);
+  });
+
+  it('no francês as regras só escolhem a variante: quem estima é o modelo G2P', async () => {
+    expect(await rules.estimate('zorglub', 'fr-FR')).toBeUndefined();
+  });
+
+  it('no italiano a 1ª variante do Wiktionary é mantida', () => {
+    expect(rules.prefer?.('casa', 'it-IT', ['ˈka.sa', 'ˈka.za'])).toBeUndefined();
   });
 });

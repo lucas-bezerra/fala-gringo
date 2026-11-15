@@ -44,6 +44,8 @@ Palavras de teste, que o modelo nunca viu. "Grafia PT-BR" é a forma silabada co
 
 **Alemão (2026-11-14, Fase 5):** 150 mil palavras sorteadas do german-ipa-dict, 40 épocas (~50 min no M1 Pro). No teste (34.748 palavras), o IPA foi idêntico em **89,8%** (94,5% sem contar a tônica; erro por caractere de 1,7%). É publicado com o idioma, sob CC BY-SA 4.0, como o en-GB. Um 1º treino foi descartado: o `--limit` pegava as primeiras palavras do arquivo, em ordem alfabética, e o `train.py` passou a sorteá-las.
 
+**Francês (2026-11-14, T5.4):** o modelo do 1º treino (WikiPron + Wikidata; 95,8% na grafia PT-BR) é publicado com o idioma, sob CC BY-SA 4.0. Ele foi treinado com a 1ª variante do WikiPron, que às vezes é reduzida; a escolha de variante por regras corrige o dicionário, mas um retreino com as variantes escolhidas deve melhorar o modelo.
+
 ## Consequências
 
 - Nomes novos ganham uma leitura plausível em vez de nada, sempre marcada como estimada.

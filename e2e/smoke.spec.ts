@@ -15,7 +15,7 @@ test('converte uma frase em inglês com o motor no worker', async ({ page }) => 
   await expect(page.getByText('MAIÚSCULAS')).toBeVisible();
 });
 
-test('espanhol, italiano e alemão (Fase 5): dicionário, variante padrão e estimativa por regras', async ({
+test('espanhol, francês, italiano e alemão (Fase 5): dicionário, variante padrão e estimativa por regras', async ({
   page,
 }) => {
   await page.goto('/');
@@ -28,6 +28,9 @@ test('espanhol, italiano e alemão (Fase 5): dicionário, variante padrão e est
   await page.getByRole('radio', { name: 'Espanha' }).click();
   await page.getByLabel('Texto em espanhol').fill('cerveza');
   await expect(words(page).first()).toContainText('θ');
+  await page.getByRole('button', { name: /Francês/ }).click();
+  await page.getByLabel('Texto em francês').fill('de');
+  await expect(words(page).first()).toContainText('/də/'); // o WikiPron põe "dam" primeiro
   await page.getByRole('button', { name: /Italiano/ }).click();
   await page.getByLabel('Texto em italiano').fill('grazie');
   await expect(words(page).first()).toContainText('GRA');

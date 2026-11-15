@@ -9,7 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Idiomas que o site oferece. Manter em sincronia com apps/web/src/engine/langs.ts.
-const ACTIVE = ['en-US', 'en-GB', 'es-419', 'es-ES', 'it-IT', 'de-DE'];
+const ACTIVE = ['en-US', 'en-GB', 'es-419', 'es-ES', 'fr-FR', 'it-IT', 'de-DE'];
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const pkg = path.resolve(here, '..');
