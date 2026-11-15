@@ -22,7 +22,18 @@ function getVoices(): SpeechSynthesisVoice[] {
   return cache.voices;
 }
 
-/** Melhor voz para o idioma: a variante exata (en-GB); senão, qualquer do mesmo idioma (en-*). */
+/** Vozes de efeito do macOS (Eddy, Flo, Grandma, Bad News…): existem em vários idiomas, mas não servem para pronúncia. */
+const NOVELTY =
+  /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Junior|Ralph|Fred|Kathy)\b/u;
+/** Variante pedida sem voz própria: regiões equivalentes, em ordem (o espanhol latino-americano não tem voz es-419). */
+const REGIONS: Partial<Record<string, string[]>> = {
+  'es-419': ['es-mx', 'es-us', 'es-co', 'es-ar', 'es-cl'],
+};
+
+/**
+ * Melhor voz para o idioma. Ordem: variante exata (en-GB) → região equivalente (es-419 → es-MX) → qualquer do mesmo
+ * idioma (en-*). Em cada grupo: a voz padrão do sistema, depois vozes que não são de efeito, depois as locais.
+ */
 export function pickVoice(
   voices: readonly SpeechSynthesisVoice[],
   lang: Lang,
@@ -30,11 +41,20 @@ export function pickVoice(
   const norm = (l: string) => l.replace('_', '-').toLowerCase();
   const want = lang.toLowerCase();
   const base = want.split('-')[0]!;
-  return (
-    voices.find((v) => norm(v.lang) === want && v.localService) ??
-    voices.find((v) => norm(v.lang) === want) ??
-    voices.find((v) => norm(v.lang).split('-')[0] === base)
-  );
+  const score = (v: SpeechSynthesisVoice) =>
+    (v.default ? 4 : 0) + (NOVELTY.test(v.name) ? 0 : 2) + (v.localService ? 1 : 0);
+  const best = (list: SpeechSynthesisVoice[]) =>
+    list.reduce<SpeechSynthesisVoice | undefined>((a, v) => (!a || score(v) > score(a) ? v : a), undefined);
+  const groups = [
+    voices.filter((v) => norm(v.lang) === want),
+    ...(REGIONS[want] ?? []).map((r) => voices.filter((v) => norm(v.lang) === r)),
+    voices.filter((v) => norm(v.lang).split('-')[0] === base),
+  ];
+  for (const g of groups) {
+    const v = best(g);
+    if (v) return v;
+  }
+  return undefined;
 }
 
 export type SpeechState =

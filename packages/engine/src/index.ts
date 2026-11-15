@@ -34,6 +34,8 @@ export { createG2pEstimator, modelInput } from './g2p/estimator';
 export { chainEstimators, createRuleEstimator, ruleToIpa } from './g2p/rules';
 export { spanishToIpa } from './g2p/spanish';
 export { italianToIpa } from './g2p/italian';
+export { frenchToIpa } from './g2p/french';
+export { koreanToIpa } from './g2p/korean';
 export type { G2pEstimatorOptions } from './g2p/estimator';
 export { EngineClient } from './worker/client';
 export { serveEngine } from './worker/serve';

@@ -12,6 +12,7 @@
     "rules-coverage": "tsx scripts/rules-coverage.ts",
     "golden": "tsx scripts/golden.ts",
     "golden:draft": "tsx scripts/golden-draft.ts",
+    "golden:variants": "tsx scripts/golden-variants.ts",
     "bench": "tsx scripts/bench.ts",
     "g2p-eval": "tsx scripts/g2p-eval.ts"
   },

@@ -28,7 +28,10 @@ export const LANG_GROUPS: readonly LangGroup[] = [
       { lang: 'es-ES', label: 'Espanha' },
     ],
   },
+  { code: 'FR', label: 'Francês', inLabel: 'francês', variants: [{ lang: 'fr-FR', label: 'França' }] },
   { code: 'IT', label: 'Italiano', inLabel: 'italiano', variants: [{ lang: 'it-IT', label: 'Itália' }] },
+  { code: 'KO', label: 'Coreano', inLabel: 'coreano', variants: [{ lang: 'ko-KR', label: 'Coreia do Sul' }] },
+  { code: 'JA', label: 'Japonês', inLabel: 'japonês', variants: [{ lang: 'ja-JP', label: 'Japão' }] },
   { code: 'DE', label: 'Alemão', inLabel: 'alemão', variants: [{ lang: 'de-DE', label: 'Alemanha' }] },
 ];
 

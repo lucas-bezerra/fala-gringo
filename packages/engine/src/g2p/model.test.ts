@@ -148,12 +148,12 @@ describe('estimador G2P', () => {
 });
 
 const real = [
-  ...['en-US', 'en-GB', 'de-DE'].map((l) => [`${l} (publicado)`, path.join(PUBLISHED, l)]),
+  ...['en-US', 'en-GB', 'de-DE', 'fr-FR'].map((l) => [`${l} (publicado)`, path.join(PUBLISHED, l)]),
   ...['en-US', 'en-GB', 'fr-FR', 'de-DE'].map((l) => [`${l} (tools/g2p/export)`, path.join(EXPORTS, l)]),
 ].filter(([, dir]) => existsSync(path.join(dir, 'g2p.bin')));
 describe('modelos reais', () => {
   it('os modelos publicados existem', () => {
-    expect(real.filter(([name]) => name.endsWith('(publicado)'))).toHaveLength(3);
+    expect(real.filter(([name]) => name.endsWith('(publicado)'))).toHaveLength(4);
   });
   it.each(real)(
     '%s: reproduz as 300 fixtures do PyTorch',

@@ -15,7 +15,7 @@ test('converte uma frase em inglês com o motor no worker', async ({ page }) => 
   await expect(page.getByText('MAIÚSCULAS')).toBeVisible();
 });
 
-test('espanhol, italiano e alemão (Fase 5): dicionário, variante padrão e estimativa por regras', async ({
+test('espanhol, francês, italiano, coreano e alemão (Fase 5): dicionário, variante padrão e estimativa por regras', async ({
   page,
 }) => {
   await page.goto('/');
@@ -28,14 +28,37 @@ test('espanhol, italiano e alemão (Fase 5): dicionário, variante padrão e est
   await page.getByRole('radio', { name: 'Espanha' }).click();
   await page.getByLabel('Texto em espanhol').fill('cerveza');
   await expect(words(page).first()).toContainText('θ');
+  await page.getByRole('button', { name: /Francês/ }).click();
+  await page.getByLabel('Texto em francês').fill('de');
+  await expect(words(page).first()).toContainText('/də/'); // o WikiPron põe "dam" primeiro
   await page.getByRole('button', { name: /Italiano/ }).click();
   await page.getByLabel('Texto em italiano').fill('grazie');
   await expect(words(page).first()).toContainText('GRA');
+  await page.getByRole('button', { name: /Coreano/ }).click();
+  await page.getByLabel('Texto em coreano').fill('있어요'); // forma flexionada: fora do dicionário, regras do Hangul
+  await expect(words(page).first()).toContainText('estimado');
+  await expect(words(page).first()).toContainText('i·ssó·iô');
   await page.getByRole('button', { name: /Alemão/ }).click();
   await page.getByLabel('Texto em alemão').fill('danke');
   await expect(words(page).first()).toContainText('DAN');
   await page.getByLabel('Texto em alemão').fill('Merzkoalition'); // composto novo: modelo G2P do alemão
   await expect(words(page).first()).toContainText('estimado', { timeout: 15_000 });
+});
+
+test('japonês (T5.5): kanji pelo dicionário com leitura curada, kana por regras e segmentação', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Japonês/ }).click();
+  await page.getByLabel('Texto em japonês').fill('私は東京'); // sem espaços: o segmentador separa
+  await expect(words(page)).toHaveCount(3);
+  await expect(words(page).nth(0)).toContainText('ua·ta·chi'); // a fonte põe "atai" antes de "watashi"
+  await expect(words(page).nth(1)).toContainText('ua'); // partícula は = wa
+  await expect(words(page).nth(2)).toContainText('tôo·kiôo'); // vogal longa que a fonte não marca
+  await page.getByLabel('Texto em japonês').fill('ございます'); // o ICU quebra em ご|ざ|い|ます; fora do dicionário
+  await expect(words(page)).toHaveCount(1);
+  await expect(words(page).first()).toContainText('estimado');
+  await expect(words(page).first()).toContainText('gô·zai·ma·s(u)');
 });
 
 test('variante Reino Unido usa o dicionário britânico', async ({ page }) => {

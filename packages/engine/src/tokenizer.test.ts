@@ -91,6 +91,7 @@ describe('createTokenizer', () => {
     expect(ja.length).toBeGreaterThan(4);
     expect(ja).toContain('[ありがとう]');
     expect(ja).toContain('[東京]');
+    expect(ja).toContain('[ございます]'); // o ICU quebra em ご|ざ|い|ます (T5.5)
   });
 
   it('coreano separa por espaço', () => {
