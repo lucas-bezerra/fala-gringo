@@ -8,6 +8,7 @@ import type { Estimator } from '../stages';
 import type { Lang } from '../types';
 import { frenchToIpa } from './french';
 import { italianToIpa } from './italian';
+import { koreanToIpa } from './korean';
 import { spanishToIpa } from './spanish';
 
 /** IPA por regras, ou `undefined` se o idioma não tem regras ou a palavra tem símbolo estranho. */
@@ -15,11 +16,12 @@ export function ruleToIpa(key: string, lang: Lang): string | undefined {
   if (lang === 'es-ES' || lang === 'es-419') return spanishToIpa(key, lang);
   if (lang === 'it-IT') return italianToIpa(key);
   if (lang === 'fr-FR') return frenchToIpa(key);
+  if (lang === 'ko-KR') return koreanToIpa(key);
   return undefined;
 }
 
 /** Idiomas em que as regras também ESTIMAM. No francês, só escolhem a variante (o modelo G2P estima melhor). */
-const ESTIMATES = new Set<Lang>(['es-ES', 'es-419', 'it-IT']);
+const ESTIMATES = new Set<Lang>(['es-ES', 'es-419', 'it-IT', 'ko-KR']);
 /** Idiomas em que a 1ª variante da fonte pode ser dialetal/reduzida (WikiPron). No italiano, a do Wiktionary já é
  *  a principal, e as regras só trocariam um padrão por outro (casa: ˈka.sa → ˈka.za). */
 const PREFERS = new Set<Lang>(['es-ES', 'es-419', 'fr-FR']);
