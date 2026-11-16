@@ -16,15 +16,14 @@ async function axe(page: Page) {
 /** Simula uma voz instalada e registra o que seria falado (o Chromium de teste não tem vozes). */
 async function fakeVoices(page: Page, langs: string[]) {
   await page.addInitScript((voiceLangs) => {
-    const spoken: { text: string; lang: string }[] = [];
+    const spoken: { text: string; lang: string; voice: string }[] = [];
     (window as unknown as { __spoken: typeof spoken }).__spoken = spoken;
-    const voices = voiceLangs.map((lang) => ({
-      lang,
-      name: `Voz ${lang}`,
-      voiceURI: `v-${lang}`,
-      localService: true,
-      default: false,
-    }));
+    // "en-GB:online" = voz online (como as do Google no Chrome)
+    const voices = voiceLangs.map((spec) => {
+      const [lang, kind] = spec.split(':');
+      const name = kind === 'online' ? `Google ${lang}` : `Voz ${lang}`;
+      return { lang, name, voiceURI: name, localService: kind !== 'online', default: false };
+    });
     class FakeUtterance {
       voice: unknown = null;
       lang = '';
@@ -35,7 +34,8 @@ async function fakeVoices(page: Page, langs: string[]) {
     Object.defineProperty(window, 'speechSynthesis', {
       value: {
         getVoices: () => voices,
-        speak: (u: FakeUtterance) => spoken.push({ text: u.text, lang: u.lang }),
+        speak: (u: FakeUtterance) =>
+          spoken.push({ text: u.text, lang: u.lang, voice: (u.voice as { name: string }).name }),
         cancel: () => {},
         addEventListener: () => {},
         removeEventListener: () => {},
@@ -91,14 +91,48 @@ test.describe('desktop', () => {
     await expect(words(page)).toHaveCount(2);
     await page.getByRole('radio', { name: 'Reino Unido' }).click();
     const button = page.getByRole('button', { name: 'Ouvir a palavra' });
-    await expect(button).toHaveAccessibleDescription('Voz sintética do navegador');
+    await expect(button).toHaveAccessibleDescription('Voz sintética do navegador (Voz en-GB)');
     await button.click();
     await page.getByRole('button', { name: 'Ouvir frase' }).click();
     const spoken = await page.evaluate(() => (window as unknown as { __spoken: unknown[] }).__spoken);
     expect(spoken).toEqual([
-      { text: 'water', lang: 'en-GB' },
-      { text: 'water please', lang: 'en-GB' },
+      { text: 'water', lang: 'en-GB', voice: 'Voz en-GB' },
+      { text: 'water please', lang: 'en-GB', voice: 'Voz en-GB' },
     ]);
+  });
+
+  test('troca de voz: online só por escolha, com aviso, e lembrada no navegador', async ({ page }) => {
+    await fakeVoices(page, ['en-US', 'en-US:online']);
+    await page.goto('/');
+    await page.getByLabel('Texto em inglês').fill('water');
+    const button = page.getByRole('button', { name: 'Ouvir a palavra' });
+    await expect(button).toHaveAccessibleDescription('Voz sintética do navegador (Voz en-US)'); // local é o padrão
+    const select = page.getByLabel('Falou em outro idioma? Troque a voz:');
+    await select.selectOption({ label: 'Google en-US (en-US) — online, envia o texto ao Google' });
+    await expect(button).toHaveAccessibleDescription(
+      'Voz sintética online (Google en-US): o texto ouvido é enviado ao Google',
+    );
+    expect(await axe(page)).toEqual([]);
+    await page.reload();
+    await page.getByLabel('Texto em inglês').fill('water');
+    await page.getByRole('button', { name: 'Ouvir a palavra' }).click();
+    const spoken = await page.evaluate(
+      () => (window as unknown as { __spoken: { voice: string }[] }).__spoken,
+    );
+    expect(spoken.map((s) => s.voice)).toEqual(['Google en-US']);
+  });
+
+  test('só com voz online, o áudio espera a pessoa escolher', async ({ page }) => {
+    await fakeVoices(page, ['en-US:online']);
+    await page.goto('/');
+    await expect(words(page).first()).toBeVisible();
+    const button = page.getByRole('button', { name: 'Ouvir a palavra' });
+    await expect(button).toBeDisabled();
+    await expect(button).toHaveAccessibleDescription(
+      'Só há voz online em inglês: escolha abaixo se quiser usá-la.',
+    );
+    await page.getByLabel('Falou em outro idioma? Troque a voz:').selectOption('Google en-US');
+    await expect(button).toBeEnabled();
   });
 });
 

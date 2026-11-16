@@ -50,6 +50,6 @@ Anotar aqui o resultado (data, leitor, navegador, problemas).
 
 ## Limites conhecidos
 
-- **Áudio:** depende das vozes instaladas no sistema. Sem voz, o botão é desativado e o motivo é dito (não é um erro).
+- **Áudio:** depende das vozes instaladas no sistema. Sem voz, o botão é desativado e o motivo é dito (não é um erro). A legenda diz qual voz está em uso, e uma lista permite trocá-la: no Chrome do macOS várias vozes do sistema (Mónica, Alice, Kyoko…) falham sem aviso e ele fala com a voz padrão em inglês, o que a página não consegue detectar.
 - **Popover em navegadores antigos** (antes de Chrome 114, Safari 17, Firefox 125): o conteúdo aparece fora da camada superior ([ADR 0003](adr/0003-componentes-nativos.md)).
 - **IPA:** no painel de detalhe, ele continua acessível, com o prefixo "Transcrição IPA", para quem quiser. Cada leitor de tela lê os símbolos de um jeito.

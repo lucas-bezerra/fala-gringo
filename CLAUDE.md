@@ -78,7 +78,8 @@ engine/langs.ts                      → idiomas e variantes oferecidos na tela
 translate/TranslateScreen.tsx        → tela Traduzir (idioma, variante, entrada, cartões, leitura, copiar)
 translate/Pronunciation.tsx          → sílabas com tônica e destaque laranja por segmento (notação, seção 5.1)
 translate/WordDetail.tsx             → detalhe: som a som, fonte, variantes, áudio (painel lateral ≥ 1024 px; inferior abaixo)
-translate/useSpeech.ts               → voz sintética do navegador (Web Speech); sem voz no idioma, desativa e explica
+translate/useSpeech.ts               → voz sintética do navegador (Web Speech); escolha automática só entre vozes locais;
+                                      lista para trocar (fg:voz), voz online só por escolha e com aviso; sem voz, explica
 app/                                 → cabeçalho (navegação + tema), rodapé com créditos, #/creditos (de sources.ts),
                                       storage.ts (recentes/favoritos em localStorage), share.ts (?t=&l=), theme.ts
 offline/                             → PWA (T4.8): offlineStore.ts (Cache Storage "fg-dict", o MESMO cache CacheFirst do service
