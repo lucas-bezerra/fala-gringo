@@ -3,7 +3,7 @@ import type { Lang, Pronunciation, UnknownToken, WordToken } from '@falagringo/e
 import { useId } from 'react';
 import { Button, cx } from '@/ui';
 import { PronunciationText } from './Pronunciation';
-import type { SpeechState } from './useSpeech';
+import { isOnline, voiceProvider, type SpeechState } from './useSpeech';
 
 const SpeakerIcon = () => (
   <svg
@@ -24,9 +24,19 @@ const SpeakerIcon = () => (
 const NOTE =
   'mt-3 rounded-control border border-dashed border-muted bg-subtle px-3 py-2.5 text-[13px] text-ink-2';
 
+/** Legenda do áudio: voz em uso e, se for online, o aviso de que o texto vai ao provedor. */
+export function speechCaption(speech: SpeechState): string {
+  const v = speech.voice;
+  if (!speech.available || !v) return speech.reason ?? '';
+  return isOnline(v)
+    ? `Voz sintética online (${v.name}): o texto ouvido é enviado ao ${voiceProvider(v)}`
+    : `Voz sintética do navegador (${v.name})`;
+}
+
 /**
- * Botão de áudio com a legenda "voz sintética do navegador" sempre visível (e lida junto, via aria-describedby).
- * Sem voz disponível, o botão fica desativado e a legenda passa a dizer o motivo.
+ * Botão de áudio com a legenda sempre visível (e lida junto, via aria-describedby): voz em uso ou o motivo de não
+ * haver áudio. Abaixo, a lista para trocar de voz: no Chrome do macOS algumas vozes do sistema falham sem aviso e
+ * ele fala com a voz padrão (inglês); só a pessoa percebe, então só ela pode trocar.
  */
 export function SpeakButton({
   text,
@@ -38,6 +48,8 @@ export function SpeakButton({
   className?: string;
 }) {
   const captionId = useId();
+  const selectId = useId();
+  const online = !!speech.voice && isOnline(speech.voice);
   return (
     <div className={className}>
       <Button
@@ -50,9 +62,31 @@ export function SpeakButton({
       >
         Ouvir a palavra
       </Button>
-      <p id={captionId} className="mt-1.5 text-center text-xs text-muted">
-        {speech.available ? 'Voz sintética do navegador' : speech.reason}
+      <p id={captionId} className={cx('mt-1.5 text-center text-xs', online ? 'text-ink-2' : 'text-muted')}>
+        {speechCaption(speech)}
       </p>
+      {(speech.options.length > 1 || (!speech.available && speech.options.length > 0)) && (
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-muted">
+          <label htmlFor={selectId}>Falou em outro idioma? Troque a voz:</label>
+          <select
+            id={selectId}
+            className="focus-ring max-w-full rounded-control border border-line bg-surface px-2 py-1 text-sm text-ink"
+            value={speech.voice?.voiceURI ?? ''}
+            onChange={(e) => speech.choose(e.target.value)}
+          >
+            {!speech.voice && (
+              <option value="" disabled>
+                Escolha uma voz
+              </option>
+            )}
+            {speech.options.map((v) => (
+              <option key={v.voiceURI} value={v.voiceURI}>
+                {v.name} ({v.lang}){isOnline(v) ? ` — online, envia o texto ao ${voiceProvider(v)}` : ''}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
     </div>
   );
 }

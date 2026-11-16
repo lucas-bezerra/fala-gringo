@@ -17,7 +17,8 @@ Revisão feita em 2026-11-14 sobre o build de produção. O FalaGringo é um sit
 | Vazamento entre origens | `Cross-Origin-Opener-Policy` e `Cross-Origin-Resource-Policy: same-origin`, `Referrer-Policy: no-referrer` | e2e |
 | Permissões do navegador | `Permissions-Policy` nega câmera, microfone, localização, pagamento, USB, sensores e *topics* | e2e |
 | Privacidade do texto | O texto fica no navegador (o motor roda num Web Worker local). O link compartilhado leva o texto no **fragmento** (`#/?t=`), que nunca vai ao servidor nem aos logs | e2e: nenhuma requisição carrega o texto |
-| Dados locais | Recentes e favoritos só no `localStorage` do aparelho, apagáveis na tela; nada é enviado | revisão |
+| Áudio (voz sintética) | A escolha automática usa só vozes **locais**. Vozes online (Google, Microsoft…), que fazem o navegador enviar o texto ouvido ao provedor, só são usadas se a pessoa escolher na lista, que as marca como "online, envia o texto ao Google"; com uma delas em uso, a legenda avisa | e2e (`detalhe.spec.ts`) |
+| Dados locais | Recentes, favoritos e a voz escolhida por idioma (`fg:voz`) só no `localStorage` do aparelho; nada é enviado | revisão |
 | Service worker | Só requisições GET da própria origem; dicionários em CacheFirst só com status 200 (nunca respostas opacas); runtime do Workbox embutido (sem `importScripts`); `sw.js` em `no-cache`; versão nova só com o clique em "Atualizar" | e2e offline e de segurança |
 | Cache HTTP | Arquivos com hash: imutáveis. `dict/manifest.json`, `sw.js` e `manifest.webmanifest`: `no-cache` | e2e + `_headers` |
 | Cadeia de suprimentos (npm) | `pnpm audit --audit-level high` no CI; `--frozen-lockfile`; builds de pacotes só para o `esbuild` (`allowBuilds`); overrides para `glob` e `minimatch`; Dependabot semanal | CI |

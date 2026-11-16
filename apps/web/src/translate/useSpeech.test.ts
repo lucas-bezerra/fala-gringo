@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pickVoice } from './useSpeech';
+import { pickVoice, voiceOptions } from './useSpeech';
 
 const v = (name: string, lang: string, extra: Partial<SpeechSynthesisVoice> = {}) =>
   ({ name, lang, localService: true, default: false, voiceURI: name, ...extra }) as SpeechSynthesisVoice;
@@ -16,6 +16,7 @@ const VOICES = [
   v('Alice', 'it-IT'),
   v('Daniel', 'en-GB'),
   v('Google español', 'es-ES', { localService: false }),
+  v('Google 日本語', 'ja-JP', { localService: false }),
 ];
 
 describe('pickVoice', () => {
@@ -32,5 +33,20 @@ describe('pickVoice', () => {
   });
   it('sem voz do idioma: nada (a tela explica)', () => {
     expect(pickVoice(VOICES, 'ko-KR')).toBeUndefined();
+  });
+  it('voz online nunca é a escolha automática (envia o texto ao provedor)', () => {
+    expect(pickVoice(VOICES, 'ja-JP')).toBeUndefined();
+  });
+});
+
+describe('voiceOptions', () => {
+  it('lista as vozes do idioma para trocar: locais primeiro, online por último, sem vozes de efeito', () => {
+    expect(voiceOptions(VOICES, 'es-ES').map((x) => x.name)).toEqual(['Mónica', 'Paulina', 'Google español']);
+    expect(voiceOptions(VOICES, 'es-419').map((x) => x.name)).toEqual([
+      'Paulina',
+      'Mónica',
+      'Google español',
+    ]);
+    expect(voiceOptions(VOICES, 'ja-JP').map((x) => x.name)).toEqual(['Google 日本語']);
   });
 });
